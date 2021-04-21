@@ -10,4 +10,8 @@ locals {
       }
     ]
   }
+  default_notebook_config = {
+    direct_internet_access = "Enabled"
+    instance_type          = "ml.t2.medium"
+  }
 }
