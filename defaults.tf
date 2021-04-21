@@ -2,7 +2,7 @@
 
 locals {
   default_studio_config = {
-    app_network_access_type = "VpcOnly"
+    app_network_access_type = "PublicInternetOnly"
     auth_mode               = "IAM"
     user_profiles = [
       {

@@ -14,15 +14,7 @@ variable "subnets" {
 ### sagemaker studio
 variable "sagemaker_studio" {
   description = "Amazon SageMaker studio definition"
-  default = {
-    app_network_access_type = "VpcOnly"
-    auth_mode               = "IAM"
-    user_profiles = [
-      {
-        name = "default"
-      }
-    ]
-  }
+  default     = null
 }
 
 variable "notebook_instances" {
