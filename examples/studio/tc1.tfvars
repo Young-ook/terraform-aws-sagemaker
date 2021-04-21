@@ -6,3 +6,7 @@ tags = {
   env  = "dev"
   test = "tc1"
 }
+sagemaker_studio = {
+  app_network_access_type = "VpcOnly"
+  auth_mode               = "IAM"
+}
