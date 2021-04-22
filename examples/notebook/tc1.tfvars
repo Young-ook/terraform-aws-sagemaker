@@ -10,5 +10,9 @@ notebook_instances = [
   {
     name          = "default"
     instance_type = "ml.t2.medium"
+
+    # Supported values: Enabled (Default) or Disabled. If set to Disabled,
+    # the notebook instance will be able to access resources only in your VPC
+    direct_internet_access = "Disabled"
   }
 ]

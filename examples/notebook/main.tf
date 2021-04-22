@@ -13,6 +13,5 @@ module "sagemaker" {
   source             = "../../"
   name               = var.name
   tags               = var.tags
-  sagemaker_studio   = null
   notebook_instances = var.notebook_instances
 }
