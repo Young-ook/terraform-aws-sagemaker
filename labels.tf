@@ -1,4 +1,9 @@
-resource "random_string" "sagemaker-suffix" {
+module "frigga" {
+  source = "Young-ook/spinnaker/aws//modules/frigga"
+  name   = var.name
+}
+
+resource "random_string" "uid" {
   length  = 12
   upper   = false
   lower   = true
@@ -7,13 +12,13 @@ resource "random_string" "sagemaker-suffix" {
 }
 
 locals {
-  name = var.name == null ? join("-", ["sagemaker", random_string.sagemaker-suffix.result]) : var.name
+  service  = "sagemaker"
+  uid      = join("-", [local.service, random_string.uid.result])
+  name     = var.name == null ? local.uid : module.frigga.name
+  name-tag = { Name = format("%s", local.name) }
   default-tags = merge(
     { "terraform.io" = "managed" },
   )
-  name-tag = {
-    Name = format("%s", local.name)
-  }
   sagemaker-shared-tag = {
     format("sagemaker/%s", local.name) = "shared"
   }
