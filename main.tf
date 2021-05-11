@@ -53,7 +53,7 @@ resource "aws_sagemaker_user_profile" "user" {
 # drawing lots for choosing a subnet
 resource "random_integer" "subnet" {
   min = 0
-  max = length(local.subnet_ids)
+  max = length(local.subnet_ids) - 1
 }
 
 resource "aws_sagemaker_notebook_instance" "ni" {
