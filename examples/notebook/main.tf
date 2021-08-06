@@ -1,4 +1,4 @@
-# SageMaker Studio
+# SageMaker Notebook
 
 terraform {
   required_version = "0.13.5"
