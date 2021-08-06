@@ -83,7 +83,7 @@ resource "aws_security_group" "vpce" {
 
 # bucket
 module "s3" {
-  source          = "./modules/bucket"
+  source          = "./bucket"
   tags            = var.tags
   vpc_endpoint_s3 = var.use_default_vpc ? null : module.vpc.vpc_endpoint_s3_id
 }
