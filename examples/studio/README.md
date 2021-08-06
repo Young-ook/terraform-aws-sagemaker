@@ -16,7 +16,12 @@ $ terraform apply -var-file default.tfvars
 ```
 
 ## Clean up
-Before you destroy the SageMaker Studio, make sure that users in the SageMaker are deleted. For more the details, please refer to [this](https://docs.aws.amazon.com/sagemaker/latest/dg/gs-studio-delete-domain.html).
+Before you destroy the SageMaker Studio, make sure that users in the SageMaker are deleted. Repeat the following steps for each user in the **User name** list on SageMaker control panel.
+1. Choose the user.
+2. On the User Details page, for each non-failed app in the Apps list, choose Delete app.
+3. On the Delete app dialog, choose Yes, delete app, type delete in the confirmation field, and then choose Delete.
+4. When the Status for all apps show as Deleted, choose Delete user.
+For more informatiom, please refer to [this](https://docs.aws.amazon.com/sagemaker/latest/dg/gs-studio-delete-domain.html).
 
 Run terraform:
 ```
