@@ -18,20 +18,33 @@ module "sagemaker" {
   tags    = { env = "test" }
 }
 ```
+
 Run terraform:
 ```
-$ terraform init
-$ terraform apply
+terraform init
+terraform apply
 ```
 
 # Known Issues
 ## Not supported instance in the availability zone
 You may receive a 'Failed' error message when creating a SageMaker notebook instance. This happens for a number of reasons, so you should check the detailed messages about the state of your notebook instance.
 ```
-Error: error waiting for sagemaker notebook instance (sagemaker-lhdhu-default) to create: unexpected state 'Failed', wanted target 'InService'. last error: %!s(<nil>)
+Error: error waiting for sagemaker notebook instance (sagemaker-lhdhu-default) to create: unexpected state 'Failed',
+wanted target 'InService'. last error: %!s(<nil>)
 ```
 
 Open the AWS Management Console and go to the SageMaker service page. Then select the *Notebook Instances* menu in the left navigation bar. This will show the instances that failed to create. Select the instance and check the details in the pop-up message. If you see a message like the below, you should try creating the notebook instance again by changing the Availability Zone or Instance Type values.
 ```
-The Notebook Instance type 'ml.t3.large' is not available in the availability zone 'ap-northeast-2b'. We apologize for the inconvenience. Please try again using subnet in a different availability zone, or try a different instance type.
+The Notebook Instance type 'ml.t3.large' is not available in the availability zone 'ap-northeast-2b'. We apologize for the inconvenience.
+Please try again using subnet in a different availability zone, or try a different instance type.
+```
+
+Run terraform to delete a randomly selected subnet index and notebook instance:
+```
+terraform destroy -target module.sagemaker.random_integer.subnet -target module.sagemaker.aws_sagemaker_notebook_instance.ni
+```
+Then retry terraform apply
+
+```
+terraform apply
 ```
