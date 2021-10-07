@@ -36,6 +36,12 @@ variable "notebook_instances" {
   default     = []
 }
 
+### test client
+variable "node_groups" {
+  description = "Node groups definition"
+  default     = []
+}
+
 ### description
 variable "name" {
   description = "The logical name of the module instance"
