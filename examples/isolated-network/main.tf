@@ -99,7 +99,7 @@ module "client" {
   tags        = var.tags
   subnets     = values(module.corp.subnets["public"])
   policy_arns = [aws_iam_policy.client.arn]
-  node_groups = var.node_groups
+  node_groups = var.ec2_instances
 }
 
 resource "aws_iam_policy" "client" {

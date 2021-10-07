@@ -37,8 +37,8 @@ variable "notebook_instances" {
 }
 
 ### test client
-variable "node_groups" {
-  description = "Node groups definition"
+variable "ec2_instances" {
+  description = "EC2 instance groups definition for test client"
   default     = []
 }
 
