@@ -65,6 +65,7 @@ resource "aws_sagemaker_notebook_instance" "ni" {
   subnet_id              = local.subnet_ids[random_integer.subnet.result]
   security_groups        = [aws_security_group.sagemaker.id]
   instance_type          = lookup(each.value, "instance_type", local.default_notebook_config["instance_type"])
+  volume_size            = lookup(each.value, "volume_size", local.default_notebook_config["volume_size"])
 
   depends_on = [
     aws_iam_role_policy_attachment.sagemaker-admin,
