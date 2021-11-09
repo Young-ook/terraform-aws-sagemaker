@@ -1,7 +1,7 @@
 # SageMaker Studio
 
 terraform {
-  required_version = "0.13.5"
+  required_version = "~> 1.0"
 }
 
 provider "aws" {
@@ -12,7 +12,7 @@ provider "aws" {
 module "vpc" {
   source             = "terraform-aws-modules/vpc/aws"
   version            = "2.70.0"
-  create_vpc         = ! var.use_default_vpc
+  create_vpc         = !var.use_default_vpc
   name               = var.name
   azs                = var.azs
   cidr               = "10.0.0.0/16"
