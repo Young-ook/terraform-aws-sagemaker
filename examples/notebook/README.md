@@ -1,3 +1,5 @@
+[[English](README.md)] [[한국어](README.ko.md)]
+
 # SageMaker Notebook
 An [Amazon SageMaker notebook instance](https://docs.aws.amazon.com/sagemaker/latest/dg/nbi.html) is a machine learning (ML) compute instance running the Jupyter Notebook App. SageMaker manages creating the instance and related resources. Use Jupyter notebooks in your notebook instance to prepare and process data, write code to train models, deploy models to SageMaker hosting, and test or validate your models.
 
@@ -48,7 +50,7 @@ pwd
 ```
 
 ```
-git clone https://github.com/aws-samples/aws-ai-ml-workshop-kr/tree/master/sagemaker
+git clone https://github.com/aws-samples/aws-ai-ml-workshop-kr
 ```
 
 ### Bring Your Own Containers (BYOC)
