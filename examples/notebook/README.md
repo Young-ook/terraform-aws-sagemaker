@@ -1,3 +1,5 @@
+[[English](README.md)] [[한국어](README.ko.md)]
+
 # SageMaker Notebook
 An [Amazon SageMaker notebook instance](https://docs.aws.amazon.com/sagemaker/latest/dg/nbi.html) is a machine learning (ML) compute instance running the Jupyter Notebook App. SageMaker manages creating the instance and related resources. Use Jupyter notebooks in your notebook instance to prepare and process data, write code to train models, deploy models to SageMaker hosting, and test or validate your models.
 
@@ -33,3 +35,32 @@ Don't forget you have to use the `-var-file` option when you run terraform destr
 ```
 terraform destroy -var-file tc1.tfvars
 ```
+
+## SageMaker notebook examples
+### Clone GitHub repository
+After terraform successfully creates a sagemaker notebook instance in your aws environment, open the sagemaker notebook in your web browser. And click `git` icon on the left navigation bar, and select clone repository button to get the example codes from github repository. Or you can open a terminal in the jupyter notebook and directly clone the repository in the sagemaker workspace as below.
+
+```
+cd SageMaker
+pwd
+```
+
+```
+/home/ec2-user/SageMaker
+```
+
+```
+git clone https://github.com/aws-samples/aws-ai-ml-workshop-kr
+```
+
+### Bring Your Own Containers (BYOC)
+You can run your owne container in the sagemaker. There are some examples to explain how to use custom containers for machine leaning workloads.
+
+#### Hello Docker
+Find `sagemaker/byoc` directory and move in. Click `hello_docker.ipynb` file to open the interactive (notebook) interface for machine learning jobs and follow the instructions. Note this example written in korean. For english example, please refer to [this](TBD)
+
+#### Scikit learn
+
+#### Tensorflow
+
+### Model Monitor
