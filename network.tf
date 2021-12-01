@@ -1,18 +1,26 @@
 ## aws partition and region (global, gov, china)
 data "aws_partition" "current" {}
 
-## default vpc
-data "aws_vpc" "default" {
-  default = true
+## features
+locals {
+  use_default_vpc         = (var.vpc == null || var.vpc == "") ? true : false
+  use_default_vpc_subnets = (var.subnets == null || var.subnets == "") ? true : false
 }
 
-data "aws_subnet_ids" "default" {
-  vpc_id = data.aws_vpc.default.id
+## default vpc
+data "aws_vpc" "vpc" {
+  for_each = local.use_default_vpc ? toset(["default"]) : toset([])
+  default  = true
+}
+
+data "aws_subnet_ids" "subnets" {
+  for_each = local.use_default_vpc_subnets ? toset(["default"]) : toset([])
+  vpc_id   = data.aws_vpc.vpc["default"].id
 }
 
 locals {
-  vpc_id     = var.vpc == null ? data.aws_vpc.default.id : var.vpc
-  subnet_ids = var.subnets == null ? data.aws_subnet_ids.default.ids : var.subnets
+  vpc_id     = local.use_default_vpc ? data.aws_vpc.vpc["default"].id : var.vpc
+  subnet_ids = local.use_default_vpc_subnets ? data.aws_subnet_ids.subnets["default"].ids : var.subnets
 }
 
 # security/firewall

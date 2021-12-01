@@ -11,6 +11,13 @@ When you're starting a new notebook, we recommend that you create the notebook i
 - SageMaker Studio notebooks are accessed from within Studio. This enables you to build, train, debug, track, and monitor your models without leaving Studio.
 
 For more information, please refer to the [this](https://docs.aws.amazon.com/sagemaker/latest/dg/notebooks-comparison.html) developer guide.
+
+## Download example
+Download this example on your workspace
+```sh
+git clone https://github.com/Young-ook/terraform-aws-sagemaker
+cd terraform-aws-sagemaker/examples/notebook
+```
  
 ## Setup
 [This](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/notebook/main.tf) is the example of terraform configuration file to create an SageMaker notebook instance. Check out and apply it using terraform command.
@@ -18,9 +25,28 @@ For more information, please refer to the [this](https://docs.aws.amazon.com/sag
 Run terraform:
 ```
 terraform init
+```
+
+At the first, you must decided to build a custom vpc using terraform module or to retrieve and use a default vpc on your AWS account. In this example, you can configure where to your sagemaker notebook instance running on using `use_default_vpc` variable.
+
+```
+terraform plan -target module.vpc
+terraform apply -target module.vpc
+```
+
+Also you can use the `-var-file` option for customized paramters when you run the terraform plan/apply command.
+```
+terraform plan -var-file tc1.tfvars -target module.vpc
+terraform apply -var-file tc1.tfvars -target module.vpc
+```
+
+After vpc creation or default vpc discovery operation is complete, run terraform again to create the sagemaker notebook instance:
+```
+terraform plan
 terraform apply
 ```
-Also you can use the `-var-file` option for customized paramters when you run the terraform plan/apply command.
+
+Don't forget to use the `-var-file` option when re-running the terraform apply command to create another resource if you configured additional variables in the previous step.
 ```
 terraform plan -var-file tc1.tfvars
 terraform apply -var-file tc1.tfvars
