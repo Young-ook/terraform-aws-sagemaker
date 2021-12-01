@@ -27,10 +27,28 @@ cd terraform-aws-sagemaker/examples/notebook
 테라폼 실행:
 ```
 terraform init
-terraform apply
+```
+
+시작하기 전에, 이 예제에서 사용자 정의 VPC를 생성할 지 아니면 기본 VPC를 정해야 합니다. 이 예제에서 사용자는 `use_default_vpc` 변수를 이용하여 세이지 메이커 노트북을 새로운 VPC에 생성할 지, 아니면 기본 VPC에 생성할 지 결정할 수 있습니다.
+
+```
+terraform plan -target module.vpc
+terraform apply -target module.vpc
 ```
 
 다른 변수를 사용해서 테라폼을 실행하려면 `-var-file` 옵션을 사용할 수 있습니다. 다음과 같이 테라폼 명령을 수행할 때 추가해 주면 됩니다.
+```
+terraform plan -var-file tc1.tfvars -target module.vpc
+terraform apply -var-file tc1.tfvars -target module.vpc
+```
+
+신규 VPC 생성 또는 기본 VPC 조회를 완료한 다음에는 테라폼 명령을 한 번더 수행해서 세이지 메이커 노트북을 생성합니다. 이전 단계에서는 VPC만 다뤘습니다. VPC 가 생성 되었거나 기본 VPC를 조회 했기 때문에 이제 나머지 자원을 생성할 수 있습니다.
+```
+terraform plan
+terraform apply
+```
+
+이전 단계에서 추가 변수를 구성한 경우 다른 리소스를 생성하기 위해 테라폼 명령을 다시 실행할 때는 `-var-file` 옵션을 사용해야 합니다.
 ```
 terraform plan -var-file tc1.tfvars
 terraform apply -var-file tc1.tfvars
