@@ -1,7 +1,5 @@
 aws_region    = "ap-northeast-2"
-name          = "s3"
-stack         = "dev"
-detail        = "tc2"
+name          = "s3-tc2"
 force_destroy = true
 versioning    = true
 lifecycle_rules = [

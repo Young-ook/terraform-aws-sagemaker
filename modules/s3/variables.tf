@@ -43,18 +43,6 @@ variable "name" {
   type        = string
 }
 
-variable "stack" {
-  description = "Text used to identify stack of infrastructure components"
-  type        = string
-  default     = ""
-}
-
-variable "detail" {
-  description = "The extra description of module instance"
-  type        = string
-  default     = ""
-}
-
 ### tags
 variable "tags" {
   description = "The key-value maps for tagging"

@@ -28,19 +28,7 @@ variable "lifecycle_rules" {
 variable "name" {
   description = "The logical name of the module instance"
   type        = string
-  default     = "s3"
-}
-
-variable "stack" {
-  description = "Text used to identify stack of infrastructure components"
-  type        = string
-  default     = ""
-}
-
-variable "detail" {
-  description = "The extra description of module instance"
-  type        = string
-  default     = ""
+  default     = null
 }
 
 ### tags
