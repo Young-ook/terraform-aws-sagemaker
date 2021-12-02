@@ -22,6 +22,8 @@ cd terraform-aws-sagemaker/examples/notebook
 ## Setup
 [This](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/notebook/main.tf) is the example of terraform configuration file to create an SageMaker notebook instance. Check out and apply it using terraform command.
 
+If you don't have the terraform tool in your environment, go to the main [page](https://github.com/Young-ook/terraform-aws-sagemaker) of this repository and follow the installation instructions.
+
 Run terraform:
 ```
 terraform init

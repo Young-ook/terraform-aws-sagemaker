@@ -1,5 +1,7 @@
 ## aws partition and region (global, gov, china)
-data "aws_partition" "current" {}
+module "current" {
+  source = "Young-ook/spinnaker/aws//modules/aws-partitions"
+}
 
 ## features
 locals {
