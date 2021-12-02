@@ -1,8 +1,3 @@
-module "frigga" {
-  source = "Young-ook/spinnaker/aws//modules/frigga"
-  name   = var.name
-}
-
 resource "random_string" "uid" {
   length  = 12
   upper   = false
@@ -14,7 +9,7 @@ resource "random_string" "uid" {
 locals {
   service  = "sagemaker"
   uid      = join("-", [local.service, random_string.uid.result])
-  name     = var.name == null ? local.uid : module.frigga.name
+  name     = var.name == null ? local.uid : var.name
   name-tag = { Name = format("%s", local.name) }
   default-tags = merge(
     { "terraform.io" = "managed" },

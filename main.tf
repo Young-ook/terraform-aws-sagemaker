@@ -10,7 +10,7 @@ resource "aws_iam_role" "ni" {
       Action = "sts:AssumeRole"
       Effect = "Allow"
       Principal = {
-        Service = format("sagemaker.%s", data.aws_partition.current.dns_suffix)
+        Service = format("sagemaker.%s", module.current.partition.dns_suffix)
       }
     }]
     Version = "2012-10-17"
@@ -18,7 +18,7 @@ resource "aws_iam_role" "ni" {
 }
 
 resource "aws_iam_role_policy_attachment" "sagemaker-admin" {
-  policy_arn = format("arn:%s:iam::aws:policy/AmazonSageMakerFullAccess", data.aws_partition.current.partition)
+  policy_arn = format("arn:%s:iam::aws:policy/AmazonSageMakerFullAccess", module.current.partition.partition)
   role       = aws_iam_role.ni.id
 }
 

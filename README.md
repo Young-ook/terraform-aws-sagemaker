@@ -4,6 +4,8 @@
 + This module utilises the default VPC of a target region if the user does not pass variables for vpc and subnets. In this case, this module does not create VPC endpoints that allows SageMaker to access AWS services over a private network.
 
 ## Examples
+- [Amazon EFS](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/efs)
+- [Amazon S3](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/s3)
 - [Amazon SageMaker Studio](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/studio)
 - [Amazon SageMaker Notebook](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/notebook)
 - [Securing Amazon SageMaker Studio connectivity using a private VPC](https://aws.amazon.com/ko/blogs/machine-learning/securing-amazon-sagemaker-studio-connectivity-using-a-private-vpc/)
