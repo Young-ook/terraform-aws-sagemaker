@@ -25,6 +25,24 @@ variable "subnets" {
   default     = null
 }
 
+### s3
+variable "force_destroy" {
+  description = "A boolean that indicates all objects should be deleted from the bucket so that the bucket can be destroyed without error"
+  type        = bool
+  default     = false
+}
+
+variable "versioning" {
+  description = "A configuration to enable object version control"
+  type        = bool
+  default     = false
+}
+
+variable "lifecycle_rules" {
+  description = "A configuration of object lifecycle management"
+  default     = []
+}
+
 ### sagemaker
 variable "sagemaker_studio" {
   description = "Amazon SageMaker studio definition"
