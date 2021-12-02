@@ -7,7 +7,7 @@ output "efs" {
 
 output "mnt" {
   description = "A list of mount target to access efs volume"
-  value       = aws_efs_mount_target.efs
+  value       = { for mnt in values(aws_efs_mount_target.efs) : mnt.availability_zone_name => mnt }
 }
 
 output "security_group" {
