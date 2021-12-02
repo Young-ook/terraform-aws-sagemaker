@@ -5,7 +5,7 @@
 ### Setup
 ```hcl
 module "s3" {
-  source  = "Young-ook/spinnaker/aws//modules/s3"
+  source  = "Young-ook/sagemaker/aws//modules/s3"
   name    = var.name
   tags    = { env = "test" }
 }
@@ -25,7 +25,7 @@ For more information, see [Object lifecycle management](https://docs.aws.amazon.
 ### Example
 ```hcl
 module "s3" {
-  source  = "Young-ook/spinnaker/aws//modules/s3"
+  source  = "Young-ook/sagemaker/aws//modules/s3"
   name    = var.name
   tags    = { env = "test" }
 
