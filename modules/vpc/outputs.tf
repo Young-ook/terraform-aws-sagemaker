@@ -21,7 +21,7 @@ output "route_tables" {
   description = "A list of subnet IDs in the default VPC"
   value = (local.use_default_vpc ?
     {
-      main = data.aws_vpc.default.0.main_route_table_id
+      public = { main = data.aws_vpc.default.0.main_route_table_id }
     } :
     {
       private = { for k, v in aws_route_table.private : k => v.id }
