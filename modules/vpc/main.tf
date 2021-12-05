@@ -6,8 +6,6 @@ locals {
   azs         = lookup(var.vpc_config, "azs", local.default_vpc_config.azs)
   selected_az = local.azs.0
   single_ngw  = lookup(var.vpc_config, "single_ngw", local.default_vpc_config.single_ngw)
-  igw_enabled = lookup(var.vpc_config, "enable_igw", local.default_vpc_config.enable_igw)
-  ngw_enabled = lookup(var.vpc_config, "enable_ngw", local.default_vpc_config.enable_ngw)
   subnet_type = lookup(var.vpc_config, "subnet_type", local.default_vpc_config.subnet_type)
 }
 
@@ -15,12 +13,9 @@ locals {
 locals {
   default_vpc = (var.vpc_config == null || var.vpc_config == {}) ? true : false
   vpc         = local.default_vpc ? data.aws_vpc.default.0 : aws_vpc.vpc.0
-  #  isolated    = !local.igw_enabled && !local.ngw_enabled ? true : false
-  #  public      = local.igw_enabled && !local.ngw_enabled ? true : false
-  #  standard    = local.igw_enabled && local.ngw_enabled ? true : false
-  isolated = ("isolated" == local.subnet_type) ? true : false
-  public   = ("public" == local.subnet_type) ? true : false
-  standard = ("standard" == local.subnet_type) ? true : false
+  isolated    = ("isolated" == local.subnet_type) ? true : false
+  public      = ("public" == local.subnet_type) ? true : false
+  standard    = ("standard" == local.subnet_type) ? true : false
 }
 
 ## default vpc
@@ -52,6 +47,10 @@ resource "aws_vpc" "vpc" {
     { Name = local.name },
     var.tags,
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # security/firewall
@@ -97,7 +96,7 @@ resource "aws_subnet" "private" {
 }
 
 resource "aws_route_table" "private" {
-  for_each = !local.default_vpc && !local.public ? (local.ngw_enabled && local.single_ngw ? toset([local.selected_az]) : toset(local.azs)) : toset([])
+  for_each = !local.default_vpc && !local.public ? (local.single_ngw ? toset([local.selected_az]) : toset(local.azs)) : toset([])
   vpc_id   = local.vpc.id
 
   tags = merge(
@@ -110,10 +109,10 @@ resource "aws_route_table" "private" {
 resource "aws_route_table_association" "private" {
   for_each       = !local.default_vpc && !local.public ? toset(local.azs) : toset([])
   subnet_id      = aws_subnet.private[each.key].id
-  route_table_id = local.ngw_enabled && local.single_ngw ? aws_route_table.private[local.selected_az].id : aws_route_table.private[each.key].id
+  route_table_id = local.single_ngw ? aws_route_table.private[local.selected_az].id : aws_route_table.private[each.key].id
 }
 
-resource "aws_route" "ngw" {
+resource "aws_route" "ingw" {
   for_each               = !local.default_vpc && local.standard ? (local.single_ngw ? toset([local.selected_az]) : toset(local.azs)) : toset([])
   route_table_id         = aws_route_table.private[each.key].id
   destination_cidr_block = "0.0.0.0/0"
@@ -180,7 +179,7 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public[local.selected_az].id
 }
 
-resource "aws_route" "public_igw" {
+resource "aws_route" "igw" {
   for_each               = !local.default_vpc && (local.public || local.standard) ? toset([local.selected_az]) : toset([])
   route_table_id         = aws_route_table.public[local.selected_az].id
   destination_cidr_block = "0.0.0.0/0"

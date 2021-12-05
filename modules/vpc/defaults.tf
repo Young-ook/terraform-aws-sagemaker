@@ -5,8 +5,6 @@ locals {
     cidr        = "10.0.0.0/16"
     azs         = ["us-east-1a", "us-east-1b", "us-east-1c"]
     subnet_type = "standard" # allowed values : "isolated" | "public" | "standard"
-    enable_igw  = true
-    enable_ngw  = false
     single_ngw  = false
   }
   default_vgw_config = {
