@@ -2,11 +2,10 @@
 
 locals {
   default_vpc_config = {
-    cidr       = "10.0.0.0/16"
-    azs        = ["us-east-1a", "us-east-1b", "us-east-1c"]
-    enable_igw = true
-    enable_ngw = false
-    single_ngw = false
+    cidr        = "10.0.0.0/16"
+    azs         = ["us-east-1a", "us-east-1b", "us-east-1c"]
+    subnet_type = "standard" # allowed values : "isolated" | "public" | "standard"
+    single_ngw  = false
   }
   default_vgw_config = {
     enable_vgw      = false
