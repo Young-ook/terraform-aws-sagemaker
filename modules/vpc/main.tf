@@ -1,5 +1,9 @@
 ## virtual private cloud
 
+module "current" {
+  source = "Young-ook/spinnaker/aws//modules/aws-partitions"
+}
+
 ## parameters
 locals {
   cidr        = lookup(var.vpc_config, "cidr", local.default_vpc_config.cidr)
@@ -11,11 +15,12 @@ locals {
 
 ## feature
 locals {
-  default_vpc = (var.vpc_config == null || var.vpc_config == {}) ? true : false
-  vpc         = local.default_vpc ? data.aws_vpc.default.0 : aws_vpc.vpc.0
-  isolated    = ("isolated" == local.subnet_type) ? true : false
-  public      = ("public" == local.subnet_type) ? true : false
-  standard    = ("standard" == local.subnet_type) ? true : false
+  default_vpc  = (var.vpc_config == null || var.vpc_config == {}) ? true : false
+  isolated     = ("isolated" == local.subnet_type) ? true : false
+  public       = ("public" == local.subnet_type) ? true : false
+  standard     = ("standard" == local.subnet_type) ? true : false
+  vpce_config  = (var.vpce_config == null) ? local.default_vpce_config : var.vpce_config
+  vpce_enabled = length(local.vpce_config) > 0 ? true : false
 }
 
 ## default vpc
@@ -50,29 +55,6 @@ resource "aws_vpc" "vpc" {
 
   lifecycle {
     create_before_destroy = true
-  }
-}
-
-# security/firewall
-resource "aws_security_group" "vpce" {
-  count       = !local.public ? 1 : 0
-  name        = format("%s-%s", local.name, "vpce")
-  description = format("security group for vpc endpoint of %s", local.name)
-  vpc_id      = local.vpc.id
-  tags        = merge(local.default-tags, var.tags)
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = [local.cidr]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
@@ -198,6 +180,63 @@ resource "aws_internet_gateway" "igw" {
   tags = merge(
     local.default-tags,
     { Name = join("-", [local.name, "igw"]) },
+    var.tags,
+  )
+}
+
+# vpc endpoint
+# security/firewall
+resource "aws_security_group" "vpce" {
+  count       = local.vpce_enabled ? 1 : 0
+  name        = format("%s-%s", local.name, "vpce")
+  description = format("security group for vpc endpoint of %s", local.name)
+  vpc_id      = local.vpc.id
+  tags        = merge(local.default-tags, var.tags)
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = [local.cidr]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# For AWS services the service name is usually in the form com.amazonaws.<region>.<service>
+# The SageMaker Notebook service is an exception to this rule, the service name is in the form
+# aws.sagemaker.<region>.notebook.
+data "aws_vpc_endpoint_service" "vpce" {
+  for_each     = { for ep in local.vpce_config : ep.service => ep if local.vpce_enabled }
+  service      = each.key == "notebook" ? null : each.key
+  service_name = each.key == "notebook" ? format("aws.sagemaker.%s.notebook", module.current.region.name) : null
+  service_type = lookup(each.value, "type", "Gateway")
+}
+
+# How to use matchkey function (https://www.terraform.io/docs/language/functions/matchkeys.html)
+# This matchkey function pick subnet IDs up where VPC endpoints are available
+resource "aws_vpc_endpoint" "vpce" {
+  for_each          = { for ep in local.vpce_config : ep.service => ep if local.vpce_enabled }
+  service_name      = data.aws_vpc_endpoint_service.vpce[each.key].service_name
+  vpc_endpoint_type = lookup(each.value, "type", "Gateway")
+  vpc_id            = local.vpc.id
+  subnet_ids = lookup(each.value, "type") == "Interface" ? matchkeys(
+    values(local.vpce_subnets),
+    keys(local.vpce_subnets),
+    data.aws_vpc_endpoint_service.vpce[each.key].availability_zones
+  ) : null
+  security_group_ids  = lookup(each.value, "type") == "Interface" ? [aws_security_group.vpce.0.id] : null
+  private_dns_enabled = lookup(each.value, "private_dns_enabled", false)
+  policy              = lookup(each.value, "policy", null)
+
+  tags = merge(
+    local.default-tags,
+    { Name = join("-", [local.name, "private", "vpce", each.key]) },
     var.tags,
   )
 }
