@@ -1,6 +1,6 @@
 ## virtual private cloud
 
-module "current" {
+module "aws" {
   source = "Young-ook/spinnaker/aws//modules/aws-partitions"
 }
 
@@ -216,7 +216,7 @@ resource "aws_security_group" "vpce" {
 data "aws_vpc_endpoint_service" "vpce" {
   for_each     = { for ep in local.vpce_config : ep.service => ep if local.vpce_enabled }
   service      = each.key == "notebook" ? null : each.key
-  service_name = each.key == "notebook" ? format("aws.sagemaker.%s.notebook", module.current.region.name) : null
+  service_name = each.key == "notebook" ? format("aws.sagemaker.%s.notebook", module.aws.region.name) : null
   service_type = lookup(each.value, "type", "Gateway")
 }
 
