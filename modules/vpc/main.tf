@@ -20,7 +20,7 @@ locals {
   isolated     = ("isolated" == local.subnet_type) ? true : false
   public       = ("public" == local.subnet_type) ? true : false
   private      = ("private" == local.subnet_type) ? true : false
-  vpce_config  = (var.vpce_config == null) ? local.default_vpce_config : var.vpce_config
+  vpce_config  = (var.vpce_config == null || var.vpce_config == []) ? local.default_vpce_config : var.vpce_config
   vpce_enabled = length(local.vpce_config) > 0 ? true : false
   vgw_enabled  = lookup(var.vgw_config, "enable_vgw", local.default_vgw_config.enable_vgw)
 }

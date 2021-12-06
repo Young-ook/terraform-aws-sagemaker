@@ -6,6 +6,7 @@
 ## Examples
 - [Amazon EFS](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/efs)
 - [Amazon S3](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/s3)
+- [Amazon VPC](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/vpc)
 - [Amazon SageMaker Studio](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/studio)
 - [Amazon SageMaker Notebook](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/notebook)
 - [Securing Amazon SageMaker Studio connectivity using a private VPC](https://aws.amazon.com/ko/blogs/machine-learning/securing-amazon-sagemaker-studio-connectivity-using-a-private-vpc/)
