@@ -15,4 +15,3 @@ vpc_config = {
   subnet_type = "public" # allowed values : "isolated" | "public" | "standard" 
   single_ngw  = true
 }
-vpce_config = []
