@@ -24,7 +24,7 @@ locals {
 }
 
 output "vpc" {
-  description = "Attributes of the VPC"
+  description = "Attributes of the Virtual Private Cloud (VPC)"
   value       = local.vpc
 }
 
@@ -41,4 +41,9 @@ output "route_tables" {
 output "vpce" {
   description = "Attributes of the VPC endpoints"
   value       = aws_vpc_endpoint.vpce
+}
+
+output "vgw" {
+  description = "Attributes of Virtual Private Gateway (VGW)"
+  value       = aws_vpn_gateway.vgw
 }

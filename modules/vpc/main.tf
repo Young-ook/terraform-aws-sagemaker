@@ -1,16 +1,17 @@
 ## virtual private cloud
 
-module "current" {
+module "aws" {
   source = "Young-ook/spinnaker/aws//modules/aws-partitions"
 }
 
 ## parameters
 locals {
-  cidr        = lookup(var.vpc_config, "cidr", local.default_vpc_config.cidr)
-  azs         = lookup(var.vpc_config, "azs", local.default_vpc_config.azs)
-  selected_az = local.azs.0
-  single_ngw  = lookup(var.vpc_config, "single_ngw", local.default_vpc_config.single_ngw)
-  subnet_type = lookup(var.vpc_config, "subnet_type", local.default_vpc_config.subnet_type)
+  cidr            = lookup(var.vpc_config, "cidr", local.default_vpc_config.cidr)
+  azs             = lookup(var.vpc_config, "azs", local.default_vpc_config.azs)
+  selected_az     = local.azs.0
+  single_ngw      = lookup(var.vpc_config, "single_ngw", local.default_vpc_config.single_ngw)
+  subnet_type     = lookup(var.vpc_config, "subnet_type", local.default_vpc_config.subnet_type)
+  amazon_side_asn = lookup(var.vgw_config, "amazon_side_asn", local.default_vgw_config.amazon_side_asn)
 }
 
 ## feature
@@ -18,9 +19,10 @@ locals {
   default_vpc  = (var.vpc_config == null || var.vpc_config == {}) ? true : false
   isolated     = ("isolated" == local.subnet_type) ? true : false
   public       = ("public" == local.subnet_type) ? true : false
-  standard     = ("standard" == local.subnet_type) ? true : false
+  private      = ("private" == local.subnet_type) ? true : false
   vpce_config  = (var.vpce_config == null) ? local.default_vpce_config : var.vpce_config
   vpce_enabled = length(local.vpce_config) > 0 ? true : false
+  vgw_enabled  = lookup(var.vgw_config, "enable_vgw", local.default_vgw_config.enable_vgw)
 }
 
 ## default vpc
@@ -95,7 +97,7 @@ resource "aws_route_table_association" "private" {
 }
 
 resource "aws_route" "ingw" {
-  for_each               = !local.default_vpc && local.standard ? (local.single_ngw ? toset([local.selected_az]) : toset(local.azs)) : toset([])
+  for_each               = !local.default_vpc && local.private ? (local.single_ngw ? toset([local.selected_az]) : toset(local.azs)) : toset([])
   route_table_id         = aws_route_table.private[each.key].id
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = aws_nat_gateway.ingw[each.value].id
@@ -107,13 +109,13 @@ resource "aws_route" "ingw" {
 
 # nat gateway
 resource "aws_eip" "ingw" {
-  for_each = !local.default_vpc && local.standard ? (local.single_ngw ? toset([local.selected_az]) : toset(local.azs)) : toset([])
+  for_each = !local.default_vpc && local.private ? (local.single_ngw ? toset([local.selected_az]) : toset(local.azs)) : toset([])
   tags     = merge(local.default-tags, var.tags, )
   vpc      = true
 }
 
 resource "aws_nat_gateway" "ingw" {
-  for_each      = !local.default_vpc && local.standard ? (local.single_ngw ? toset([local.selected_az]) : toset(local.azs)) : toset([])
+  for_each      = !local.default_vpc && local.private ? (local.single_ngw ? toset([local.selected_az]) : toset(local.azs)) : toset([])
   allocation_id = aws_eip.ingw[each.key].id
   subnet_id     = aws_subnet.public[each.key].id
 
@@ -126,7 +128,7 @@ resource "aws_nat_gateway" "ingw" {
 
 ### public subnet
 resource "aws_subnet" "public" {
-  for_each                = !local.default_vpc && (local.public || local.standard) ? toset(local.azs) : toset([])
+  for_each                = !local.default_vpc && (local.public || local.private) ? toset(local.azs) : toset([])
   vpc_id                  = local.vpc.id
   availability_zone       = each.value
   cidr_block              = cidrsubnet(local.cidr, 8, (index(local.azs, each.value) * 8) + 2)
@@ -145,7 +147,7 @@ resource "aws_subnet" "public" {
 }
 
 resource "aws_route_table" "public" {
-  for_each = !local.default_vpc && (local.public || local.standard) ? toset([local.selected_az]) : toset([])
+  for_each = !local.default_vpc && (local.public || local.private) ? toset([local.selected_az]) : toset([])
   vpc_id   = local.vpc.id
 
   tags = merge(
@@ -156,13 +158,13 @@ resource "aws_route_table" "public" {
 }
 
 resource "aws_route_table_association" "public" {
-  for_each       = !local.default_vpc && (local.public || local.standard) ? toset(local.azs) : toset([])
+  for_each       = !local.default_vpc && (local.public || local.private) ? toset(local.azs) : toset([])
   subnet_id      = aws_subnet.public[each.key].id
   route_table_id = aws_route_table.public[local.selected_az].id
 }
 
 resource "aws_route" "igw" {
-  for_each               = !local.default_vpc && (local.public || local.standard) ? toset([local.selected_az]) : toset([])
+  for_each               = !local.default_vpc && (local.public || local.private) ? toset([local.selected_az]) : toset([])
   route_table_id         = aws_route_table.public[local.selected_az].id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.igw[local.selected_az].id
@@ -174,7 +176,7 @@ resource "aws_route" "igw" {
 
 # internet gateway
 resource "aws_internet_gateway" "igw" {
-  for_each = !local.default_vpc && (local.public || local.standard) ? toset([local.selected_az]) : toset([])
+  for_each = !local.default_vpc && (local.public || local.private) ? toset([local.selected_az]) : toset([])
   vpc_id   = local.vpc.id
 
   tags = merge(
@@ -214,7 +216,7 @@ resource "aws_security_group" "vpce" {
 data "aws_vpc_endpoint_service" "vpce" {
   for_each     = { for ep in local.vpce_config : ep.service => ep if local.vpce_enabled }
   service      = each.key == "notebook" ? null : each.key
-  service_name = each.key == "notebook" ? format("aws.sagemaker.%s.notebook", module.current.region.name) : null
+  service_name = each.key == "notebook" ? format("aws.sagemaker.%s.notebook", module.aws.region.name) : null
   service_type = lookup(each.value, "type", "Gateway")
 }
 
@@ -239,4 +241,30 @@ resource "aws_vpc_endpoint" "vpce" {
     { Name = join("-", [local.name, "private", "vpce", each.key]) },
     var.tags,
   )
+}
+
+# vpn gateway
+resource "aws_vpn_gateway" "vgw" {
+  for_each          = local.vgw_enabled ? toset([local.selected_az]) : toset([])
+  vpc_id            = local.vpc.id
+  amazon_side_asn   = local.amazon_side_asn
+  availability_zone = local.selected_az
+
+  tags = merge(
+    local.default-tags,
+    { Name = join("-", [local.name, "vgw"]) },
+    var.tags,
+  )
+}
+
+resource "aws_vpn_gateway_route_propagation" "public" {
+  for_each       = (local.default_vpc || local.public || local.private) && local.vgw_enabled ? toset(local.azs) : toset([])
+  vpn_gateway_id = aws_vpn_gateway.vgw[local.selected_az].id
+  route_table_id = local.default_vpc ? local.route_tables.public.main : local.route_tables.public[local.selected_az]
+}
+
+resource "aws_vpn_gateway_route_propagation" "private" {
+  for_each       = !local.default_vpc && !local.public && local.vgw_enabled ? toset(local.azs) : toset([])
+  vpn_gateway_id = aws_vpn_gateway.vgw[local.selected_az].id
+  route_table_id = local.single_ngw ? local.route_tables.private[local.selected_az] : local.route_tables.private[each.key]
 }
