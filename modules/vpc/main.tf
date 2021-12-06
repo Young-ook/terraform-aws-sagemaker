@@ -19,7 +19,7 @@ locals {
   default_vpc  = (var.vpc_config == null || var.vpc_config == {}) ? true : false
   isolated     = ("isolated" == local.subnet_type) ? true : false
   public       = ("public" == local.subnet_type) ? true : false
-  standard     = ("standard" == local.subnet_type) ? true : false
+  private      = ("private" == local.subnet_type) ? true : false
   vpce_config  = (var.vpce_config == null) ? local.default_vpce_config : var.vpce_config
   vpce_enabled = length(local.vpce_config) > 0 ? true : false
   vgw_enabled  = lookup(var.vgw_config, "enable_vgw", local.default_vgw_config.enable_vgw)
@@ -97,7 +97,7 @@ resource "aws_route_table_association" "private" {
 }
 
 resource "aws_route" "ingw" {
-  for_each               = !local.default_vpc && local.standard ? (local.single_ngw ? toset([local.selected_az]) : toset(local.azs)) : toset([])
+  for_each               = !local.default_vpc && local.private ? (local.single_ngw ? toset([local.selected_az]) : toset(local.azs)) : toset([])
   route_table_id         = aws_route_table.private[each.key].id
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = aws_nat_gateway.ingw[each.value].id
@@ -109,13 +109,13 @@ resource "aws_route" "ingw" {
 
 # nat gateway
 resource "aws_eip" "ingw" {
-  for_each = !local.default_vpc && local.standard ? (local.single_ngw ? toset([local.selected_az]) : toset(local.azs)) : toset([])
+  for_each = !local.default_vpc && local.private ? (local.single_ngw ? toset([local.selected_az]) : toset(local.azs)) : toset([])
   tags     = merge(local.default-tags, var.tags, )
   vpc      = true
 }
 
 resource "aws_nat_gateway" "ingw" {
-  for_each      = !local.default_vpc && local.standard ? (local.single_ngw ? toset([local.selected_az]) : toset(local.azs)) : toset([])
+  for_each      = !local.default_vpc && local.private ? (local.single_ngw ? toset([local.selected_az]) : toset(local.azs)) : toset([])
   allocation_id = aws_eip.ingw[each.key].id
   subnet_id     = aws_subnet.public[each.key].id
 
@@ -128,7 +128,7 @@ resource "aws_nat_gateway" "ingw" {
 
 ### public subnet
 resource "aws_subnet" "public" {
-  for_each                = !local.default_vpc && (local.public || local.standard) ? toset(local.azs) : toset([])
+  for_each                = !local.default_vpc && (local.public || local.private) ? toset(local.azs) : toset([])
   vpc_id                  = local.vpc.id
   availability_zone       = each.value
   cidr_block              = cidrsubnet(local.cidr, 8, (index(local.azs, each.value) * 8) + 2)
@@ -147,7 +147,7 @@ resource "aws_subnet" "public" {
 }
 
 resource "aws_route_table" "public" {
-  for_each = !local.default_vpc && (local.public || local.standard) ? toset([local.selected_az]) : toset([])
+  for_each = !local.default_vpc && (local.public || local.private) ? toset([local.selected_az]) : toset([])
   vpc_id   = local.vpc.id
 
   tags = merge(
@@ -158,13 +158,13 @@ resource "aws_route_table" "public" {
 }
 
 resource "aws_route_table_association" "public" {
-  for_each       = !local.default_vpc && (local.public || local.standard) ? toset(local.azs) : toset([])
+  for_each       = !local.default_vpc && (local.public || local.private) ? toset(local.azs) : toset([])
   subnet_id      = aws_subnet.public[each.key].id
   route_table_id = aws_route_table.public[local.selected_az].id
 }
 
 resource "aws_route" "igw" {
-  for_each               = !local.default_vpc && (local.public || local.standard) ? toset([local.selected_az]) : toset([])
+  for_each               = !local.default_vpc && (local.public || local.private) ? toset([local.selected_az]) : toset([])
   route_table_id         = aws_route_table.public[local.selected_az].id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.igw[local.selected_az].id
@@ -176,7 +176,7 @@ resource "aws_route" "igw" {
 
 # internet gateway
 resource "aws_internet_gateway" "igw" {
-  for_each = !local.default_vpc && (local.public || local.standard) ? toset([local.selected_az]) : toset([])
+  for_each = !local.default_vpc && (local.public || local.private) ? toset([local.selected_az]) : toset([])
   vpc_id   = local.vpc.id
 
   tags = merge(
@@ -258,7 +258,7 @@ resource "aws_vpn_gateway" "vgw" {
 }
 
 resource "aws_vpn_gateway_route_propagation" "public" {
-  for_each       = (local.default_vpc || local.public || local.standard) && local.vgw_enabled ? toset(local.azs) : toset([])
+  for_each       = (local.default_vpc || local.public || local.private) && local.vgw_enabled ? toset(local.azs) : toset([])
   vpn_gateway_id = aws_vpn_gateway.vgw[local.selected_az].id
   route_table_id = local.default_vpc ? local.route_tables.public.main : local.route_tables.public[local.selected_az]
 }
