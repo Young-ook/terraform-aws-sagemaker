@@ -58,7 +58,7 @@ variable "notebook_instances" {
 variable "name" {
   description = "The logical name of the module instance"
   type        = string
-  default     = "eks"
+  default     = null
 }
 
 ### tags
