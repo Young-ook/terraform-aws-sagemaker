@@ -6,11 +6,12 @@ module "current" {
 
 ## parameters
 locals {
-  cidr        = lookup(var.vpc_config, "cidr", local.default_vpc_config.cidr)
-  azs         = lookup(var.vpc_config, "azs", local.default_vpc_config.azs)
-  selected_az = local.azs.0
-  single_ngw  = lookup(var.vpc_config, "single_ngw", local.default_vpc_config.single_ngw)
-  subnet_type = lookup(var.vpc_config, "subnet_type", local.default_vpc_config.subnet_type)
+  cidr            = lookup(var.vpc_config, "cidr", local.default_vpc_config.cidr)
+  azs             = lookup(var.vpc_config, "azs", local.default_vpc_config.azs)
+  selected_az     = local.azs.0
+  single_ngw      = lookup(var.vpc_config, "single_ngw", local.default_vpc_config.single_ngw)
+  subnet_type     = lookup(var.vpc_config, "subnet_type", local.default_vpc_config.subnet_type)
+  amazon_side_asn = lookup(var.vgw_config, "amazon_side_asn", local.default_vgw_config.amazon_side_asn)
 }
 
 ## feature
@@ -21,6 +22,7 @@ locals {
   standard     = ("standard" == local.subnet_type) ? true : false
   vpce_config  = (var.vpce_config == null) ? local.default_vpce_config : var.vpce_config
   vpce_enabled = length(local.vpce_config) > 0 ? true : false
+  vgw_enabled  = lookup(var.vgw_config, "enable_vgw", local.default_vgw_config.enable_vgw)
 }
 
 ## default vpc
@@ -239,4 +241,30 @@ resource "aws_vpc_endpoint" "vpce" {
     { Name = join("-", [local.name, "private", "vpce", each.key]) },
     var.tags,
   )
+}
+
+# vpn gateway
+resource "aws_vpn_gateway" "vgw" {
+  for_each          = local.vgw_enabled ? toset([local.selected_az]) : toset([])
+  vpc_id            = local.vpc.id
+  amazon_side_asn   = local.amazon_side_asn
+  availability_zone = local.selected_az
+
+  tags = merge(
+    local.default-tags,
+    { Name = join("-", [local.name, "vgw"]) },
+    var.tags,
+  )
+}
+
+resource "aws_vpn_gateway_route_propagation" "public" {
+  for_each       = (local.default_vpc || local.public || local.standard) && local.vgw_enabled ? toset(local.azs) : toset([])
+  vpn_gateway_id = aws_vpn_gateway.vgw[local.selected_az].id
+  route_table_id = local.default_vpc ? local.route_tables.public.main : local.route_tables.public[local.selected_az]
+}
+
+resource "aws_vpn_gateway_route_propagation" "private" {
+  for_each       = !local.default_vpc && !local.public && local.vgw_enabled ? toset(local.azs) : toset([])
+  vpn_gateway_id = aws_vpn_gateway.vgw[local.selected_az].id
+  route_table_id = local.single_ngw ? local.route_tables.private[local.selected_az] : local.route_tables.private[each.key]
 }
