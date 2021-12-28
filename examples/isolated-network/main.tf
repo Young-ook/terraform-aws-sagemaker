@@ -11,12 +11,15 @@ provider "aws" {
 
 # isolated vpc
 module "vpc" {
-  source = "Young-ook/spinnaker/aws//modules/spinnaker-aware-aws-vpc"
+  source = "Young-ook/sagemaker/aws//modules/vpc"
   name   = join("-", [var.name, "aws"])
   tags   = var.tags
-  azs    = var.azs
-  cidr   = "10.10.0.0/16"
-  vpc_endpoint_config = [
+  vpc_config = {
+    azs         = var.azs
+    cidr        = "10.10.0.0/16"
+    subnet_type = "isolated"
+  }
+  vpce_config = [
     {
       service             = "notebook"
       type                = "Interface"
@@ -38,8 +41,6 @@ module "vpc" {
       private_dns_enabled = true
     },
   ]
-  enable_igw = false
-  enable_ngw = false
 }
 
 # peering
@@ -72,14 +73,15 @@ resource "aws_route" "peer-to-aws" {
 
 # control plane network
 module "corp" {
-  source              = "Young-ook/spinnaker/aws//modules/spinnaker-aware-aws-vpc"
-  name                = join("-", [var.name, "corp"])
-  tags                = var.tags
-  azs                 = var.azs
-  cidr                = "10.20.0.0/16"
-  vpc_endpoint_config = []
-  enable_igw          = true
-  enable_ngw          = false
+  source = "Young-ook/sagemaker/aws//modules/vpc"
+  name   = join("-", [var.name, "corp"])
+  tags   = var.tags
+  vpc_config = {
+    azs         = var.azs
+    cidr        = "10.20.0.0/16"
+    subnet_type = "private"
+    single_ngw  = true
+  }
 }
 
 # sagemaker
@@ -104,7 +106,7 @@ module "client" {
 
 resource "aws_iam_policy" "client" {
   name = join("-", [var.name, "create-presigned-url"])
-  #tag = var.tags
+  tags = var.tags
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
