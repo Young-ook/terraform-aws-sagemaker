@@ -6,6 +6,11 @@ variable "tgw_config" {
   default     = {}
 }
 
+variable "vpc_attachments" {
+  description = "Map of VPC details to attach to Transit Gateway (TGW)"
+  default     = {}
+}
+
 ### description
 variable "name" {
   description = "The logical name of the module instance"
