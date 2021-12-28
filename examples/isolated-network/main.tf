@@ -101,7 +101,7 @@ module "client" {
   tags        = var.tags
   subnets     = values(module.corp.subnets["public"])
   policy_arns = [aws_iam_policy.client.arn]
-  node_groups = var.ec2_instances
+  node_groups = var.client_instances
 }
 
 resource "aws_iam_policy" "client" {
@@ -119,4 +119,40 @@ resource "aws_iam_policy" "client" {
       },
     ]
   })
+}
+
+
+# tgw
+module "tgw" {
+  source     = "../../modules/transit-gateway"
+  tags       = var.tags
+  tgw_config = {}
+  vpc_attachments = {
+    vpc = {
+      vpc     = module.vpc.vpc.id
+      subnets = values(module.vpc.subnets["private"])
+      routes = [
+        {
+          destination_cidr_block = "10.50.0.0/16"
+        },
+        {
+          blackhole              = true
+          destination_cidr_block = "0.0.0.0/0"
+        }
+      ]
+    }
+    corp = {
+      vpc     = module.corp.vpc.id
+      subnets = values(module.corp.subnets["public"])
+      routes = [
+        {
+          destination_cidr_block = "10.40.0.0/16"
+        },
+        {
+          blackhole              = true
+          destination_cidr_block = "10.10.10.10/32"
+        }
+      ]
+    }
+  }
 }

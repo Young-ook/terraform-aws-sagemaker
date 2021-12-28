@@ -18,12 +18,12 @@ First we have to create two VPCs. One is an isolated vpc to place the sagemaker 
 Run terraform:
 ```
 terraform init
-terraform apply -target module.isolated-vpc -target module.control-plane-vpc
+terraform apply -target module.vpc -target module.corp
 ```
 Also you can use the `-var-file` option for customized paramters when you run the terraform plan/apply command.
 ```
-terraform plan -var-file tc1.tfvars -target module.isolated-vpc -target module.control-plane-vpc
-terraform apply -var-file tc1.tfvars -target module.isolated-vpc -target module.control-plane-vpc
+terraform plan -var-file tc1.tfvars -target module.vpc -target module.corp
+terraform apply -var-file tc1.tfvars -target module.vpc -target module.corp
 ```
 
 Run terraform to create other resources:
