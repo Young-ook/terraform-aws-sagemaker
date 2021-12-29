@@ -9,7 +9,7 @@ provider "aws" {
 }
 
 
-module "current" {
+module "aws" {
   source = "Young-ook/spinnaker/aws//modules/aws-partitions"
 }
 
@@ -25,15 +25,17 @@ locals {
 
 # vpc
 module "vpc" {
-  count               = var.use_default_vpc ? 0 : 1
-  source              = "Young-ook/spinnaker/aws//modules/spinnaker-aware-aws-vpc"
-  name                = join("-", [var.name, "aws"])
-  tags                = var.tags
-  azs                 = var.azs
-  cidr                = "10.10.0.0/16"
-  vpc_endpoint_config = var.use_default_vpc ? [] : local.s3_vpce_config
-  enable_igw          = false
-  enable_ngw          = false
+  source  = "Young-ook/sagemaker/aws//modules/vpc"
+  version = "> 0.0.6"
+  name    = join("-", [var.name, "aws"])
+  tags    = var.tags
+  vpc_config = var.use_default_vpc ? null : {
+    cidr        = "10.10.0.0/16"
+    azs         = var.azs
+    subnet_type = "isolated"
+    single_ngw  = true
+  }
+  vpce_config = var.use_default_vpc ? [] : local.s3_vpce_config
 }
 
 # s3
@@ -61,12 +63,12 @@ resource "aws_s3_bucket_policy" "access_from_vpc_only" {
         ]
         Effect = "Deny"
         Principal = {
-          AWS = flatten([module.current.caller.account_id, ])
+          AWS = flatten([module.aws.caller.account_id, ])
         }
         Resource = [module.s3.bucket.arn, join("/", [module.s3.bucket.arn, "*"]), ]
         Condition = {
           StringNotEquals = {
-            "aws:sourceVpce" = module.vpc.0.vpce.s3.id
+            "aws:sourceVpce" = module.vpc.vpce.s3.id
           }
         }
       },
@@ -75,7 +77,7 @@ resource "aws_s3_bucket_policy" "access_from_vpc_only" {
         Action = "s3:ListBucket"
         Effect = "Allow"
         Principal = {
-          AWS = flatten([module.current.caller.account_id, ])
+          AWS = flatten([module.aws.caller.account_id, ])
         }
         Resource = [module.s3.bucket.arn, ]
       }
@@ -89,7 +91,7 @@ module "sagemaker" {
   source             = "../../"
   name               = var.name
   tags               = var.tags
-  vpc                = var.use_default_vpc ? null : module.vpc.0.vpc.id
-  subnets            = var.use_default_vpc ? null : values(module.vpc.0.subnets["private"])
+  vpc                = module.vpc.vpc.id
+  subnets            = var.use_default_vpc ? values(module.vpc.subnets["public"]) : values(module.vpc.subnets["private"])
   notebook_instances = var.notebook_instances
 }

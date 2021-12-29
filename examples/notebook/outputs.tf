@@ -12,3 +12,13 @@ output "users" {
   description = "The attributes of users of sagemaker studio"
   value       = module.sagemaker.users
 }
+
+output "vpc" {
+  description = "The attributes of vpc for sagemaker"
+  value       = module.vpc.vpc
+}
+
+output "subnets" {
+  description = "The attributes of subnets where to deploy"
+  value       = module.vpc.subnets
+}

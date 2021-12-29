@@ -2,13 +2,11 @@
 variable "vpc" {
   description = "The vpc ID for sagemaker"
   type        = string
-  default     = null
 }
 
 variable "subnets" {
   description = "The subnet IDs to deploy sagemaker"
   type        = list(string)
-  default     = null
 }
 
 ### sagemaker studio
