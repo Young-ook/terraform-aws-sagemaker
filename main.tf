@@ -27,8 +27,8 @@ resource "aws_sagemaker_domain" "studio" {
   domain_name             = format("%s", local.name)
   auth_mode               = lookup(var.sagemaker_studio, "auth_mode", local.default_studio_config["auth_mode"])
   app_network_access_type = lookup(var.sagemaker_studio, "app_network_access_type", local.default_studio_config["app_network_access_type"])
-  vpc_id                  = local.vpc_id
-  subnet_ids              = local.subnet_ids
+  vpc_id                  = var.vpc
+  subnet_ids              = var.subnets
 
   default_user_settings {
     execution_role  = aws_iam_role.ni.arn
@@ -53,7 +53,7 @@ resource "aws_sagemaker_user_profile" "user" {
 # drawing lots for choosing a subnet
 resource "random_integer" "subnet" {
   min = 0
-  max = length(local.subnet_ids) - 1
+  max = length(var.subnets) - 1
 }
 
 resource "aws_sagemaker_notebook_instance" "ni" {
@@ -62,7 +62,7 @@ resource "aws_sagemaker_notebook_instance" "ni" {
   role_arn               = aws_iam_role.ni.arn
   tags                   = merge(local.default-tags, var.tags)
   direct_internet_access = lookup(each.value, "direct_internet_access", local.default_notebook_config["direct_internet_access"])
-  subnet_id              = local.subnet_ids[random_integer.subnet.result]
+  subnet_id              = var.subnets[random_integer.subnet.result]
   security_groups        = [aws_security_group.sagemaker.id]
   instance_type          = lookup(each.value, "instance_type", local.default_notebook_config["instance_type"])
   volume_size            = lookup(each.value, "volume_size", local.default_notebook_config["volume_size"])
