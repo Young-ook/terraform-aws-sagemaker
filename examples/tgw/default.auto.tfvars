@@ -14,7 +14,7 @@ notebook_instances = [
     direct_internet_access = "Disabled"
   }
 ]
-node_groups = [
+client_instances = [
   {
     name          = "win"
     max_size      = 1

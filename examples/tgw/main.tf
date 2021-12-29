@@ -1,7 +1,6 @@
 # SageMaker isolated-network
 
 terraform {
-  #required_version = "0.13.5"
   required_version = "~> 1.0"
 }
 
@@ -11,12 +10,15 @@ provider "aws" {
 
 # isolated vpc
 module "vpc" {
-  source = "Young-ook/spinnaker/aws//modules/spinnaker-aware-aws-vpc"
+  source = "Young-ook/sagemaker/aws//modules/vpc"
   name   = join("-", [var.name, "aws"])
   tags   = var.tags
-  azs    = var.azs
-  cidr   = "10.10.0.0/16"
-  vpc_endpoint_config = [
+  vpc_config = {
+    azs         = var.azs
+    cidr        = "10.10.0.0/16"
+    subnet_type = "isolated"
+  }
+  vpce_config = [
     {
       service             = "notebook"
       type                = "Interface"
@@ -38,8 +40,6 @@ module "vpc" {
       private_dns_enabled = true
     },
   ]
-  enable_igw = false
-  enable_ngw = false
 }
 
 # peering
@@ -47,13 +47,6 @@ resource "aws_vpc_peering_connection" "peering" {
   peer_vpc_id = module.vpc.vpc.id
   vpc_id      = module.corp.vpc.id
   auto_accept = true
-}
-
-output "route_tables" {
-  value = {
-    vpc_rt  = values(module.vpc.route_tables.private)
-    corp_rt = values(module.corp.route_tables.private)
-  }
 }
 
 resource "aws_route" "peer-to-corp" {
@@ -72,14 +65,15 @@ resource "aws_route" "peer-to-aws" {
 
 # control plane network
 module "corp" {
-  source              = "Young-ook/spinnaker/aws//modules/spinnaker-aware-aws-vpc"
-  name                = join("-", [var.name, "corp"])
-  tags                = var.tags
-  azs                 = var.azs
-  cidr                = "10.20.0.0/16"
-  vpc_endpoint_config = []
-  enable_igw          = true
-  enable_ngw          = false
+  source = "Young-ook/sagemaker/aws//modules/vpc"
+  name   = join("-", [var.name, "corp"])
+  tags   = var.tags
+  vpc_config = {
+    azs         = var.azs
+    cidr        = "10.20.0.0/16"
+    subnet_type = "private"
+    single_ngw  = true
+  }
 }
 
 # sagemaker
@@ -99,12 +93,12 @@ module "client" {
   tags        = var.tags
   subnets     = values(module.corp.subnets["public"])
   policy_arns = [aws_iam_policy.client.arn]
-  node_groups = var.ec2_instances
+  node_groups = var.client_instances
 }
 
 resource "aws_iam_policy" "client" {
   name = join("-", [var.name, "create-presigned-url"])
-  #tag = var.tags
+  tags = var.tags
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -117,4 +111,39 @@ resource "aws_iam_policy" "client" {
       },
     ]
   })
+}
+
+# transit gateway
+module "tgw" {
+  source     = "../../modules/tgw"
+  tags       = var.tags
+  tgw_config = {}
+  vpc_attachments = {
+    vpc = {
+      vpc     = module.vpc.vpc.id
+      subnets = values(module.vpc.subnets["private"])
+      routes = [
+        {
+          destination_cidr_block = "10.50.0.0/16"
+        },
+        {
+          blackhole              = true
+          destination_cidr_block = "0.0.0.0/0"
+        }
+      ]
+    }
+    corp = {
+      vpc     = module.corp.vpc.id
+      subnets = values(module.corp.subnets["public"])
+      routes = [
+        {
+          destination_cidr_block = "10.40.0.0/16"
+        },
+        {
+          blackhole              = true
+          destination_cidr_block = "10.10.10.10/32"
+        }
+      ]
+    }
+  }
 }
