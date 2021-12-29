@@ -14,10 +14,6 @@ locals {
   dns_support                      = lookup(var.tgw_config, "enable_dns_support", local.default_tgw_config.dns_support)
 }
 
-## feature
-locals {
-}
-
 ## transit gateway
 resource "aws_ec2_transit_gateway" "tgw" {
   description                     = local.name
@@ -84,7 +80,6 @@ resource "aws_ec2_transit_gateway_route_table_association" "vpcs" {
   transit_gateway_attachment_id = aws_ec2_transit_gateway_vpc_attachment.vpcs[each.key].id
   transit_gateway_route_table_id = coalesce(
     lookup(each.value, "transit_gateway_route_table_id", null),
-    #	var.transit_gateway_route_table_id,
     aws_ec2_transit_gateway_route_table.domain.id
   )
 }
@@ -94,7 +89,6 @@ resource "aws_ec2_transit_gateway_route_table_propagation" "vpcs" {
   transit_gateway_attachment_id = aws_ec2_transit_gateway_vpc_attachment.vpcs[each.key].id
   transit_gateway_route_table_id = coalesce(
     lookup(each.value, "transit_gateway_route_table_id", null),
-    #	var.transit_gateway_route_table_id,
     aws_ec2_transit_gateway_route_table.domain.id
   )
 }

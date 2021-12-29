@@ -1,7 +1,6 @@
 # SageMaker isolated-network
 
 terraform {
-  #required_version = "0.13.5"
   required_version = "~> 1.0"
 }
 
@@ -48,13 +47,6 @@ resource "aws_vpc_peering_connection" "peering" {
   peer_vpc_id = module.vpc.vpc.id
   vpc_id      = module.corp.vpc.id
   auto_accept = true
-}
-
-output "route_tables" {
-  value = {
-    vpc_rt  = values(module.vpc.route_tables.private)
-    corp_rt = values(module.corp.route_tables.private)
-  }
 }
 
 resource "aws_route" "peer-to-corp" {
@@ -120,7 +112,6 @@ resource "aws_iam_policy" "client" {
     ]
   })
 }
-
 
 # transit gateway
 module "tgw" {
