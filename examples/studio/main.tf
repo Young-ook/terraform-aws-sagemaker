@@ -59,11 +59,17 @@ module "vpc" {
   sagemaker_runtime_endpoint_security_group_ids = [aws_security_group.vpce.id]
 }
 
+module "default-vpc" {
+  source = "Young-ook/sagemaker/aws//modules/vpc"
+  name   = var.name
+  tags   = var.tags
+}
+
 # security/firewall
 resource "aws_security_group" "vpce" {
   name        = format("%s-%s", var.name, "vpce")
   description = format("security group for vpc endpoint for %s", var.name)
-  vpc_id      = module.vpc.vpc_id
+  vpc_id      = var.use_default_vpc ? module.default-vpc.vpc.id : module.vpc.vpc_id
   tags        = var.tags
 
   ingress {
@@ -93,8 +99,8 @@ module "sagemaker" {
   source             = "../../"
   name               = var.name
   tags               = var.tags
-  vpc                = var.use_default_vpc ? null : module.vpc.vpc_id
-  subnets            = var.use_default_vpc ? null : module.vpc.private_subnets
+  vpc                = var.use_default_vpc ? module.default-vpc.vpc.id : module.vpc.vpc_id
+  subnets            = var.use_default_vpc ? values(module.default-vpc.subnets.public) : module.vpc.private_subnets
   sagemaker_studio   = var.sagemaker_studio
   notebook_instances = var.notebook_instances
 }
