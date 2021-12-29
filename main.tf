@@ -62,7 +62,7 @@ resource "aws_sagemaker_notebook_instance" "ni" {
   role_arn                = aws_iam_role.ni.arn
   tags                    = merge(local.default-tags, var.tags)
   direct_internet_access  = lookup(each.value, "direct_internet_access", local.default_notebook_config["direct_internet_access"])
-  subnet_id               = local.subnet_ids[random_integer.subnet.result]
+  subnet_id               = var.subnets[random_integer.subnet.result]
   security_groups         = [aws_security_group.sagemaker.id]
   instance_type           = lookup(each.value, "instance_type", local.default_notebook_config["instance_type"])
   volume_size             = lookup(each.value, "volume_size", local.default_notebook_config["volume_size"])
