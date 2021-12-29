@@ -10,7 +10,7 @@ resource "aws_iam_role" "ni" {
       Action = "sts:AssumeRole"
       Effect = "Allow"
       Principal = {
-        Service = format("sagemaker.%s", module.current.partition.dns_suffix)
+        Service = format("sagemaker.%s", module.aws.partition.dns_suffix)
       }
     }]
     Version = "2012-10-17"
@@ -18,7 +18,7 @@ resource "aws_iam_role" "ni" {
 }
 
 resource "aws_iam_role_policy_attachment" "sagemaker-admin" {
-  policy_arn = format("arn:%s:iam::aws:policy/AmazonSageMakerFullAccess", module.current.partition.partition)
+  policy_arn = format("arn:%s:iam::aws:policy/AmazonSageMakerFullAccess", module.aws.partition.partition)
   role       = aws_iam_role.ni.id
 }
 
@@ -57,15 +57,16 @@ resource "random_integer" "subnet" {
 }
 
 resource "aws_sagemaker_notebook_instance" "ni" {
-  for_each               = { for ni in var.notebook_instances : ni.name => ni }
-  name                   = format("%s-%s", local.name, each.key)
-  role_arn               = aws_iam_role.ni.arn
-  tags                   = merge(local.default-tags, var.tags)
-  direct_internet_access = lookup(each.value, "direct_internet_access", local.default_notebook_config["direct_internet_access"])
-  subnet_id              = var.subnets[random_integer.subnet.result]
-  security_groups        = [aws_security_group.sagemaker.id]
-  instance_type          = lookup(each.value, "instance_type", local.default_notebook_config["instance_type"])
-  volume_size            = lookup(each.value, "volume_size", local.default_notebook_config["volume_size"])
+  for_each                = { for ni in var.notebook_instances : ni.name => ni }
+  name                    = format("%s-%s", local.name, each.key)
+  role_arn                = aws_iam_role.ni.arn
+  tags                    = merge(local.default-tags, var.tags)
+  direct_internet_access  = lookup(each.value, "direct_internet_access", local.default_notebook_config["direct_internet_access"])
+  subnet_id               = local.subnet_ids[random_integer.subnet.result]
+  security_groups         = [aws_security_group.sagemaker.id]
+  instance_type           = lookup(each.value, "instance_type", local.default_notebook_config["instance_type"])
+  volume_size             = lookup(each.value, "volume_size", local.default_notebook_config["volume_size"])
+  default_code_repository = lookup(each.value, "default_code_repository", null)
 
   depends_on = [
     aws_iam_role_policy_attachment.sagemaker-admin,
