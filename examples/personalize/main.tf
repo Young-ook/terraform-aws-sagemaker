@@ -8,11 +8,20 @@ provider "aws" {
   region = var.aws_region
 }
 
-# sagemaker
-module "sagemaker" {
-  source = "../../"
+# vpc
+module "vpc" {
+  source = "Young-ook/sagemaker/aws//modules/vpc"
   name   = var.name
   tags   = var.tags
+}
+
+# sagemaker
+module "sagemaker" {
+  source  = "../../"
+  name    = var.name
+  tags    = var.tags
+  vpc     = module.vpc.vpc.id
+  subnets = values(module.vpc.subnets.public)
   notebook_instances = [
     {
       name                    = "default"
