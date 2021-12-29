@@ -6,12 +6,12 @@ module "aws" {
 
 ## parameters
 locals {
-  cidr            = lookup(var.vpc_config, "cidr", local.default_vpc_config.cidr)
-  azs             = lookup(var.vpc_config, "azs", local.default_vpc_config.azs)
-  selected_az     = local.azs.0
-  single_ngw      = lookup(var.vpc_config, "single_ngw", local.default_vpc_config.single_ngw)
-  subnet_type     = lookup(var.vpc_config, "subnet_type", local.default_vpc_config.subnet_type)
-  amazon_side_asn = lookup(var.vgw_config, "amazon_side_asn", local.default_vgw_config.amazon_side_asn)
+  cidr            = !local.default_vpc ? lookup(var.vpc_config, "cidr", local.default_vpc_config.cidr) : null
+  azs             = !local.default_vpc ? lookup(var.vpc_config, "azs", local.default_vpc_config.azs) : null
+  selected_az     = !local.default_vpc ? local.azs.0 : null
+  single_ngw      = !local.default_vpc ? lookup(var.vpc_config, "single_ngw", local.default_vpc_config.single_ngw) : null
+  subnet_type     = !local.default_vpc ? lookup(var.vpc_config, "subnet_type", local.default_vpc_config.subnet_type) : null
+  amazon_side_asn = !local.default_vpc ? lookup(var.vgw_config, "amazon_side_asn", local.default_vgw_config.amazon_side_asn) : null
 }
 
 ## feature
