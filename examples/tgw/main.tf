@@ -122,9 +122,9 @@ resource "aws_iam_policy" "client" {
 }
 
 
-# tgw
+# transit gateway
 module "tgw" {
-  source     = "../../modules/transit-gateway"
+  source     = "../../modules/tgw"
   tags       = var.tags
   tgw_config = {}
   vpc_attachments = {
