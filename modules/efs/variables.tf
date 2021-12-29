@@ -2,13 +2,11 @@
 variable "vpc" {
   description = "The vpc ID for efs"
   type        = string
-  default     = null
 }
 
 variable "subnets" {
   description = "The subnet IDs for efs"
   type        = list(string)
-  default     = []
 }
 
 ### description
