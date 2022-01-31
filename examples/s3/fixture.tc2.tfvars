@@ -22,11 +22,18 @@ lifecycle_rules = [
     },
     "noncurrent_version_transition" : [],
     "tags" : {},
-    "transition" : [
+    transition = [
+      {
+        "days" : "0",
+        # valid values for 'storage_class':
+        #   STANDARD_IA, ONEZONE_IA, INTELLIGENT_TIERING,
+        #   GLACIER, DEEP_ARCHIVE, GLACIER_IR
+        "storage_class" : "INTELLIGENT_TIERING"
+      },
       {
         "days" : "180",
-        "storage_class" : "STANDARD_IA"
-      }
+        "storage_class" : "GLACIER_IR"
+      },
     ]
   }
 ]
