@@ -85,5 +85,77 @@ resource "aws_sagemaker_notebook_instance" "ni" {
   volume_size             = lookup(each.value, "volume_size", local.default_notebook_config["volume_size"])
   default_code_repository = lookup(each.value, "default_code_repository", null)
   lifecycle_config_name   = lookup(each.value, "lifecycle_config", null) != null ? aws_sagemaker_notebook_instance_lifecycle_configuration.lc[each.key].name : null
+}
 
+# WIP: lifecycle config
+resource "aws_sagemaker_notebook_instance_lifecycle_configuration" "lc" {
+  for_each  = {} # { for ni in var.notebook_instances : ni.name => ni }
+  name      = join("-", [local.name, each.key])
+  on_create = base64encode("echo foo")
+  on_start  = base64encode("echo bar")
+}
+
+# WIP: sagemaker endpoint
+resource "aws_sagemaker_model" "model" {
+  for_each                 = { for m in var.models : m.name => m }
+  name                     = lower(each.key)
+  tags                     = merge(local.default-tags, var.tags)
+  execution_role_arn       = aws_iam_role.ni.arn # todo: replace with new role
+  enable_network_isolation = lookup(each.value, "enable_network_isolation", false)
+
+  dynamic "primary_container" {
+    for_each = { for k, v in each.value : k => v if k == "primary_container" }
+    content {
+      image              = lookup(primary_container.value, "image", null)
+      model_data_url     = lookup(primary_container.value, "model_data_url", null)
+      container_hostname = lookup(primary_container.value, "container_hostname", null)
+      environment        = lookup(primary_container.value, "environment", null)
+    }
+  }
+
+  dynamic "container" {
+    for_each = {} # lookup(each.value, "containers", [])
+    content {
+      image              = lookup(container.value, "image", null)
+      model_data_url     = lookup(container.value, "model_data_url", null)
+      container_hostname = lookup(container.value, "container_hostname", null)
+      environment        = lookup(container.value, "environment", null)
+    }
+  }
+
+  dynamic "vpc_config" {
+    for_each = { for k, v in each.value : k => v if k == "vpc_config" }
+    content {
+      subnets            = lookup(vpc_config.value, "subnets", null)
+      security_group_ids = lookup(vpc_config.value, "security_group_ids", null)
+    }
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_sagemaker_endpoint_configuration" "ep" {
+  depends_on  = [aws_sagemaker_model.model]
+  for_each    = {}
+  name        = lower(local.name)
+  tags        = merge(local.default-tags, var.tags)
+  kms_key_arn = lookup(var.endpoint, "kms_key_arn", null)
+
+  dynamic "production_variants" {
+    for_each = { for m in var.models : m.name => m }
+    content {
+      model_name             = aws_sagemaker_model.model[production_variants.key].name
+      variant_name           = lookup(production_variants.value, "variant_name", null)
+      accelerator_type       = lookup(production_variants.value, "accelerator_type", null)
+      instance_type          = lookup(production_variants.value, "instance_type", "ml.t2.medium")
+      initial_instance_count = lookup(production_variants.value, "initial_instance_count", 0)
+      initial_variant_weight = lookup(production_variants.value, "initial_variant_weight", null)
+    }
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
