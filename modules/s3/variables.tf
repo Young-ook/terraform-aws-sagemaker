@@ -25,6 +25,11 @@ variable "server_side_encryption" {
   default     = [{ sse_algorithm = "AES256" }]
 }
 
+variable "intelligent_tiering" {
+  description = "A configuration of intelligent tiering"
+  default     = {}
+}
+
 variable "versioning" {
   description = "A configuration to enable object version control"
   type        = bool
