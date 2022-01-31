@@ -22,6 +22,7 @@ To manage your objects so that they are stored cost effectively throughout their
 * **Expiration actions** Define when objects expire. Amazon S3 deletes expired objects on your behalf. The lifecycle expiration costs depend on when you choose to expire objects.
 
 For more information, see [Object lifecycle management](https://docs.aws.amazon.com/AmazonS3/latest/dev/object-lifecycle-mgmt.html).
+
 ### Example
 ```hcl
 module "s3" {
@@ -53,3 +54,44 @@ S3 Intelligent-Tiering is a new Amazon S3 storage class designed for customers w
 S3 Intelligent-Tiering stores objects in many access tiers. For a small monthly monitoring and automation fee per object, S3 Intelligent-Tiering monitors access patterns and moves objects that have not been accessed for 30 consecutive days to the infrequent access tier. There are no retrieval fees in S3 Intelligent-Tiering. If an object in the infrequent access tier is accessed later, it is automatically moved back to the frequent access tier. No additional tiering fees apply when objects are moved between access tiers within the S3 Intelligent-Tiering storage class. S3 Intelligent-Tiering is designed for 99.9% availability and 99.999999999% durability, and offers the same low latency and high throughput performance of S3 Standard.
 
 For more information, see [Amazon S3 Intelligent-Tiering](https://docs.aws.amazon.com/AmazonS3/latest/userguide/intelligent-tiering.html).
+
+### Example
+```hcl
+module "s3" {
+  source  = "Young-ook/sagemaker/aws//modules/s3"
+  name    = var.name
+  tags    = { env = "test" }
+
+  lifecycle_rules = [{
+    enabled = "true"
+    transition = [
+      {
+        "days" : "0",
+        "storage_class" : "INTELLIGENT_TIERING"
+      },
+    ]
+  }]
+  intelligent_tiering_archive_rules = {
+    state = "Enabled"
+    filter = [{
+      prefix = "logs/"
+      tags = {
+        priority = "high"
+        class    = "blue"
+      }
+    }]
+    tiering = [{
+      access_tier = "ARCHIVE_ACCESS"
+      days        = 125
+    }, {
+      access_tier = "DEEP_ARCHIVE_ACCESS"
+      days        = 180
+    }]
+  }
+}
+```
+Modify the terraform configuration file to add a lifecycle rule to apply objects in the S3 bucket.
+```
+terraform init
+terraform apply
+```
