@@ -24,6 +24,11 @@ variable "lifecycle_rules" {
   default     = []
 }
 
+variable "intelligent_tiering_archive_rules" {
+  description = "A configuration of intelligent tiering archive management"
+  default     = {}
+}
+
 ### description
 variable "name" {
   description = "The logical name of the module instance"

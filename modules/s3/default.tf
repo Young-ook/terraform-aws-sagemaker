@@ -22,4 +22,13 @@ locals {
       ]
     }
   ]
+  default_intelligent_tiering = {
+    state  = "Disabled"
+    filter = []
+    tiering = [{
+      access_tier = "ARCHIVE_ACCESS" # allowed values: ARCHIVE_ACCESS, DEEP_ARCHIVE_ACCESS
+      days        = 180
+      }
+    ]
+  }
 }
