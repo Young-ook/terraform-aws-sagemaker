@@ -24,6 +24,11 @@ variable "lifecycle_rules" {
   default     = []
 }
 
+variable "intelligent_tiering" {
+  description = "A configuration of intelligent tiering"
+  default     = {}
+}
+
 ### description
 variable "name" {
   description = "The logical name of the module instance"

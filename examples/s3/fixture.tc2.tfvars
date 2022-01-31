@@ -1,5 +1,12 @@
-aws_region    = "ap-northeast-2"
-name          = "s3-tc2"
+aws_region = "ap-northeast-2"
+name       = "s3-tc2"
+tags = {
+  env             = "dev"
+  test            = "tc2"
+  versioning      = "true"
+  force-destroy   = "true"
+  lifecycle-rules = "enabled"
+}
 force_destroy = true
 versioning    = true
 lifecycle_rules = [
@@ -23,10 +30,3 @@ lifecycle_rules = [
     ]
   }
 ]
-tags = {
-  env             = "dev"
-  test            = "tc2"
-  versioning      = "true"
-  force-destroy   = "true"
-  lifecycle-rules = "enabled"
-}
