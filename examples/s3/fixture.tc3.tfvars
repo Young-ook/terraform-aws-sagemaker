@@ -12,14 +12,14 @@ force_destroy = true
 versioning    = true
 lifecycle_rules = [
   {
-    enabled = "true"
+    enabled = true
     transition = [
       {
-        "days" : "0",
+        days = 0
         # valid values for 'storage_class':
         #   STANDARD_IA, ONEZONE_IA, INTELLIGENT_TIERING,
         #   GLACIER, DEEP_ARCHIVE, GLACIER_IR
-        "storage_class" : "INTELLIGENT_TIERING"
+        storage_class = "INTELLIGENT_TIERING"
       },
     ]
   },
