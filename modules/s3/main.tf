@@ -159,10 +159,10 @@ resource "aws_s3_bucket" "bucket" {
 resource "aws_s3_bucket_intelligent_tiering_configuration" "tiering" {
   bucket = aws_s3_bucket.bucket.id
   name   = local.name
-  status = lookup(var.intelligent_tiering, "status", local.default_intelligent_tiering.state)
+  status = lookup(var.intelligent_tiering_archive_rules, "status", local.default_intelligent_tiering.state)
 
   dynamic "filter" {
-    for_each = { for k, v in lookup(var.intelligent_tiering, "filter", local.default_intelligent_tiering.filter) : k => v }
+    for_each = { for k, v in lookup(var.intelligent_tiering_archive_rules, "filter", local.default_intelligent_tiering.filter) : k => v }
     content {
       prefix = lookup(filter.value, "prefix")
       tags   = lookup(filter.value, "tags")
@@ -170,7 +170,7 @@ resource "aws_s3_bucket_intelligent_tiering_configuration" "tiering" {
   }
 
   dynamic "tiering" {
-    for_each = { for k, v in lookup(var.intelligent_tiering, "tiering", local.default_intelligent_tiering.tiering) : k => v }
+    for_each = { for k, v in lookup(var.intelligent_tiering_archive_rules, "tiering", local.default_intelligent_tiering.tiering) : k => v }
     content {
       access_tier = lookup(tiering.value, "access_tier")
       days        = lookup(tiering.value, "days")

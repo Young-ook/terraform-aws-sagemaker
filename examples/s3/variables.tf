@@ -24,8 +24,8 @@ variable "lifecycle_rules" {
   default     = []
 }
 
-variable "intelligent_tiering" {
-  description = "A configuration of intelligent tiering"
+variable "intelligent_tiering_archive_rules" {
+  description = "A configuration of intelligent tiering archive management"
   default     = {}
 }
 

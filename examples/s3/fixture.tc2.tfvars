@@ -1,11 +1,12 @@
 aws_region = "ap-northeast-2"
 name       = "s3-tc2"
 tags = {
-  env             = "dev"
-  test            = "tc2"
-  versioning      = "true"
-  force-destroy   = "true"
-  lifecycle-rules = "enabled"
+  env                         = "dev"
+  test                        = "tc2"
+  versioning                  = "true"
+  force-destroy               = "true"
+  lifecycle-rules             = "enabled"
+  intelligent-tiering-archive = "disabled"
 }
 force_destroy = true
 versioning    = true

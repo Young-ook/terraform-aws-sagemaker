@@ -25,8 +25,8 @@ variable "server_side_encryption" {
   default     = [{ sse_algorithm = "AES256" }]
 }
 
-variable "intelligent_tiering" {
-  description = "A configuration of intelligent tiering"
+variable "intelligent_tiering_archive_rules" {
+  description = "A configuration of intelligent tiering archive management"
   default     = {}
 }
 
