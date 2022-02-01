@@ -95,3 +95,9 @@ Modify the terraform configuration file to add a lifecycle rule to apply objects
 terraform init
 terraform apply
 ```
+
+## Storage Cost Optimization
+* [How to optimize storage costs using Amazon S3](https://d1.awsstatic.com/product-marketing/S3/Amazon_S3_eBook_Cost_Optimization.pdf)
+* [5 Ways to reduce data storage costs using Amazon S3 Storage Lens](https://aws.amazon.com/blogs/storage/5-ways-to-reduce-costs-using-amazon-s3-storage-lens/)
+* [Amazon S3 cost optimization for predictable and dynamic access patterns](https://aws.amazon.com/blogs/storage/amazon-s3-cost-optimization-for-predictable-and-dynamic-access-patterns/)
+* [Expiring Amazon S3 Objects Based on Last Accessed Date to Decrease Costs](https://aws.amazon.com/blogs/architecture/expiring-amazon-s3-objects-based-on-last-accessed-date-to-decrease-costs/)
