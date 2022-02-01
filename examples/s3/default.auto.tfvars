@@ -5,4 +5,4 @@ tags = {
 force_destroy                     = false
 versioning                        = false
 lifecycle_rules                   = []
-intelligent_tiering_archive_rules = {}
+intelligent_tiering_archive_rules = null

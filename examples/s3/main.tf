@@ -4,9 +4,14 @@ provider "aws" {
   region = "ap-northeast-2"
 }
 
+resource "random_pet" "prefix" {
+  length    = 3
+  separator = "-"
+}
+
 module "s3" {
   source                            = "../../modules/s3"
-  name                              = var.name
+  name                              = join("-", [random_pet.prefix.id, var.name])
   tags                              = var.tags
   force_destroy                     = var.force_destroy
   versioning                        = var.versioning

@@ -10,23 +10,19 @@ variable "aws_region" {
 variable "force_destroy" {
   description = "A boolean that indicates all objects should be deleted from the bucket so that the bucket can be destroyed without error"
   type        = bool
-  default     = false
 }
 
 variable "versioning" {
   description = "A configuration to enable object version control"
   type        = bool
-  default     = false
 }
 
 variable "lifecycle_rules" {
   description = "A configuration of object lifecycle management"
-  default     = []
 }
 
 variable "intelligent_tiering_archive_rules" {
   description = "A configuration of intelligent tiering archive management"
-  default     = {}
 }
 
 ### description

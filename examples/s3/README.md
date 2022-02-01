@@ -23,6 +23,10 @@ terraform plan -var-file tc1.tfvars
 terraform apply -var-file tc1.tfvars
 ```
 
+## Object lifecycle rules
+
+![s3-lifecycle-rules-intelligent-tiering](../../images/s3-lifecycle-rules-intelligent-tiering.png)
+
 ## Clean up
 Run terraform:
 ```
