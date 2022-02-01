@@ -3,7 +3,7 @@
 locals {
   default_lifecycle_rules = [
     {
-      enabled                       = true
+      enabled                       = false
       id                            = null
       tags                          = {}
       prefix                        = null
@@ -13,13 +13,5 @@ locals {
       noncurrent_version_transition = []
     }
   ]
-  default_intelligent_tiering = {
-    state  = "Disabled"
-    filter = []
-    tiering = [{
-      access_tier = "ARCHIVE_ACCESS" # allowed values: ARCHIVE_ACCESS, DEEP_ARCHIVE_ACCESS
-      days        = 180
-      }
-    ]
-  }
+  default_intelligent_tiering_archive_rules = {}
 }

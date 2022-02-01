@@ -37,6 +37,8 @@ intelligent_tiering_archive_rules = {
   ]
   tiering = [
     {
+      # allowed values for 'access_tier':
+      #   ARCHIVE_ACCESS, DEEP_ARCHIVE_ACCESS
       access_tier = "ARCHIVE_ACCESS"
       days        = 125
     },

@@ -5,6 +5,10 @@ module "current" {
 }
 
 locals {
+  intelligent_tiering_archive_rules = (var.intelligent_tiering_archive_rules == null ? [] : [var.intelligent_tiering_archive_rules])
+}
+
+locals {
   bucket_arn_with_slash = join("/", [aws_s3_bucket.bucket.arn, "*"])
 }
 
@@ -157,12 +161,13 @@ resource "aws_s3_bucket" "bucket" {
 }
 
 resource "aws_s3_bucket_intelligent_tiering_configuration" "tiering" {
-  bucket = aws_s3_bucket.bucket.id
-  name   = local.name
-  status = lookup(var.intelligent_tiering_archive_rules, "status", local.default_intelligent_tiering.state)
+  for_each = { for k, v in local.intelligent_tiering_archive_rules : k => v }
+  bucket   = aws_s3_bucket.bucket.id
+  name     = local.name
+  status   = lookup(each.value, "status", "Disabled")
 
   dynamic "filter" {
-    for_each = { for k, v in lookup(var.intelligent_tiering_archive_rules, "filter", local.default_intelligent_tiering.filter) : k => v }
+    for_each = { for k, v in lookup(each.value, "filter", []) : k => v }
     content {
       prefix = lookup(filter.value, "prefix")
       tags   = lookup(filter.value, "tags")
@@ -170,7 +175,7 @@ resource "aws_s3_bucket_intelligent_tiering_configuration" "tiering" {
   }
 
   dynamic "tiering" {
-    for_each = { for k, v in lookup(var.intelligent_tiering_archive_rules, "tiering", local.default_intelligent_tiering.tiering) : k => v }
+    for_each = { for k, v in lookup(each.value, "tiering", []) : k => v }
     content {
       access_tier = lookup(tiering.value, "access_tier")
       days        = lookup(tiering.value, "days")

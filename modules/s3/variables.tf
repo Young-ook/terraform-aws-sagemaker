@@ -27,7 +27,11 @@ variable "server_side_encryption" {
 
 variable "intelligent_tiering_archive_rules" {
   description = "A configuration of intelligent tiering archive management"
-  default     = {}
+  default     = null
+  validation {
+    condition     = var.intelligent_tiering_archive_rules != {}
+    error_message = "The intelligent_tiering_archive_rules must not be empty. Required at least one archive tier."
+  }
 }
 
 variable "versioning" {
