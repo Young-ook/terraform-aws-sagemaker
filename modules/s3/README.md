@@ -1,8 +1,7 @@
 # Amazon S3 (Simple Storage Service)
 [Amazon S3](https://aws.amazon.com/s3/) is an object storage service that offers industry-leading scalability, data availability, security, and performance.
 
-## Quickstart
-### Setup
+### Quickstart
 ```hcl
 module "s3" {
   source  = "Young-ook/sagemaker/aws//modules/s3"
@@ -54,6 +53,7 @@ S3 Intelligent-Tiering is a new Amazon S3 storage class designed for customers w
 S3 Intelligent-Tiering stores objects in many access tiers. For a small monthly monitoring and automation fee per object, S3 Intelligent-Tiering monitors access patterns and moves objects that have not been accessed for 30 consecutive days to the infrequent access tier. There are no retrieval fees in S3 Intelligent-Tiering. If an object in the infrequent access tier is accessed later, it is automatically moved back to the frequent access tier. No additional tiering fees apply when objects are moved between access tiers within the S3 Intelligent-Tiering storage class. **S3 Intelligent-Tiering is designed for 99.9% availability and 99.999999999% durability, and offers the same low latency and high throughput performance of S3 Standard**.
 
 For more information, see [Amazon S3 Intelligent-Tiering](https://docs.aws.amazon.com/AmazonS3/latest/userguide/intelligent-tiering.html).
+Also, you can find out more about how to add archive tier to your Intelligent-Tiering stoage classes for lower stoage costs in this blog, [S3 Intelligent-Tiering Adds Archive Access Tiers](https://aws.amazon.com/blogs/aws/s3-intelligent-tiering-adds-archive-access-tiers/).
 
 ### Example
 ```hcl
