@@ -43,7 +43,7 @@ locals {
 resource "aws_sagemaker_user_profile" "user" {
   for_each          = { for user in local.user_profiles : user.name => user }
   domain_id         = aws_sagemaker_domain.studio.0.id
-  user_profile_name = format("%s", local.name)
+  user_profile_name = each.key
   user_settings {
     execution_role  = aws_iam_role.ni.arn
     security_groups = [aws_security_group.sagemaker.id]
