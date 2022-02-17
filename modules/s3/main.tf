@@ -5,10 +5,6 @@ module "aws" {
 }
 
 locals {
-  intelligent_tiering_archive_rules = (var.intelligent_tiering_archive_rules == null ? [] : [var.intelligent_tiering_archive_rules])
-}
-
-locals {
   bucket_arn_with_slash = join("/", [aws_s3_bucket.bucket.arn, "*"])
 }
 
@@ -81,30 +77,65 @@ resource "aws_s3_bucket" "bucket" {
   bucket        = local.name
   tags          = merge(local.default-tags, var.tags)
   force_destroy = var.force_destroy
-  acl           = var.canned_acl
+}
 
-  # logging policy
-  dynamic "logging" {
-    for_each = var.logging_rules
-    content {
-      target_bucket = lookup(logging.value, "target_bucket", local.name)
-      target_prefix = lookup(logging.value, "target_prefix", "log")
+resource "aws_s3_bucket_acl" "acl" {
+  bucket = aws_s3_bucket.bucket.id
+  acl    = var.canned_acl
+}
+
+resource "aws_s3_bucket_versioning" "versioning" {
+  for_each = toset(var.versioning != null ? ["versioning"] : [])
+  bucket   = aws_s3_bucket.bucket.id
+  versioning_configuration {
+    status = var.versioning
+  }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "sse" {
+  for_each = toset(var.server_side_encryption != null ? ["sse"] : [])
+  bucket   = aws_s3_bucket.bucket.id
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm     = lookup(var.server_side_encryption, "sse_algorithm", null)
+      kms_master_key_id = lookup(var.server_side_encryption, "kms_master_key_id", null)
     }
   }
+}
 
-  # object lifecycle policy
-  dynamic "lifecycle_rule" {
-    for_each = var.lifecycle_rules
+resource "aws_s3_bucket_logging" "log" {
+  for_each      = toset(var.logging_rules != null ? ["log"] : [])
+  bucket        = aws_s3_bucket.bucket.id
+  target_bucket = lookup(var.logging_rules, "target_bucket", local.name)
+  target_prefix = lookup(var.logging_rules, "target_prefix", "log/")
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "lc" {
+  for_each = toset(var.lifecycle_rules != null ? ["lc"] : [])
+  bucket   = aws_s3_bucket.bucket.id
+
+  dynamic "rule" {
+    for_each = { for k, v in var.lifecycle_rules : k => v }
     content {
-      id      = lookup(lifecycle_rule.value, "id", null) == null ? local.name : lifecycle_rule.value["id"]
-      enabled = lifecycle_rule.value["enabled"]
-      tags    = lookup(lifecycle_rule.value, "tags", null)
-      prefix  = lookup(lifecycle_rule.value, "prefix", null)
+      id     = lookup(rule.value, "id", local.name)
+      status = lookup(rule.value, "status", "Disabled")
+
+      dynamic "filter" {
+        for_each = { for k, v in lookup(rule.value, "filter", []) : k => v }
+        content {
+          prefix = lookup(filter.value, "prefix", null)
+          dynamic "tag" {
+            for_each = { for k, v in lookup(filter.value, "tag", []) : k => v }
+            content {
+              key   = lookup(tag.value, "key")
+              value = lookup(tag.value, "value")
+            }
+          }
+        }
+      }
 
       dynamic "expiration" {
-        for_each = {
-          for k, v in lifecycle_rule.value : k => v if k == "expiration"
-        }
+        for_each = { for k, v in rule.value : k => v if k == "expirarion" }
         content {
           date                         = lookup(expiration.value, "date", null)
           days                         = lookup(expiration.value, "days", null)
@@ -113,7 +144,7 @@ resource "aws_s3_bucket" "bucket" {
       }
 
       dynamic "transition" {
-        for_each = lookup(lifecycle_rule.value, "transition", [])
+        for_each = lookup(rule.value, "transition", [])
         content {
           date          = lookup(transition.value, "date", null)
           days          = lookup(transition.value, "days", null)
@@ -122,46 +153,25 @@ resource "aws_s3_bucket" "bucket" {
       }
 
       dynamic "noncurrent_version_expiration" {
-        for_each = {
-          for k, v in lifecycle_rule.value : k => v if k == "noncurrent_version_expiration"
-        }
+        for_each = { for k, v in rule.value : k => v if k == "noncurrent_version_expiration" }
         content {
-          days = lookup(noncurrent_version_expiration.value, "days", null)
+          noncurrent_days = lookup(noncurrent_version_expiration.value, "days", null)
         }
       }
 
       dynamic "noncurrent_version_transition" {
-        for_each = lookup(lifecycle_rule.value, "noncurrent_version_transition", [])
-
+        for_each = lookup(rule.value, "noncurrent_version_transition", [])
         content {
-          days          = lookup(noncurrent_version_transition.value, "days", null)
-          storage_class = noncurrent_version_transition.value.storage_class
+          noncurrent_days = lookup(noncurrent_version_transition.value, "days", null)
+          storage_class   = noncurrent_version_transition.value.storage_class
         }
       }
     }
-  }
-
-  # server side encryption options
-  dynamic "server_side_encryption_configuration" {
-    for_each = var.server_side_encryption
-    content {
-      rule {
-        apply_server_side_encryption_by_default {
-          sse_algorithm     = lookup(server_side_encryption_configuration.value, "sse_algorithm", null)
-          kms_master_key_id = lookup(server_side_encryption_configuration.value, "kms_master_key_id", null)
-        }
-      }
-    }
-  }
-
-  # enable object version control
-  versioning {
-    enabled = var.versioning
   }
 }
 
-resource "aws_s3_bucket_intelligent_tiering_configuration" "tiering" {
-  for_each = { for k, v in local.intelligent_tiering_archive_rules : k => v }
+resource "aws_s3_bucket_intelligent_tiering_configuration" "int" {
+  for_each = { for k, v in(var.intelligent_tiering_archive_rules != null ? var.intelligent_tiering_archive_rules : []) : k => v }
   bucket   = aws_s3_bucket.bucket.id
   name     = local.name
   status   = lookup(each.value, "status", "Disabled")
