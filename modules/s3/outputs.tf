@@ -15,7 +15,7 @@ output "empty" {
   value = join(" ", [
     "bash -e",
     format("%s/script/empty.sh", path.module),
-    format("-r %s", module.current.region.name),
+    format("-r %s", module.aws.region.name),
     format("-b %s", aws_s3_bucket.bucket.id),
   ])
 }

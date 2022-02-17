@@ -1,6 +1,6 @@
 ## simple storage service
 
-module "current" {
+module "aws" {
   source = "Young-ook/spinnaker/aws//modules/aws-partitions"
 }
 
@@ -184,7 +184,7 @@ resource "aws_s3_bucket_intelligent_tiering_configuration" "tiering" {
 }
 
 locals {
-  aws_region  = module.current.region.name
+  aws_region  = module.aws.region.name
   bucket_name = aws_s3_bucket.bucket.id
 }
 
