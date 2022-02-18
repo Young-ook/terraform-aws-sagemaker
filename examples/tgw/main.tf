@@ -115,7 +115,7 @@ resource "aws_iam_policy" "client" {
 
 # transit gateway
 module "tgw" {
-  source     = "../../modules/tgw"
+  source      = "Young-ook/vpc/aws//modules/tgw"
   tags       = var.tags
   tgw_config = {}
   vpc_attachments = {
