@@ -9,10 +9,11 @@ tags = {
   intelligent-tiering-archive = "enabled"
 }
 force_destroy = true
-versioning    = true
+versioning    = "Enabled"
 lifecycle_rules = [
   {
-    enabled = true
+    id     = "s3-tc3-intelligent-tiering"
+    status = "Enabled"
     transition = [
       {
         days = 0
@@ -24,27 +25,29 @@ lifecycle_rules = [
     ]
   },
 ]
-intelligent_tiering_archive_rules = {
-  state = "Enabled"
-  filter = [
-    {
-      prefix = "logs/"
-      tags = {
-        priority = "high"
-        class    = "blue"
-      }
-    },
-  ]
-  tiering = [
-    {
-      # allowed values for 'access_tier':
-      #   ARCHIVE_ACCESS, DEEP_ARCHIVE_ACCESS
-      access_tier = "ARCHIVE_ACCESS"
-      days        = 125
-    },
-    {
-      access_tier = "DEEP_ARCHIVE_ACCESS"
-      days        = 180
-    },
-  ]
-}
+intelligent_tiering_archive_rules = [
+  {
+    state = "Enabled"
+    filter = [
+      {
+        prefix = "logs/"
+        tags = {
+          priority = "high"
+          class    = "blue"
+        }
+      },
+    ]
+    tiering = [
+      {
+        # allowed values for 'access_tier':
+        #   ARCHIVE_ACCESS, DEEP_ARCHIVE_ACCESS
+        access_tier = "ARCHIVE_ACCESS"
+        days        = 125
+      },
+      {
+        access_tier = "DEEP_ARCHIVE_ACCESS"
+        days        = 180
+      },
+    ]
+  }
+]

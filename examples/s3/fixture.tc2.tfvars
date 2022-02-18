@@ -9,13 +9,14 @@ tags = {
   intelligent-tiering-archive = "disabled"
 }
 force_destroy = true
-versioning    = true
+versioning    = "Enabled"
 lifecycle_rules = [
   {
-    enabled = true
-    id      = null
-    prefix  = null
-    tags    = {}
+    id     = "intelligent_tiering"
+    status = "Enabled"
+    filter = {
+      prefix = "datas/"
+    }
     expiration = {
       days = 365
     }
@@ -36,5 +37,25 @@ lifecycle_rules = [
       days = 120
     }
     noncurrent_version_transition = []
-  }
+  },
+  {
+    id     = "infrequent_access"
+    status = "Enabled"
+    transition = [
+      {
+        days          = 90
+        storage_class = "STANDARD_IA"
+      },
+    ]
+  },
+  {
+    id     = "glacier"
+    status = "Disabled"
+    transition = [
+      {
+        days          = 360
+        storage_class = "GLACIER"
+      },
+    ]
+  },
 ]
