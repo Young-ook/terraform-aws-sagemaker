@@ -25,7 +25,7 @@ locals {
 
 # vpc
 module "vpc" {
-  source  = "Young-ook/sagemaker/aws//modules/vpc"
+  source  = "Young-ook/vpc/aws"
   version = "> 0.0.6"
   name    = join("-", [var.name, "aws"])
   tags    = var.tags
