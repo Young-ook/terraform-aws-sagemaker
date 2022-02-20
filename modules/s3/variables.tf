@@ -20,7 +20,7 @@ variable "canned_acl" {
 
 variable "intelligent_tiering_archive_rules" {
   description = "A configuration of intelligent tiering archive management"
-  type        = list(any)
+  type        = any
   default     = null
   validation {
     condition     = var.intelligent_tiering_archive_rules == null ? true : length(var.intelligent_tiering_archive_rules) > 0
@@ -30,7 +30,7 @@ variable "intelligent_tiering_archive_rules" {
 
 variable "lifecycle_rules" {
   description = "A configuration of object lifecycle management"
-  type        = list(any)
+  type        = any
   default     = null
   validation {
     condition     = var.lifecycle_rules == null ? true : length(var.lifecycle_rules) > 0

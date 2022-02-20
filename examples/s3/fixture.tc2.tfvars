@@ -15,7 +15,7 @@ lifecycle_rules = [
     id     = "intelligent_tiering"
     status = "Enabled"
     filter = {
-      prefix = "datas/"
+      prefix = ""
     }
     expiration = {
       days = 365
@@ -41,6 +41,9 @@ lifecycle_rules = [
   {
     id     = "infrequent_access"
     status = "Enabled"
+    filter = {
+      prefix = ""
+    }
     transition = [
       {
         days          = 90
@@ -51,6 +54,9 @@ lifecycle_rules = [
   {
     id     = "glacier"
     status = "Disabled"
+    filter = {
+      prefix = ""
+    }
     transition = [
       {
         days          = 360

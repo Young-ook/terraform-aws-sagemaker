@@ -14,6 +14,9 @@ lifecycle_rules = [
   {
     id     = "s3-tc3-intelligent-tiering"
     status = "Enabled"
+    filter = {
+      prefix = ""
+    }
     transition = [
       {
         days = 0

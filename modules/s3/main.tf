@@ -117,11 +117,11 @@ resource "aws_s3_bucket_lifecycle_configuration" "lc" {
   dynamic "rule" {
     for_each = { for k, v in var.lifecycle_rules : k => v }
     content {
-      id     = lookup(rule.value, "id", local.name)
+      id     = lookup(rule.value, "id")
       status = lookup(rule.value, "status", "Disabled")
 
       dynamic "filter" {
-        for_each = { for k, v in lookup(rule.value, "filter", []) : k => v }
+        for_each = { for k, v in rule.value : k => v if k == "filter" }
         content {
           prefix = lookup(filter.value, "prefix", null)
           dynamic "tag" {
