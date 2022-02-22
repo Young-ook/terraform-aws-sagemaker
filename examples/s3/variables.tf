@@ -14,7 +14,7 @@ variable "force_destroy" {
 
 variable "versioning" {
   description = "A configuration to enable object version control"
-  type        = bool
+  type        = string
 }
 
 variable "lifecycle_rules" {

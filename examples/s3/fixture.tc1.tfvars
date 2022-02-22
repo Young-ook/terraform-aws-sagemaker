@@ -9,4 +9,4 @@ tags = {
   intelligent-tiering-archive = "disabled"
 }
 force_destroy = true
-versioning    = true
+versioning    = "Enabled"

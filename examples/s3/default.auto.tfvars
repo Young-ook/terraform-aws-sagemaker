@@ -3,6 +3,6 @@ tags = {
   env = "dev"
 }
 force_destroy                     = false
-versioning                        = false
-lifecycle_rules                   = []
+versioning                        = null
+lifecycle_rules                   = null
 intelligent_tiering_archive_rules = null
