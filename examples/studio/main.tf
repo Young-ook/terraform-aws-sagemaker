@@ -60,7 +60,7 @@ module "vpc" {
 }
 
 module "default-vpc" {
-  source = "Young-ook/sagemaker/aws//modules/vpc"
+  source = "Young-ook/vpc/aws"
   name   = var.name
   tags   = var.tags
 }

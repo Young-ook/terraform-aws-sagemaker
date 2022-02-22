@@ -8,17 +8,18 @@ tags = {
   lifecycle-rules             = "disabled"
   intelligent-tiering-archive = "enabled"
 }
-force_destroy   = true
-versioning      = true
-lifecycle_rules = []
-intelligent_tiering_archive_rules = {
-  state = "Disabled"
-  tiering = [
-    {
-      # allowed values for 'access_tier':
-      #   ARCHIVE_ACCESS, DEEP_ARCHIVE_ACCESS
-      access_tier = "ARCHIVE_ACCESS"
-      days        = 125
-    },
-  ]
-}
+force_destroy = true
+versioning    = "Enabled"
+intelligent_tiering_archive_rules = [
+  {
+    state = "Disabled"
+    tiering = [
+      {
+        # allowed values for 'access_tier':
+        #   ARCHIVE_ACCESS, DEEP_ARCHIVE_ACCESS
+        access_tier = "ARCHIVE_ACCESS"
+        days        = 125
+      },
+    ]
+  }
+]
