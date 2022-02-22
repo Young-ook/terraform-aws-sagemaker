@@ -10,7 +10,7 @@ provider "aws" {
 
 # vpc
 module "vpc" {
-  source = "Young-ook/sagemaker/aws//modules/vpc"
+  source = "Young-ook/vpc/aws"
   name   = var.name
   tags   = var.tags
 }

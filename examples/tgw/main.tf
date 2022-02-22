@@ -10,7 +10,7 @@ provider "aws" {
 
 # isolated vpc
 module "vpc" {
-  source = "Young-ook/sagemaker/aws//modules/vpc"
+  source = "Young-ook/vpc/aws"
   name   = join("-", [var.name, "aws"])
   tags   = var.tags
   vpc_config = {
@@ -65,7 +65,7 @@ resource "aws_route" "peer-to-aws" {
 
 # control plane network
 module "corp" {
-  source = "Young-ook/sagemaker/aws//modules/vpc"
+  source = "Young-ook/vpc/aws"
   name   = join("-", [var.name, "corp"])
   tags   = var.tags
   vpc_config = {
@@ -115,7 +115,7 @@ resource "aws_iam_policy" "client" {
 
 # transit gateway
 module "tgw" {
-  source     = "../../modules/tgw"
+  source     = "Young-ook/vpc/aws//modules/tgw"
   tags       = var.tags
   tgw_config = {}
   vpc_attachments = {
