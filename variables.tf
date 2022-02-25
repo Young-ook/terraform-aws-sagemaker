@@ -7,6 +7,10 @@ variable "vpc" {
 variable "subnets" {
   description = "The subnet IDs to deploy sagemaker"
   type        = list(string)
+  validation {
+    condition     = var.subnets != null && length(var.subnets) > 0
+    error_message = "The subnets required."
+  }
 }
 
 ### sagemaker studio
@@ -17,6 +21,13 @@ variable "sagemaker_studio" {
 
 variable "notebook_instances" {
   description = "Notebook instances definition"
+  default     = []
+}
+
+### security
+variable "policy_arns" {
+  description = "A list of policy ARNs to attach the sagemaker role"
+  type        = list(string)
   default     = []
 }
 
