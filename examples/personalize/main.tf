@@ -29,6 +29,7 @@ module "sagemaker" {
       default_code_repository = aws_sagemaker_code_repository.repo.code_repository_name
     }
   ]
+  policy_arns = ["arn:aws:iam::aws:policy/service-role/AmazonPersonalizeFullAccess"]
 }
 
 # personalize sample

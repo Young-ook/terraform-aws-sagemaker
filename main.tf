@@ -22,6 +22,12 @@ resource "aws_iam_role_policy_attachment" "sagemaker-admin" {
   role       = aws_iam_role.ni.id
 }
 
+resource "aws_iam_role_policy_attachment" "extra" {
+  for_each   = { for k, v in var.policy_arns : k => v }
+  policy_arn = each.value
+  role       = aws_iam_role.ni.id
+}
+
 resource "aws_sagemaker_domain" "studio" {
   count                   = var.sagemaker_studio != null ? 1 : 0
   domain_name             = format("%s", local.name)
