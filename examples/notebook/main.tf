@@ -40,12 +40,10 @@ module "vpc" {
 
 # s3
 module "s3" {
-  source          = "../../modules/s3"
-  name            = var.name
-  tags            = var.tags
-  force_destroy   = var.force_destroy
-  versioning      = var.versioning
-  lifecycle_rules = var.lifecycle_rules
+  source        = "../../modules/s3"
+  name          = var.name
+  tags          = var.tags
+  force_destroy = var.force_destroy
 }
 
 resource "aws_s3_bucket_policy" "access_from_vpc_only" {

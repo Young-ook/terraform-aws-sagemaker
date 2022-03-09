@@ -32,23 +32,7 @@ variable "force_destroy" {
   default     = false
 }
 
-variable "versioning" {
-  description = "A configuration to enable object version control"
-  type        = bool
-  default     = false
-}
-
-variable "lifecycle_rules" {
-  description = "A configuration of object lifecycle management"
-  default     = []
-}
-
 ### sagemaker
-variable "sagemaker_studio" {
-  description = "Amazon SageMaker studio definition"
-  default     = {}
-}
-
 variable "notebook_instances" {
   description = "Notebook instances definition"
   default     = []
