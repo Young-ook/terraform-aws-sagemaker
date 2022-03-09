@@ -101,6 +101,6 @@ module "sagemaker" {
   tags               = var.tags
   vpc                = var.use_default_vpc ? module.default-vpc.vpc.id : module.vpc.vpc_id
   subnets            = var.use_default_vpc ? values(module.default-vpc.subnets.public) : module.vpc.private_subnets
-  sagemaker_studio   = var.sagemaker_studio
+  studio             = var.studio
   notebook_instances = var.notebook_instances
 }

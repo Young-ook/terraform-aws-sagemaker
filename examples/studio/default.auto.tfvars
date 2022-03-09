@@ -5,7 +5,7 @@ use_default_vpc = true
 tags = {
   env = "dev"
 }
-sagemaker_studio = {
+studio = {
   auth_mode = "IAM"
   user_profiles = [
     {
