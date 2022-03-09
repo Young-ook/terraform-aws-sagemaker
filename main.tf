@@ -29,10 +29,10 @@ resource "aws_iam_role_policy_attachment" "extra" {
 }
 
 resource "aws_sagemaker_domain" "studio" {
-  count                   = var.sagemaker_studio != null ? 1 : 0
+  count                   = var.studio != null ? 1 : 0
   domain_name             = format("%s", local.name)
-  auth_mode               = lookup(var.sagemaker_studio, "auth_mode", local.default_studio_config["auth_mode"])
-  app_network_access_type = lookup(var.sagemaker_studio, "app_network_access_type", local.default_studio_config["app_network_access_type"])
+  auth_mode               = lookup(var.studio, "auth_mode", local.default_studio_config["auth_mode"])
+  app_network_access_type = lookup(var.studio, "app_network_access_type", local.default_studio_config["app_network_access_type"])
   vpc_id                  = var.vpc
   subnet_ids              = var.subnets
 
@@ -43,7 +43,7 @@ resource "aws_sagemaker_domain" "studio" {
 }
 
 locals {
-  user_profiles = var.sagemaker_studio != null ? lookup(var.sagemaker_studio, "user_profiles", local.default_studio_config["user_profiles"]) : []
+  user_profiles = var.studio != null ? lookup(var.studio, "user_profiles", local.default_studio_config["user_profiles"]) : []
 }
 
 resource "aws_sagemaker_user_profile" "user" {
