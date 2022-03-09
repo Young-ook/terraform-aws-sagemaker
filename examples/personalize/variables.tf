@@ -26,13 +26,13 @@ variable "subnets" {
 }
 
 ### sagemaker
-variable "sagemaker_studio" {
+variable "studio" {
   description = "Amazon SageMaker studio definition"
   default     = {}
 }
 
 variable "notebook_instances" {
-  description = "Notebook instances definition"
+  description = "Amazon SageMaker Notebook instances definition"
   default     = []
 }
 
