@@ -11,7 +11,7 @@ resource "random_pet" "prefix" {
 
 module "s3" {
   source                            = "../../modules/s3"
-  name                              = join("-", [random_pet.prefix.id, var.name])
+  name                              = var.name == null ? random_pet.prefix.id : var.name
   tags                              = var.tags
   force_destroy                     = var.force_destroy
   versioning                        = var.versioning
