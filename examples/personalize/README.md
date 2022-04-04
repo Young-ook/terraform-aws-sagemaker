@@ -10,13 +10,13 @@ Amazon Personalize makes it easy for developers to build applications capable of
 
 Run terraform:
 ```
-$ terraform init
-$ terraform apply
+terraform init
+terraform apply
 ```
 Also you can use the `-var-file` option for customized paramters when you run the terraform plan/apply command.
 ```
-$ terraform plan -var-file tc1.tfvars
-$ terraform apply -var-file tc1.tfvars
+terraform plan -var-file tc1.tfvars
+terraform apply -var-file tc1.tfvars
 ```
 
 ## Getting started
@@ -31,13 +31,14 @@ This tutorial will walk you through building an environment to create a custom d
 You can download the Jupyter notebooks from the /notebooks folder. If you have any issues with any of the content here please visit the original [repo](https://github.com/aws-samples/amazon-personalize-samples) for updates.
 
 ## Clean up
-Before you destroy the SageMaker Studio, make sure that users in the SageMaker are deleted. For more the details, please refer to [this](https://docs.aws.amazon.com/sagemaker/latest/dg/gs-studio-delete-domain.html).
+If you run this hands-on lab on SageMaker Studio, don't forget you have to delete users (profiles) before you destroy the SageMaker Studio. For more the details, please refer to [this](https://docs.aws.amazon.com/sagemaker/latest/dg/gs-studio-delete-domain.html).
 
-Run terraform:
+Next, follow the instruction of `Cleanup.ipynb` notebook to purge the resource that we made through SageMaker notebook. Then, run terraform destroy command to delete infrastructure:
 ```
-$ terraform destroy
+terraform destroy
 ```
+
 Don't forget you have to use the `-var-file` option when you run terraform destroy command to delete the aws resources created with extra variable files.
 ```
-$ terraform destroy -var-file tc1.tfvars
+terraform destroy -var-file tc1.tfvars
 ```

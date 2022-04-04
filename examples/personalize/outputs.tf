@@ -3,12 +3,10 @@ output "notebooks" {
   value       = module.sagemaker.notebooks
 }
 
-output "studio" {
-  description = "The attributes of the sagemaker studio"
-  value       = module.sagemaker.studio
-}
-
-output "users" {
-  description = "The attributes of users of sagemaker studio"
-  value       = module.sagemaker.users
+output "bucket" {
+  description = "The attributes of s3 bucket for personalize data sets"
+  value = {
+    uri  = format("s3://%s", module.s3.bucket.id)
+    name = module.s3.bucket.id
+  }
 }
