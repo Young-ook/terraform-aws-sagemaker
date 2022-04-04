@@ -44,9 +44,34 @@ module "sagemaker" {
   ]
   policy_arns = [
     "arn:aws:iam::aws:policy/service-role/AmazonPersonalizeFullAccess",
+    aws_iam_policy.personalize-lab-required.arn,
     module.s3.policy_arns["read"],
     module.s3.policy_arns["write"],
   ]
+}
+
+# security/policy
+resource "aws_iam_policy" "personalize-lab-required" {
+  name = join("-", [random_pet.name.id, "personalize-lab-required"])
+  policy = jsonencode({
+    Statement = [
+      {
+        Action   = ["s3:PutBucketPolicy", ]
+        Effect   = "Allow"
+        Resource = [module.s3.bucket.arn, ]
+      },
+      {
+        Action = [
+          "iam:AttachRolePolicy",
+          "iam:CreateRole",
+          "iam:DeleteRole",
+        ]
+        Effect   = "Allow"
+        Resource = ["*"]
+      }
+    ]
+    Version = "2012-10-17"
+  })
 }
 
 # personalize sample
