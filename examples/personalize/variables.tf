@@ -36,13 +36,6 @@ variable "notebook_instances" {
   default     = []
 }
 
-### description
-variable "name" {
-  description = "The logical name of the module instance"
-  type        = string
-  default     = "sagemaker"
-}
-
 ### tags
 variable "tags" {
   description = "The key-value maps for tagging"

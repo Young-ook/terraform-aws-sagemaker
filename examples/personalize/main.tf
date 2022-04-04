@@ -8,17 +8,30 @@ provider "aws" {
   region = var.aws_region
 }
 
+resource "random_pet" "name" {
+  length    = 3
+  separator = "-"
+}
+
 # vpc
 module "vpc" {
   source = "Young-ook/vpc/aws"
-  name   = var.name
+  name   = random_pet.name.id
   tags   = var.tags
+}
+
+# s3
+module "s3" {
+  source        = "../../modules/s3"
+  name          = random_pet.name.id
+  tags          = var.tags
+  force_destroy = true
 }
 
 # sagemaker
 module "sagemaker" {
   source  = "../../"
-  name    = var.name
+  name    = random_pet.name.id
   tags    = var.tags
   vpc     = module.vpc.vpc.id
   subnets = values(module.vpc.subnets.public)
@@ -29,7 +42,11 @@ module "sagemaker" {
       default_code_repository = aws_sagemaker_code_repository.repo.code_repository_name
     }
   ]
-  policy_arns = ["arn:aws:iam::aws:policy/service-role/AmazonPersonalizeFullAccess"]
+  policy_arns = [
+    "arn:aws:iam::aws:policy/service-role/AmazonPersonalizeFullAccess",
+    module.s3.policy_arns["read"],
+    module.s3.policy_arns["write"],
+  ]
 }
 
 # personalize sample
