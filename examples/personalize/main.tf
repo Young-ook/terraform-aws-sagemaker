@@ -39,7 +39,7 @@ module "sagemaker" {
     {
       name                    = "default"
       instance_type           = "ml.m5.xlarge"
-      default_code_repository = aws_sagemaker_code_repository.repo.code_repository_name
+      default_code_repository = aws_sagemaker_code_repository.repo[var.personalize_example].code_repository_name
     }
   ]
   policy_arns = [
@@ -76,8 +76,21 @@ resource "aws_iam_policy" "personalize-lab-required" {
 
 # personalize sample
 resource "aws_sagemaker_code_repository" "repo" {
-  code_repository_name = "amazon-personalize-samples"
+  for_each = {
+    for r in [
+      {
+        name = "samples",
+        url  = "https://github.com/aws-samples/amazon-personalize-samples.git"
+      },
+      {
+        name = "retailstore",
+        url  = "https://github.com/Young-ook/terraform-aws-sagemaker.git"
+      },
+    ] : r.name => r
+  }
+
+  code_repository_name = each.value["name"]
   git_config {
-    repository_url = "https://github.com/aws-samples/amazon-personalize-samples.git"
+    repository_url = each.value["url"]
   }
 }

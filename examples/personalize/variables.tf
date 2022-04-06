@@ -36,6 +36,14 @@ variable "notebook_instances" {
   default     = []
 }
 
+variable "personalize_example" {
+  description = "Choose what you want to run example: [samples, retailstore]"
+  validation {
+    condition     = contains(["samples", "retailstore"], var.personalize_example)
+    error_message = "Allowed values are [samples, retailstore]."
+  }
+}
+
 ### tags
 variable "tags" {
   description = "The key-value maps for tagging"
