@@ -65,6 +65,7 @@ resource "aws_iam_policy" "personalize-lab-required" {
           "iam:AttachRolePolicy",
           "iam:CreateRole",
           "iam:DeleteRole",
+          "iam:DetachRolePolicy",
         ]
         Effect   = "Allow"
         Resource = ["*"]
