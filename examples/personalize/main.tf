@@ -8,22 +8,17 @@ provider "aws" {
   region = var.aws_region
 }
 
-resource "random_pet" "name" {
-  length    = 3
-  separator = "-"
-}
-
 # vpc
 module "vpc" {
   source = "Young-ook/vpc/aws"
-  name   = random_pet.name.id
+  name   = local.name
   tags   = var.tags
 }
 
 # s3
 module "s3" {
   source        = "../../modules/s3"
-  name          = random_pet.name.id
+  name          = local.name
   tags          = var.tags
   force_destroy = true
 }
@@ -31,7 +26,7 @@ module "s3" {
 # sagemaker
 module "sagemaker" {
   source  = "../../"
-  name    = random_pet.name.id
+  name    = local.name
   tags    = var.tags
   vpc     = module.vpc.vpc.id
   subnets = values(module.vpc.subnets.public)
@@ -52,7 +47,7 @@ module "sagemaker" {
 
 # security/policy
 resource "aws_iam_policy" "personalize-lab-required" {
-  name = join("-", [random_pet.name.id, "personalize-lab-required"])
+  name = join("-", [local.name, "personalize-lab-required"])
   policy = jsonencode({
     Statement = [
       {
@@ -88,7 +83,6 @@ resource "aws_sagemaker_code_repository" "repo" {
       },
     ] : r.name => r
   }
-
   code_repository_name = each.value["name"]
   git_config {
     repository_url = each.value["url"]
