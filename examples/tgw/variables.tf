@@ -4,7 +4,13 @@
 variable "aws_region" {
   description = "The aws region to deploy"
   type        = string
-  default     = "us-east-1"
+  default     = "ap-northeast-2"
+}
+
+variable "azs" {
+  description = "A list of availability zones for the vpc to deploy resources"
+  type        = list(string)
+  default     = ["ap-northeast-2a", "ap-northeast-2c"]
 }
 
 variable "use_default_vpc" {
@@ -13,40 +19,11 @@ variable "use_default_vpc" {
   default     = false
 }
 
-variable "azs" {
-  description = "A list of availability zones for the vpc to deploy resources"
-  type        = list(string)
-  default     = ["us-east-1a", "us-east-1b", "us-east-1c"]
-}
-
-variable "subnets" {
-  description = "The subnet IDs to deploy"
-  type        = list(string)
-  default     = null
-}
-
-### sagemaker
-variable "studio" {
-  description = "Amazon SageMaker studio definition"
-  default     = {}
-}
-
-variable "notebook_instances" {
-  description = "Amazon SageMaker Notebook instances definition"
-  default     = []
-}
-
-### test client
-variable "client_instances" {
-  description = "EC2 instance groups definition for test client"
-  default     = []
-}
-
 ### description
 variable "name" {
   description = "The logical name of the module instance"
   type        = string
-  default     = "eks"
+  default     = "sm-fsi"
 }
 
 ### tags

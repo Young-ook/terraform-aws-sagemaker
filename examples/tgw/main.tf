@@ -42,28 +42,7 @@ module "vpc" {
   ]
 }
 
-# peering
-resource "aws_vpc_peering_connection" "peering" {
-  peer_vpc_id = module.vpc.vpc.id
-  vpc_id      = module.corp.vpc.id
-  auto_accept = true
-}
-
-resource "aws_route" "peer-to-corp" {
-  for_each                  = module.vpc.route_tables.private
-  route_table_id            = each.value
-  destination_cidr_block    = module.corp.vpc.cidr_block
-  vpc_peering_connection_id = aws_vpc_peering_connection.peering.id
-}
-
-resource "aws_route" "peer-to-aws" {
-  for_each                  = module.corp.route_tables.private
-  route_table_id            = each.value
-  destination_cidr_block    = module.vpc.vpc.cidr_block
-  vpc_peering_connection_id = aws_vpc_peering_connection.peering.id
-}
-
-# control plane network
+# corp network
 module "corp" {
   source = "Young-ook/vpc/aws"
   name   = join("-", [var.name, "corp"])
@@ -71,29 +50,97 @@ module "corp" {
   vpc_config = {
     azs         = var.azs
     cidr        = "10.20.0.0/16"
-    subnet_type = "private"
-    single_ngw  = true
+    subnet_type = "isolated"
+  }
+  vpce_config = [
+    {
+      service             = "ec2messages"
+      type                = "Interface"
+      private_dns_enabled = true
+    },
+    {
+      service             = "ssmmessages"
+      type                = "Interface"
+      private_dns_enabled = true
+    },
+    {
+      service             = "ssm"
+      type                = "Interface"
+      private_dns_enabled = true
+    },
+  ]
+}
+
+# transit gateway
+module "tgw" {
+  source     = "Young-ook/vpc/aws//modules/tgw"
+  tags       = var.tags
+  tgw_config = {}
+  vpc_attachments = {
+    vpc = {
+      vpc     = module.vpc.vpc.id
+      subnets = values(module.vpc.subnets["private"])
+    }
+    corp = {
+      vpc     = module.corp.vpc.id
+      subnets = values(module.corp.subnets["private"])
+    }
   }
 }
 
 # sagemaker
 module "sagemaker" {
-  source             = "../../"
-  name               = var.name
-  tags               = var.tags
-  vpc                = module.vpc.vpc.id
-  subnets            = values(module.vpc.subnets["private"])
-  notebook_instances = var.notebook_instances
+  source  = "../../"
+  name    = var.name
+  tags    = var.tags
+  vpc     = module.vpc.vpc.id
+  subnets = values(module.vpc.subnets["private"])
+  notebook_instances = [
+    {
+      name          = "default"
+      instance_type = "ml.t3.large"
+
+      # Supported values: Enabled (Default) or Disabled. If set to Disabled,
+      # the notebook instance will be able to access resources only in your VPC
+      direct_internet_access = "Disabled"
+    }
+  ]
 }
 
 # client
+data "aws_ami" "win" {
+  most_recent = true
+  owners      = ["801119661308"]
+  filter {
+    name   = "name"
+    values = ["Windows_Server-2019-English-Full-Base-*"]
+  }
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
 module "client" {
   source      = "Young-ook/ssm/aws"
+  version     = "0.0.7"
   name        = var.name
   tags        = var.tags
-  subnets     = values(module.corp.subnets["public"])
+  subnets     = values(module.corp.subnets["private"])
   policy_arns = [aws_iam_policy.client.arn]
-  node_groups = var.client_instances
+  node_groups = [
+    {
+      name          = "linux"
+      max_size      = 1
+      instance_type = "t3.large"
+    },
+    {
+      name          = "windows"
+      max_size      = 1
+      instance_type = "t3.large"
+      image_id      = data.aws_ami.win.id
+    },
+  ]
 }
 
 resource "aws_iam_policy" "client" {
@@ -111,39 +158,4 @@ resource "aws_iam_policy" "client" {
       },
     ]
   })
-}
-
-# transit gateway
-module "tgw" {
-  source     = "Young-ook/vpc/aws//modules/tgw"
-  tags       = var.tags
-  tgw_config = {}
-  vpc_attachments = {
-    vpc = {
-      vpc     = module.vpc.vpc.id
-      subnets = values(module.vpc.subnets["private"])
-      routes = [
-        {
-          destination_cidr_block = "10.50.0.0/16"
-        },
-        {
-          blackhole              = true
-          destination_cidr_block = "0.0.0.0/0"
-        }
-      ]
-    }
-    corp = {
-      vpc     = module.corp.vpc.id
-      subnets = values(module.corp.subnets["public"])
-      routes = [
-        {
-          destination_cidr_block = "10.40.0.0/16"
-        },
-        {
-          blackhole              = true
-          destination_cidr_block = "10.10.10.10/32"
-        }
-      ]
-    }
-  }
 }
