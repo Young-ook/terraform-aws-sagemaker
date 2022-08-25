@@ -6,7 +6,7 @@
 Amazon Personalize makes it easy for developers to build applications capable of delivering a wide array of personalization experiences, including specific product recommendations, personalized product re-ranking, and customized direct marketing. Amazon Personalize is a fully managed machine learning service that goes beyond rigid static rule based recommendation systems and trains, tunes, and deploys custom ML models to deliver highly customized recommendations to customers across industries such as retail and media and entertainment.
 
 ## Setup
-[This](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/studio/main.tf) is the example of terraform configuration file to create SageMaker studio on AWS. Check out and apply it using terraform command.
+[This](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/personalize/main.tf) is the example of terraform configuration file to create SageMaker on AWS. Check out and apply it using terraform command.
 
 Run terraform:
 ```
