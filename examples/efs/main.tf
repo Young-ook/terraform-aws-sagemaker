@@ -17,6 +17,7 @@ module "vpc" {
   }
 }
 
+# efs
 module "efs" {
   depends_on = [module.vpc]
   source     = "../../modules/efs"
@@ -24,4 +25,14 @@ module "efs" {
   tags       = var.tags
   vpc        = module.vpc.vpc.id
   subnets    = var.use_default_vpc ? values(module.vpc.subnets.public) : values(module.vpc.subnets.private)
+}
+
+# sagemaker
+module "sm" {
+  source             = "../../"
+  name               = var.name
+  tags               = var.tags
+  vpc                = module.vpc.vpc.id
+  subnets            = var.use_default_vpc ? values(module.vpc.subnets["public"]) : values(module.vpc.subnets["private"])
+  notebook_instances = var.notebook_instances
 }

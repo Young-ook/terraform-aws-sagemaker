@@ -51,3 +51,6 @@ Don't forget you have to use the `-var-file` option when you run terraform destr
 ```
 $ terraform destroy -var-file tc1.tfvars
 ```
+
+# Additional resources
+* [Mount an EFS file system to an Amazon SageMaker notebook](https://aws.amazon.com/blogs/machine-learning/mount-an-efs-file-system-to-an-amazon-sagemaker-notebook-with-lifecycle-configurations/)

@@ -25,7 +25,11 @@ variable "subnets" {
   default     = null
 }
 
-### efs
+### sagemaker
+variable "notebook_instances" {
+  description = "Notebook instances definition"
+  default     = []
+}
 
 ### description
 variable "name" {
