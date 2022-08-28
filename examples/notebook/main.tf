@@ -13,16 +13,6 @@ module "aws" {
   source = "Young-ook/spinnaker/aws//modules/aws-partitions"
 }
 
-locals {
-  s3_vpce_config = [
-    {
-      service             = "s3"
-      type                = "Interface"
-      private_dns_enabled = false
-    },
-  ]
-}
-
 # vpc
 module "vpc" {
   source  = "Young-ook/vpc/aws"
@@ -35,7 +25,13 @@ module "vpc" {
     subnet_type = "isolated"
     single_ngw  = true
   }
-  vpce_config = var.use_default_vpc ? [] : local.s3_vpce_config
+  vpce_config = var.use_default_vpc ? [] : [
+    {
+      service             = "s3"
+      type                = "Interface"
+      private_dns_enabled = false
+    },
+  ]
 }
 
 # s3

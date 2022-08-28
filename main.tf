@@ -62,7 +62,18 @@ resource "random_integer" "subnet" {
   max = length(var.subnets) - 1
 }
 
+# Lifecycle configuration for SageMaker Notebook Instances.
+# on_create : A shell script (base64-encoded) that runs only once when the SageMaker Notebook Instance is created.
+# on_start : A shell script (base64-encoded) that runs every time the SageMaker Notebook Instance is started including the time it's created.
+resource "aws_sagemaker_notebook_instance_lifecycle_configuration" "lc" {
+  for_each  = { for ni in var.notebook_instances : ni.name => ni }
+  name      = join("-", [local.name, each.key])
+  on_create = base64encode(lookup(lookup(each.value, "lifecycle_config", local.default_notebook_config["lifecycle_config"]), "on_create", ""))
+  on_start  = base64encode(lookup(lookup(each.value, "lifecycle_config", local.default_notebook_config["lifecycle_config"]), "on_start", ""))
+}
+
 resource "aws_sagemaker_notebook_instance" "ni" {
+  depends_on              = [aws_iam_role_policy_attachment.sagemaker-admin]
   for_each                = { for ni in var.notebook_instances : ni.name => ni }
   name                    = format("%s-%s", local.name, each.key)
   role_arn                = aws_iam_role.ni.arn
@@ -73,16 +84,6 @@ resource "aws_sagemaker_notebook_instance" "ni" {
   instance_type           = lookup(each.value, "instance_type", local.default_notebook_config["instance_type"])
   volume_size             = lookup(each.value, "volume_size", local.default_notebook_config["volume_size"])
   default_code_repository = lookup(each.value, "default_code_repository", null)
+  lifecycle_config_name   = lookup(each.value, "lifecycle_config", null) != null ? aws_sagemaker_notebook_instance_lifecycle_configuration.lc[each.key].name : null
 
-  depends_on = [
-    aws_iam_role_policy_attachment.sagemaker-admin,
-  ]
-}
-
-# WIP
-resource "aws_sagemaker_notebook_instance_lifecycle_configuration" "lc" {
-  for_each  = { for ni in var.notebook_instances : ni.name => ni }
-  name      = format("%s-%s", local.name, each.key)
-  on_create = base64encode("echo foo")
-  on_start  = base64encode("echo bar")
 }
