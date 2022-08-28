@@ -22,3 +22,8 @@ output "subnets" {
   description = "The attributes of subnets where to deploy"
   value       = module.vpc.subnets
 }
+
+output "bucket" {
+  description = "The attributes of s3 bucket"
+  value       = module.s3
+}
