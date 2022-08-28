@@ -5,8 +5,8 @@ module "aws" {
 
 # security/firewall
 resource "aws_security_group" "sagemaker" {
-  name        = format("%s", var.name)
-  description = format("security group for %s", var.name)
+  name        = local.name
+  description = format("security group for %s", local.name)
   vpc_id      = var.vpc
   tags        = merge(local.default-tags, var.tags)
 
