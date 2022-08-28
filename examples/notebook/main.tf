@@ -27,7 +27,7 @@ locals {
 module "vpc" {
   source  = "Young-ook/vpc/aws"
   version = "> 0.0.6"
-  name    = join("-", [var.name, "aws"])
+  name    = var.name
   tags    = var.tags
   vpc_config = var.use_default_vpc ? null : {
     cidr        = "10.10.0.0/16"
@@ -85,7 +85,7 @@ resource "aws_s3_bucket_policy" "access_from_vpc_only" {
 }
 
 # sagemaker
-module "sagemaker" {
+module "sm" {
   source             = "../../"
   name               = var.name
   tags               = var.tags

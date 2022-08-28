@@ -1,16 +1,16 @@
 output "notebooks" {
   description = "The attributes of the notebook instance"
-  value       = module.sagemaker.notebooks
+  value       = module.sm.notebooks
 }
 
 output "studio" {
   description = "The attributes of the sagemaker studio"
-  value       = module.sagemaker.studio
+  value       = module.sm.studio
 }
 
 output "users" {
   description = "The attributes of users of sagemaker studio"
-  value       = module.sagemaker.users
+  value       = module.sm.users
 }
 
 output "vpc" {
@@ -21,4 +21,9 @@ output "vpc" {
 output "subnets" {
   description = "The attributes of subnets where to deploy"
   value       = module.vpc.subnets
+}
+
+output "bucket" {
+  description = "The attributes of s3 bucket"
+  value       = module.s3
 }
