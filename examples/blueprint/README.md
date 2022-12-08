@@ -27,8 +27,8 @@ terraform apply -var-file fixture.tc1.tfvars
 ```
 
 ## Applications
-- Personalize
-- Huggingface
+- [Huggingface](./apps/README.md#huggingface-transformations-with-amazon-sagemaker)
+- [Personalize](./apps/README.md#amazon-personalize)
 
 ## Clean up
 Before you destroy the SageMaker Studio, make sure that users in the SageMaker are deleted. Repeat the following steps for each user in the **User name** list on SageMaker control panel.
@@ -36,7 +36,8 @@ Before you destroy the SageMaker Studio, make sure that users in the SageMaker a
 2. On the User Details page, for each non-failed app in the Apps list, choose Delete app.
 3. On the Delete app dialog, choose Yes, delete app, type delete in the confirmation field, and then choose Delete.
 4. When the Status for all apps show as Deleted, choose Delete user.
-For more informatiom, please refer to [this](https://docs.aws.amazon.com/sagemaker/latest/dg/gs-studio-delete-domain.html).
+
+If you run SageMaker Studio, don't forget you have to delete users (profiles) before you destroy the SageMaker Studio. For more the details, please refer to [this](https://docs.aws.amazon.com/sagemaker/latest/dg/gs-studio-delete-domain.html).
 
 Run terraform:
 ```
