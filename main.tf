@@ -130,13 +130,13 @@ resource "aws_sagemaker_model" "model" {
 
 resource "aws_sagemaker_endpoint_configuration" "ep" {
   depends_on  = [aws_sagemaker_model.model]
-  for_each    = {}
+  for_each    = { for ep in var.endpoints : ep.name => ep }
   name        = lower(local.name)
   tags        = merge(local.default-tags, var.tags)
-  kms_key_arn = lookup(var.endpoint, "kms_key_arn", null)
+  kms_key_arn = lookup(each.value, "kms_key_arn", null)
 
   dynamic "production_variants" {
-    for_each = { for m in var.models : m.name => m }
+    for_each = { for k, v in each.value : k => v if k == "production_variants" }
     content {
       model_name             = aws_sagemaker_model.model[production_variants.key].name
       variant_name           = lookup(production_variants.value, "variant_name", null)

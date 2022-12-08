@@ -36,7 +36,7 @@ variable "models" {
   default     = []
 }
 
-variable "endpoint" {
+variable "endpoints" {
   description = "SageMaker endpoint configuration"
   default     = {}
 }
