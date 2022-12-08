@@ -87,14 +87,6 @@ resource "aws_sagemaker_notebook_instance" "ni" {
   lifecycle_config_name   = lookup(each.value, "lifecycle_config", null) != null ? aws_sagemaker_notebook_instance_lifecycle_configuration.lc[each.key].name : null
 }
 
-# WIP: lifecycle config
-resource "aws_sagemaker_notebook_instance_lifecycle_configuration" "lc" {
-  for_each  = {} # { for ni in var.notebook_instances : ni.name => ni }
-  name      = join("-", [local.name, each.key])
-  on_create = base64encode("echo foo")
-  on_start  = base64encode("echo bar")
-}
-
 # WIP: sagemaker endpoint
 resource "aws_sagemaker_model" "model" {
   for_each                 = { for m in var.models : m.name => m }
