@@ -7,8 +7,7 @@
 - [Amazon EFS](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/efs)
 - [Amazon S3](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/s3)
 - [Amazon VPC](https://github.com/Young-ook/terraform-aws-vpc/blob/main/examples/vpc)
-- [Amazon SageMaker Studio](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/studio)
-- [Amazon SageMaker Notebook](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/notebook)
+- [Amazon SageMaker Blueprint](https://github.com/Young-ook/terraform-aws-sagemaker/tree/main/examples/blueprint)
 
 ## Getting started
 ### AWS CLI
