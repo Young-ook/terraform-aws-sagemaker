@@ -31,6 +31,16 @@ variable "policy_arns" {
   default     = []
 }
 
+variable "models" {
+  description = "Model artifact definition"
+  default     = []
+}
+
+variable "endpoints" {
+  description = "SageMaker endpoint configuration"
+  default     = {}
+}
+
 ### description
 variable "name" {
   description = "The logical name of the module instance"

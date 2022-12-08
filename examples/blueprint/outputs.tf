@@ -12,3 +12,8 @@ output "users" {
   description = "The attributes of users of sagemaker studio"
   value       = module.sagemaker.users
 }
+
+output "endpoints" {
+  description = "The attributes of sagemaker endpoints"
+  value       = module.sagemaker.endpoints
+}
