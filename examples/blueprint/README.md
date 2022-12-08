@@ -1,4 +1,6 @@
-# SageMaker Studio
+[[English](README.md)] [[한국어](README.ko.md)]
+
+# SageMaker Blueprint
 Amazon SageMaker Studio is the first fully integrated development environment (IDE) for machine learning (ML). With a single click, data scientists and developers can quickly spin up Amazon SageMaker Studio Notebooks for exploring datasets and building models. With the new ability to launch Amazon SageMaker Studio in your Amazon Virtual Private Cloud (Amazon VPC), you can control the data flow from your Amazon SageMaker Studio notebooks. This allows you to restrict internet access, monitor and inspect traffic using standard AWS networking and security capabilities, and connect to other AWS resources through AWS PrivateLink or VPC endpoints.
 
 ## Setup
@@ -14,6 +16,9 @@ Also you can use the `-var-file` option for customized paramters when you run th
 terraform plan -var-file tc1.tfvars
 terraform apply -var-file tc1.tfvars
 ```
+
+## Applications
+
 
 ## Clean up
 Before you destroy the SageMaker Studio, make sure that users in the SageMaker are deleted. Repeat the following steps for each user in the **User name** list on SageMaker control panel.

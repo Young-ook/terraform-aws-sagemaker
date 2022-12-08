@@ -87,9 +87,10 @@ module "sagemaker" {
 
 ### artifact/bucket
 module "s3" {
-  source = "../../modules/s3"
-  name   = var.name
-  tags   = var.tags
+  source        = "../../modules/s3"
+  name          = var.name
+  tags          = var.tags
+  force_destroy = var.force_destroy
   bucket_policy = {
     vpce-only = {
       policy = jsonencode({
