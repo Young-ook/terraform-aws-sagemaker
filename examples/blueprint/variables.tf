@@ -16,7 +16,7 @@ variable "use_default_vpc" {
 variable "azs" {
   description = "A list of availability zones for the vpc to deploy resources"
   type        = list(string)
-  default     = ["ap-northeast-2a", "ap-northeast-2d"]
+  default     = ["ap-northeast-2a", "ap-northeast-2b", "ap-northeast-2c", "ap-northeast-2d"]
 }
 
 variable "subnets" {
