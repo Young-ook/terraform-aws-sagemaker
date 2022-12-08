@@ -3,8 +3,17 @@
 # SageMaker Blueprint
 Amazon SageMaker Studio is the first fully integrated development environment (IDE) for machine learning (ML). With a single click, data scientists and developers can quickly spin up Amazon SageMaker Studio Notebooks for exploring datasets and building models. With the new ability to launch Amazon SageMaker Studio in your Amazon Virtual Private Cloud (Amazon VPC), you can control the data flow from your Amazon SageMaker Studio notebooks. This allows you to restrict internet access, monitor and inspect traffic using standard AWS networking and security capabilities, and connect to other AWS resources through AWS PrivateLink or VPC endpoints.
 
+This is SageMaker Blueprint example helps you compose complete SageMaker clusters that are fully bootstrapped with the operational software that is needed to deploy and operate ML workloads. With this SageMaker Blueprint example, you describe the configuration for the desired state of your ML developemnt environment, such as the control plane, worker nodes, private secure network as an Infrastructure as Code (IaC) template/blueprint. Once a blueprint is configured, you can use it to stamp out consistent environments across multiple AWS accounts and Regions using your automation workflow tool, such as Jenkins, CodePipeline. SageMaker Blueprint also helps you implement relevant security controls needed to operate workloads from multiple teams in the same cluster.
+
 ## Setup
-[This](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/studio/main.tf) is the example of terraform configuration file to create SageMaker studio on AWS. Check out and apply it using terraform command.
+### Download
+Download this example on your workspace
+```
+git clone https://github.com/Young-ook/terraform-aws-sagemaker
+cd terraform-aws-sagemaker/examples/blueprint
+```
+
+Then you are in **blueprint** directory under your current workspace. There is an exmaple that shows how to use terraform configurations to create and manage an SageMaker and utilities on your AWS account. Check out and apply it using terraform command. If you don't have the terraform tools in your environment, go to the main [page](https://github.com/Young-ook/terraform-aws-sagemaker) of this repository and follow the installation instructions before you move to the next step.
 
 Run terraform:
 ```
@@ -13,12 +22,13 @@ terraform apply
 ```
 Also you can use the `-var-file` option for customized paramters when you run the terraform plan/apply command.
 ```
-terraform plan -var-file tc1.tfvars
-terraform apply -var-file tc1.tfvars
+terraform plan -var-file fixture.tc1.tfvars
+terraform apply -var-file fixture.tc1.tfvars
 ```
 
 ## Applications
-
+- Personalize
+- Huggingface
 
 ## Clean up
 Before you destroy the SageMaker Studio, make sure that users in the SageMaker are deleted. Repeat the following steps for each user in the **User name** list on SageMaker control panel.
@@ -34,5 +44,5 @@ terraform destroy
 ```
 Don't forget you have to use the `-var-file` option when you run terraform destroy command to delete the aws resources created with extra variable files.
 ```
-terraform destroy -var-file tc1.tfvars
+terraform destroy -var-file fixture.tc1.tfvars
 ```
