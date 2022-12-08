@@ -27,7 +27,7 @@ terraform apply -var-file fixture.tc1.tfvars
 ```
 
 ## Applications
-- [Huggingface](./apps/README.md#huggingface-transformations-with-amazon-sagemaker)
+- [Huggingface](./apps/README.md#huggingface-transformers-with-amazon-sagemaker)
 - [Personalize](./apps/README.md#amazon-personalize)
 
 ## Clean up
