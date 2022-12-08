@@ -17,3 +17,8 @@ output "endpoints" {
   description = "The attributes of sagemaker endpoints"
   value       = module.sagemaker.endpoints
 }
+
+output "repo" {
+  description = "The attributes of code repository"
+  value       = aws_sagemaker_code_repository.repo
+}
