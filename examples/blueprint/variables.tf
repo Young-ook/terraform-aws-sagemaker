@@ -4,19 +4,19 @@
 variable "aws_region" {
   description = "The aws region to deploy"
   type        = string
-  default     = "us-east-1"
+  default     = "ap-northeast-2"
 }
 
 variable "use_default_vpc" {
   description = "A feature flag for whether to use default vpc"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "azs" {
   description = "A list of availability zones for the vpc to deploy resources"
   type        = list(string)
-  default     = ["us-east-1a", "us-east-1b", "us-east-1c"]
+  default     = ["ap-northeast-2a", "ap-northeast-2d"]
 }
 
 variable "subnets" {
@@ -26,14 +26,21 @@ variable "subnets" {
 }
 
 ### sagemaker
+variable "notebook_instances" {
+  description = "SageMaker Notebook instances definition"
+  default     = []
+}
+
 variable "studio" {
   description = "Amazon SageMaker studio definition"
   default     = {}
 }
 
-variable "notebook_instances" {
-  description = "SageMaker Notebook instances definition"
-  default     = []
+### s3
+variable "force_destroy" {
+  description = "A boolean that indicates all objects should be deleted from the bucket so that the bucket can be destroyed without error"
+  type        = bool
+  default     = true
 }
 
 ### description
