@@ -213,8 +213,8 @@ resource "local_file" "empty" {
     "echo $?",
     "exit 0"
   ])
-  filename        = "${path.module}/empty.sh"
-  file_permission = "0700"
+  filename        = join("/", [path.module, "awss3-empty.sh"])
+  file_permission = "0400"
 }
 
 resource "null_resource" "empty" {
@@ -222,6 +222,6 @@ resource "null_resource" "empty" {
   depends_on = [local_file.empty]
   provisioner "local-exec" {
     when    = destroy
-    command = "${path.module}/empty.sh"
+    command = "bash ${path.module}/awss3-empty.sh"
   }
 }
