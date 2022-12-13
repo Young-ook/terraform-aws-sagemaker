@@ -20,7 +20,7 @@ Run terraform:
 terraform init
 terraform apply
 ```
-Also you can use the `-var-file` option for customized paramters when you run the terraform plan/apply command.
+Also you can use the *-var-file* option for customized paramters when you run the terraform plan/apply command.
 ```
 terraform plan -var-file fixture.tc1.tfvars
 terraform apply -var-file fixture.tc1.tfvars
@@ -43,7 +43,7 @@ Run terraform:
 ```
 terraform destroy
 ```
-Don't forget you have to use the `-var-file` option when you run terraform destroy command to delete the aws resources created with extra variable files.
+**[DON'T FORGET]** You have to use the *-var-file* option when you run terraform destroy command to delete the aws resources created with extra variable files.
 ```
 terraform destroy -var-file fixture.tc1.tfvars
 ```
