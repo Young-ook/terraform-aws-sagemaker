@@ -76,7 +76,8 @@ module "vpc" {
 
 ### machinelearning
 module "sagemaker" {
-  source             = "../../"
+  source             = "Young-ook/sagemaker/aws"
+  version            = "0.3.2"
   name               = var.name
   tags               = var.tags
   vpc                = module.vpc.vpc.id
@@ -88,7 +89,7 @@ module "sagemaker" {
 ### artifact/bucket
 module "s3" {
   source        = "Young-ook/sagemaker/aws//modules/s3"
-  version       = "0.2.0"
+  version       = "0.3.2"
   name          = var.name
   tags          = var.tags
   force_destroy = var.force_destroy
