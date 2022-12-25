@@ -87,7 +87,8 @@ module "sagemaker" {
 
 ### artifact/bucket
 module "s3" {
-  source        = "../../modules/s3"
+  source        = "Young-ook/sagemaker/aws//modules/s3"
+  version       = "0.2.0"
   name          = var.name
   tags          = var.tags
   force_destroy = var.force_destroy
@@ -127,4 +128,48 @@ module "s3" {
       })
     }
   }
+  lifecycle_rules = [
+    {
+      id     = "s3-tc3-intelligent-tiering"
+      status = "Enabled"
+      filter = {
+        prefix = ""
+      }
+      transition = [
+        {
+          days = 0
+          # valid values for 'storage_class':
+          #   STANDARD_IA, ONEZONE_IA, INTELLIGENT_TIERING,
+          #   GLACIER, DEEP_ARCHIVE, GLACIER_IR
+          storage_class = "INTELLIGENT_TIERING"
+        },
+      ]
+    },
+  ]
+  intelligent_tiering_archive_rules = [
+    {
+      state = "Enabled"
+      filter = [
+        {
+          prefix = "logs/"
+          tags = {
+            priority = "high"
+            class    = "blue"
+          }
+        },
+      ]
+      tiering = [
+        {
+          # allowed values for 'access_tier':
+          #   ARCHIVE_ACCESS, DEEP_ARCHIVE_ACCESS
+          access_tier = "ARCHIVE_ACCESS"
+          days        = 125
+        },
+        {
+          access_tier = "DEEP_ARCHIVE_ACCESS"
+          days        = 180
+        },
+      ]
+    }
+  ]
 }
