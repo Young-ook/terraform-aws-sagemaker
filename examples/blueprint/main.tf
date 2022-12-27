@@ -74,7 +74,18 @@ module "vpc" {
   ]
 }
 
-### machinelearning
+### application/file
+module "efs" {
+  depends_on = [module.vpc]
+  source     = "Young-ook/sagemaker/aws//modules/efs"
+  version    = "0.3.2"
+  name       = var.name
+  tags       = var.tags
+  vpc        = module.vpc.vpc.id
+  subnets    = var.use_default_vpc ? values(module.vpc.subnets.public) : values(module.vpc.subnets.private)
+}
+
+### application/ml
 module "sagemaker" {
   source             = "Young-ook/sagemaker/aws"
   version            = "0.3.2"
