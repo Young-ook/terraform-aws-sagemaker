@@ -4,7 +4,6 @@
 
 ## Examples
 - [Amazon SageMaker Blueprint](https://github.com/Young-ook/terraform-aws-sagemaker/tree/main/examples/blueprint)
-- [Amazon EFS](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/efs)
 - [Amazon VPC](https://github.com/Young-ook/terraform-aws-vpc/blob/main/examples/vpc)
 
 ## Getting started
