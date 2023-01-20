@@ -1,4 +1,4 @@
-tags               = { example = "eks_blueprint" }
+tags               = { example = "sagemaker_blueprint" }
 notebook_instances = []
 studio = {
   # Supported values: PublicInternetOnly (Default) or VpcOnly.
