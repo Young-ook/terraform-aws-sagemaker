@@ -13,4 +13,10 @@ studio = {
       name = "default"
     }
   ]
+  lifecycle_configs = [
+    {
+      type    = "JupyterServer"
+      content = "echo hello"
+    },
+  ]
 }
