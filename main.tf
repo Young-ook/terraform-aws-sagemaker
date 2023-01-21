@@ -1,4 +1,4 @@
-## sagemaker
+### sagemaker
 
 ## notebook instance (ni)
 # security/policy
@@ -30,16 +30,15 @@ resource "aws_iam_role_policy_attachment" "extra" {
 
 # Lifecycle configuration for SageMaker Studio.
 # A shell script (base64-encoded) that runs only once when the SageMaker Studio Notebook is created.
-resource "aws_sagemaker_studio_lifecycle_config" "studio" {
-  for_each                         = { for lc in lookup(var.studio, "lifecycle_configs", []) : lc.type => lc }
+resource "aws_sagemaker_studio_lifecycle_config" "lc" {
+  for_each                         = { for lc in lookup(var.studio, "lifecycle_configs", []) : lc.name => lc }
   tags                             = merge(var.tags, local.default-tags)
   studio_lifecycle_config_name     = join("-", [local.name, "lc", each.key])
-  studio_lifecycle_config_app_type = each.key
+  studio_lifecycle_config_app_type = lookup(each.value, "type", "JupyterServer")
   studio_lifecycle_config_content  = base64encode(lookup(each.value, "content"))
 }
 
 resource "aws_sagemaker_domain" "studio" {
-  depends_on              = [aws_sagemaker_studio_lifecycle_config.studio]
   for_each                = toset(var.studio != null ? ["enabled"] : [])
   domain_name             = format("%s", local.name)
   auth_mode               = lookup(var.studio, "auth_mode", local.default_studio_config["auth_mode"])
@@ -52,10 +51,10 @@ resource "aws_sagemaker_domain" "studio" {
     security_groups = [aws_security_group.sagemaker.id]
 
     dynamic "jupyter_server_app_settings" {
-      for_each = { for lc in lookup(var.studio, "lifecycle_configs", []) : lc.type => lc if lc.type == "JupyterServer" }
+      for_each = { for lc in lookup(var.studio, "lifecycle_configs", []) : lc.name => lc if lc.type == "JupyterServer" }
       content {
         default_resource_spec {
-          lifecycle_config_arn = aws_sagemaker_studio_lifecycle_config.studio[jupyter_server_app_settings.key].arn
+          lifecycle_config_arn = aws_sagemaker_studio_lifecycle_config.lc[jupyter_server_app_settings.key].arn
         }
       }
     }
@@ -73,6 +72,32 @@ resource "aws_sagemaker_user_profile" "user" {
   user_settings {
     execution_role  = aws_iam_role.ni.arn
     security_groups = [aws_security_group.sagemaker.id]
+
+    dynamic "jupyter_server_app_settings" {
+      for_each = (lookup(each.value, "jupyter_server_app_settings", null) != null) ? [
+        lookup(each.value, "jupyter_server_app_settings")
+      ] : []
+      content {
+        default_resource_spec {
+          lifecycle_config_arn = (lookup(jupyter_server_app_settings.value, "lifecycle_rule", null) != null) ? (
+            lookup(aws_sagemaker_studio_lifecycle_config.lc, lookup(jupyter_server_app_settings.value, "lifecycle_rule"))["arn"]
+          ) : null
+        }
+      }
+    }
+
+    dynamic "kernel_gateway_app_settings" {
+      for_each = (lookup(each.value, "kernel_gateway_app_settings", null) != null) ? [
+        lookup(each.value, "kernel_gateway_app_settings")
+      ] : []
+      content {
+        default_resource_spec {
+          lifecycle_config_arn = (lookup(kernel_gateway_app_settings.value, "lifecycle_rule", null) != null) ? (
+            lookup(aws_sagemaker_studio_lifecycle_config.lc, lookup(kernel_gateway_app_settings.value, "lifecycle_rule"))["arn"]
+          ) : null
+        }
+      }
+    }
   }
 }
 
