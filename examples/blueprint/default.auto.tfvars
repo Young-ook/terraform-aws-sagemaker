@@ -1,4 +1,4 @@
-tags               = { example = "eks_blueprint" }
+tags               = { example = "sagemaker_blueprint" }
 notebook_instances = []
 studio = {
   # Supported values: PublicInternetOnly (Default) or VpcOnly.
@@ -11,6 +11,21 @@ studio = {
   user_profiles = [
     {
       name = "default"
+      jupyter_server_app_settings = {
+        lifecycle_rule = "hello"
+      }
     }
+  ]
+  lifecycle_configs = [
+    {
+      name    = "hello"
+      type    = "JupyterServer"
+      content = "echo hello"
+    },
+    {
+      name    = "distributed-training"
+      type    = "KernelGateway"
+      content = "echo hello"
+    },
   ]
 }

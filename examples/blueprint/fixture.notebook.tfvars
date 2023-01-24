@@ -7,7 +7,7 @@ notebook_instances = [
     }
   },
   {
-    name = "without-lc"
+    name          = "without-lc"
     instance_type = "ml.t3.large"
   },
 ]
