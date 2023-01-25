@@ -142,7 +142,7 @@ module "s3" {
   }
   lifecycle_rules = [
     {
-      id     = "s3-tc3-intelligent-tiering"
+      id     = "s3-intelligent-tiering"
       status = "Enabled"
       filter = {
         prefix = ""
