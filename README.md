@@ -81,3 +81,7 @@ Then retry terraform apply
 ```
 terraform apply
 ```
+
+# Additional Resources
+## Training
+- [AWS Skill Builder](https://explore.skillbuilder.aws/learn)
