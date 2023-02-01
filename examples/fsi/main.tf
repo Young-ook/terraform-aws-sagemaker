@@ -10,9 +10,10 @@ provider "aws" {
 
 # isolated vpc
 module "vpc" {
-  source = "Young-ook/vpc/aws"
-  name   = join("-", [var.name, "aws"])
-  tags   = var.tags
+  source  = "Young-ook/vpc/aws"
+  version = "1.0.3"
+  name    = join("-", [var.name, "aws"])
+  tags    = var.tags
   vpc_config = {
     azs         = var.azs
     cidr        = "10.10.0.0/16"
@@ -44,9 +45,10 @@ module "vpc" {
 
 # corp network
 module "corp" {
-  source = "Young-ook/vpc/aws"
-  name   = join("-", [var.name, "corp"])
-  tags   = var.tags
+  source  = "Young-ook/vpc/aws"
+  version = "1.0.3"
+  name    = join("-", [var.name, "corp"])
+  tags    = var.tags
   vpc_config = {
     azs         = var.azs
     cidr        = "10.20.0.0/16"
@@ -74,6 +76,7 @@ module "corp" {
 # transit gateway
 module "tgw" {
   source     = "Young-ook/vpc/aws//modules/tgw"
+  version    = "1.0.3"
   tags       = var.tags
   tgw_config = {}
   vpc_attachments = {
@@ -90,7 +93,8 @@ module "tgw" {
 
 # sagemaker
 module "sagemaker" {
-  source  = "../../"
+  source  = "Young-ook/sagemaker/aws"
+  version = "0.3.2"
   name    = var.name
   tags    = var.tags
   vpc     = module.vpc.vpc.id
