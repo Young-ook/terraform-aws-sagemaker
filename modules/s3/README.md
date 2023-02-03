@@ -1,8 +1,8 @@
 # Amazon S3 (Simple Storage Service)
 [Amazon S3](https://aws.amazon.com/s3/) is an object storage service that offers industry-leading scalability, data availability, security, and performance.
 
-### Quickstart
-```hcl
+## Quickstart
+```
 module "s3" {
   source  = "Young-ook/sagemaker/aws//modules/s3"
   name    = var.name
@@ -23,7 +23,7 @@ To manage your objects so that they are stored cost effectively throughout their
 For more information, see [Object lifecycle management](https://docs.aws.amazon.com/AmazonS3/latest/dev/object-lifecycle-mgmt.html).
 
 ### Example
-```hcl
+```
 module "s3" {
   source  = "Young-ook/sagemaker/aws//modules/s3"
   name    = var.name
