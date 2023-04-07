@@ -25,3 +25,4 @@ Whne you finishied the hands-on lab, you have to clean up AWS resources. Follow 
 
 # Additional Resources
 - [Amazon SageMaker JumpStart Simplifies Access to Pre-built Models and Machine Learning Solutions](https://aws.amazon.com/blogs/aws/amazon-sagemaker-jumpstart-simplifies-access-to-prebuilt-models-and-machine-learning-models/)
+- [Enable Amazon SageMaker JumpStart for custom IAM execution roles](https://aws.amazon.com/blogs/machine-learning/enable-amazon-sagemaker-jumpstart-for-custom-iam-execution-roles/)
