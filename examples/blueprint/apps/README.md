@@ -6,8 +6,6 @@ After a SageMaker notebook instance is launched, you can access and open a Jupyt
 
 ![sagemaker-notebook-huggingface-getting-started](../../../images/sagemaker-notebook-huggingface-getting-started.png)
 
-### Clean up Huggingface workshop
-
 ## Amazon Personalize
 [Amazon Personalize](https://aws.amazon.com/personalize/) enables developers to build applications with the same machine learning (ML) technology used by Amazon.com for real-time personalized recommendations – no ML expertise required.
 
@@ -23,5 +21,4 @@ This tutorial will walk you through building an environment to create a custom d
 
 You can download the Jupyter notebooks from the /notebooks folder. If you have any issues with any of the content here please visit the original [repo](https://github.com/aws-samples/amazon-personalize-samples) for updates.
 
-### Clean up personalize workshop
-To prepare clean up resources, follow the instruction of `Cleanup.ipynb` notebook to purge the resource that we made through SageMaker notebook. Then, you can try to destroy SageMaker and AWS infrastructure. For more information, please refer to this.
+Whne you finishied the hands-on lab, you have to clean up AWS resources. Follow the instructions of `Cleanup.ipynb` notebook to purge the resource that we made through SageMaker notebook. Then, you can try to destroy SageMaker and AWS infrastructure. For more information, please refer to this.
