@@ -82,5 +82,5 @@ terraform apply
 ```
 
 # Additional Resources
-## Training
+## On-line training courses
 - [AWS Skill Builder](https://explore.skillbuilder.aws/learn)
