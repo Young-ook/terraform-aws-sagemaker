@@ -8,7 +8,7 @@ locals {
   bucket_arn_with_slash = join("/", [aws_s3_bucket.bucket.arn, "*"])
 }
 
-# security/policy
+### security/policy
 resource "aws_iam_policy" "read" {
   name        = format("%s-read", local.name)
   description = format("Allow to read objects and the S3 bucket")
@@ -55,7 +55,7 @@ resource "aws_iam_policy" "write" {
   })
 }
 
-# security/policy
+### security/policy
 resource "aws_s3_bucket_policy" "bucket" {
   for_each   = var.bucket_policy == null ? {} : var.bucket_policy
   depends_on = [aws_s3_bucket_public_access_block.bucket]
@@ -63,7 +63,7 @@ resource "aws_s3_bucket_policy" "bucket" {
   policy     = lookup(each.value, "policy", null)
 }
 
-# security/policy
+### security/policy
 resource "aws_s3_bucket_public_access_block" "bucket" {
   bucket                  = aws_s3_bucket.bucket.id
   block_public_acls       = true
@@ -72,16 +72,11 @@ resource "aws_s3_bucket_public_access_block" "bucket" {
   restrict_public_buckets = true
 }
 
-# bucket
+### storage/bucket
 resource "aws_s3_bucket" "bucket" {
   bucket        = local.name
   tags          = merge(local.default-tags, var.tags)
   force_destroy = var.force_destroy
-}
-
-resource "aws_s3_bucket_acl" "acl" {
-  bucket = aws_s3_bucket.bucket.id
-  acl    = var.canned_acl
 }
 
 resource "aws_s3_bucket_versioning" "versioning" {
@@ -198,7 +193,7 @@ locals {
   bucket_name = aws_s3_bucket.bucket.id
 }
 
-# cleanup script
+### utility/script
 resource "local_file" "empty" {
   count      = var.force_destroy ? 1 : 0
   depends_on = [aws_s3_bucket.bucket]

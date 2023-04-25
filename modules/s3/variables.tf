@@ -5,19 +5,6 @@ variable "bucket_policy" {
   default     = {}
 }
 
-variable "canned_acl" {
-  description = "Predefined access control rule. The default is 'private' to prevent all access"
-  type        = string
-  default     = "private"
-  validation {
-    condition = var.canned_acl != null && contains([
-      "private", "public-read", "public-read-write", "aws-exec-read", "authenticated-read",
-      "bucket-owner-read", "bucket-owner-full-control", "log-delivery-write"
-    ], var.canned_acl)
-    error_message = "Please insert a valid canned ACL type name."
-  }
-}
-
 variable "intelligent_tiering_archive_rules" {
   description = "A configuration of intelligent tiering archive management"
   type        = any
