@@ -15,6 +15,6 @@ resource "test_assertions" "pet_name" {
 
   check "pet_name" {
     description = "default random pet name"
-    condition   = can(length(regexall("^s3", module.main.cluster.name)) > 0)
+    condition   = can(length(regexall("^s3", module.main.bucket.id)) > 0)
   }
 }
