@@ -56,6 +56,7 @@ terraform destroy -var-file fixture.tc1.tfvars
 # Additional Resources
 ## Amazon EFS
 - [Mount an EFS file system to an Amazon SageMaker notebook](https://aws.amazon.com/blogs/machine-learning/mount-an-efs-file-system-to-an-amazon-sagemaker-notebook-with-lifecycle-configurations/)
+- [Amazon SageMaker를 활용한 기계 학습에서 EFS 안의 민감 정보를 삭제하기 위한 서버리스 솔루션](https://aws.amazon.com/ko/blogs/tech/sensitive-ml-training-data-lifecycle-management-using-aws-lambda/)
 
 ## Amazon SageMaker
 - [Securing Amazon SageMaker Studio connectivity using a private VPC](https://aws.amazon.com/ko/blogs/machine-learning/securing-amazon-sagemaker-studio-connectivity-using-a-private-vpc/)
