@@ -1,10 +1,14 @@
-### sagemaker
+### Amazon SageMaker Notebook
 
-## notebook instance (ni)
-# security/policy
+## aws partition and region (global, gov, china)
+module "aws" {
+  source = "Young-ook/spinnaker/aws//modules/aws-partitions"
+}
+
+### security/policy
 resource "aws_iam_role" "ni" {
   name = format("%s-ni", local.name)
-  tags = merge(local.default-tags, var.tags)
+  tags = merge(var.tags, local.default-tags)
   assume_role_policy = jsonencode({
     Statement = [{
       Action = "sts:AssumeRole"
@@ -28,86 +32,35 @@ resource "aws_iam_role_policy_attachment" "extra" {
   role       = aws_iam_role.ni.id
 }
 
-# Lifecycle configuration for SageMaker Studio.
-# A shell script (base64-encoded) that runs only once when the SageMaker Studio Notebook is created.
-resource "aws_sagemaker_studio_lifecycle_config" "lc" {
-  for_each                         = { for lc in lookup(var.studio, "lifecycle_configs", []) : lc.name => lc }
-  tags                             = merge(var.tags, local.default-tags)
-  studio_lifecycle_config_name     = join("-", [local.name, "lc", each.key])
-  studio_lifecycle_config_app_type = lookup(each.value, "type", "JupyterServer")
-  studio_lifecycle_config_content  = base64encode(lookup(each.value, "content"))
-}
+### security/firewall
+resource "aws_security_group" "sagemaker" {
+  name        = local.name
+  description = format("security group for %s", local.name)
+  vpc_id      = var.vpc
+  tags        = merge(local.default-tags, var.tags)
 
-resource "aws_sagemaker_domain" "studio" {
-  for_each                = toset(var.studio != null ? ["enabled"] : [])
-  domain_name             = format("%s", local.name)
-  auth_mode               = lookup(var.studio, "auth_mode", local.default_studio_config["auth_mode"])
-  app_network_access_type = lookup(var.studio, "app_network_access_type", local.default_studio_config["app_network_access_type"])
-  vpc_id                  = var.vpc
-  subnet_ids              = var.subnets
+  ingress {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+    self      = true
+  }
 
-  default_user_settings {
-    execution_role  = aws_iam_role.ni.arn
-    security_groups = [aws_security_group.sagemaker.id]
-
-    dynamic "jupyter_server_app_settings" {
-      for_each = { for lc in lookup(var.studio, "lifecycle_configs", []) : lc.name => lc if lc.type == "JupyterServer" }
-      content {
-        default_resource_spec {
-          lifecycle_config_arn = aws_sagemaker_studio_lifecycle_config.lc[jupyter_server_app_settings.key].arn
-        }
-      }
-    }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
-locals {
-  user_profiles = var.studio != null ? lookup(var.studio, "user_profiles", local.default_studio_config["user_profiles"]) : []
-}
-
-resource "aws_sagemaker_user_profile" "user" {
-  for_each          = { for user in local.user_profiles : user.name => user }
-  domain_id         = aws_sagemaker_domain.studio["enabled"].id
-  user_profile_name = each.key
-  user_settings {
-    execution_role  = aws_iam_role.ni.arn
-    security_groups = [aws_security_group.sagemaker.id]
-
-    dynamic "jupyter_server_app_settings" {
-      for_each = (lookup(each.value, "jupyter_server_app_settings", null) != null) ? [
-        lookup(each.value, "jupyter_server_app_settings")
-      ] : []
-      content {
-        default_resource_spec {
-          lifecycle_config_arn = (lookup(jupyter_server_app_settings.value, "lifecycle_rule", null) != null) ? (
-            lookup(aws_sagemaker_studio_lifecycle_config.lc, lookup(jupyter_server_app_settings.value, "lifecycle_rule"))["arn"]
-          ) : null
-        }
-      }
-    }
-
-    dynamic "kernel_gateway_app_settings" {
-      for_each = (lookup(each.value, "kernel_gateway_app_settings", null) != null) ? [
-        lookup(each.value, "kernel_gateway_app_settings")
-      ] : []
-      content {
-        default_resource_spec {
-          lifecycle_config_arn = (lookup(kernel_gateway_app_settings.value, "lifecycle_rule", null) != null) ? (
-            lookup(aws_sagemaker_studio_lifecycle_config.lc, lookup(kernel_gateway_app_settings.value, "lifecycle_rule"))["arn"]
-          ) : null
-        }
-      }
-    }
-  }
-}
-
-# drawing lots for choosing a subnet
+### drawing lots for choosing a subnet
 resource "random_integer" "subnet" {
   min = 0
   max = length(var.subnets) - 1
 }
 
-# Lifecycle configuration for SageMaker Notebook Instances.
+### Lifecycle configuration for SageMaker Notebook Instances.
 # on_create : A shell script (base64-encoded) that runs only once when the SageMaker Notebook Instance is created.
 # on_start : A shell script (base64-encoded) that runs every time the SageMaker Notebook Instance is started including the time it's created.
 resource "aws_sagemaker_notebook_instance_lifecycle_configuration" "lc" {
@@ -117,6 +70,7 @@ resource "aws_sagemaker_notebook_instance_lifecycle_configuration" "lc" {
   on_start  = base64encode(lookup(lookup(each.value, "lifecycle_config", local.default_notebook_config["lifecycle_config"]), "on_start", ""))
 }
 
+### application/instance
 resource "aws_sagemaker_notebook_instance" "ni" {
   depends_on              = [aws_iam_role_policy_attachment.sagemaker-admin]
   for_each                = { for ni in var.notebook_instances : ni.name => ni }

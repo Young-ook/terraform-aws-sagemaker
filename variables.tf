@@ -1,3 +1,5 @@
+### input variables
+
 ### network
 variable "vpc" {
   description = "The vpc ID for sagemaker"
@@ -13,12 +15,7 @@ variable "subnets" {
   }
 }
 
-### sagemaker domain
-variable "studio" {
-  description = "Amazon SageMaker studio definition"
-  default     = null
-}
-
+### sagemaker notebook
 variable "notebook_instances" {
   description = "SageMaker Notebook instances definition"
   default     = []

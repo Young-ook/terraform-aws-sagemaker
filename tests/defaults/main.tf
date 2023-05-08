@@ -15,7 +15,6 @@ module "main" {
   source  = "../.."
   vpc     = module.vpc.vpc.id
   subnets = values(module.vpc.subnets["public"])
-  studio  = {} # need to fix
   notebook_instances = [
     {
       name = "with-lc"
