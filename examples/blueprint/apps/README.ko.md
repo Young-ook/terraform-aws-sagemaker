@@ -4,7 +4,7 @@
 ## SageMaker Studio 프로젝트
 SageMaker Studio에서 프로젝트를 활성화 해야 합니다.
 ![aws-sm-svccatal-disabled](../../../images/aws-sm-svccatal-disabled.png)
-![aws-sm-svccatal-enabled](../../../images/aws-sm-svccatal-enabled.png)
+![aws-sm-enable-jumpstart](../../../images/aws-sm-enable-jumpstart.png)
 
 ## Amazon SageMaker에서 허깅페이스 트랜스포머(Huggingface Transformers) 사용하기
 SageMaker 노트북 인스턴스가 구동되었다면, 여러 분은 AWS 관리 콘솔의 SageMaker 서비스 페이지에서 JupyterLab 또는 Jupyter notebook을 열고 접속할 수 있습니다. 이 예제에서는 Amazon SageMaker에서 처음으로 허깅페이스 트랜스포머 예제를 실행할 때 필요한 자원을 모두 배포할 것입니다. 먼저 아래와 같이 저장소를 여러 분의 노트북 작업환경에 복사합니다. 이제 여러 분은 보다 예제 노트북에 접근할 수 있습니다.

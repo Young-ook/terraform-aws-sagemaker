@@ -3,7 +3,7 @@
 # Applications
 ## SageMaker Studio Projects
 ![aws-sm-svccatal-disabled](../../../images/aws-sm-svccatal-disabled.png)
-![aws-sm-svccatal-enabled](../../../images/aws-sm-svccatal-enabled.png)
+![aws-sm-enable-jumpstart](../../../images/aws-sm-enable-jumpstart.png)
 
 ## Huggingface Transformers with Amazon SageMaker
 After a SageMaker notebook instance is launched, you can access and open a JupyterLab or Jupyter notebook in the sagemaker service page of AWS management console. This example that will deploy all the resources you need to run your first hugging face transformers example with Amazon SageMaker. This repository is cloned into the environment so you can explore the more advanced notebooks with this approach as well.
