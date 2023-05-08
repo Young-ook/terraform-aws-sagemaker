@@ -28,12 +28,12 @@ variable "subnets" {
 ### sagemaker
 variable "notebook_instances" {
   description = "SageMaker Notebook instances definition"
-  default     = []
+  default     = null
 }
 
 variable "studio" {
   description = "Amazon SageMaker studio definition"
-  default     = {}
+  default     = null
 }
 
 ### s3

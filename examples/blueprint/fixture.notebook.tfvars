@@ -11,4 +11,4 @@ notebook_instances = [
     instance_type = "ml.t3.large"
   },
 ]
-studio = {}
+studio = null

@@ -1,5 +1,5 @@
 tags               = { example = "sagemaker_blueprint" }
-notebook_instances = []
+notebook_instances = null
 studio = {
   # Supported values: PublicInternetOnly (Default) or VpcOnly.
   # To disable direct internet access, set to VpcOnly when onboarding to Studio.
