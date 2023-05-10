@@ -3,7 +3,7 @@
 # Applications
 ## SageMaker Studio Projects
 ![aws-sm-svccatal-disabled](../../../images/aws-sm-svccatal-disabled.png)
-![aws-sm-svccatal-enabled](../../../images/aws-sm-svccatal-enabled.png)
+![aws-sm-enable-jumpstart](../../../images/aws-sm-enable-jumpstart.png)
 
 ## Huggingface Transformers with Amazon SageMaker
 After a SageMaker notebook instance is launched, you can access and open a JupyterLab or Jupyter notebook in the sagemaker service page of AWS management console. This example that will deploy all the resources you need to run your first hugging face transformers example with Amazon SageMaker. This repository is cloned into the environment so you can explore the more advanced notebooks with this approach as well.
@@ -25,7 +25,7 @@ This tutorial will walk you through building an environment to create a custom d
 
 You can download the Jupyter notebooks from the /notebooks folder. If you have any issues with any of the content here please visit the original [repo](https://github.com/aws-samples/amazon-personalize-samples) for updates.
 
-Whne you finishied the hands-on lab, you have to clean up AWS resources. Follow the instructions of `Cleanup.ipynb` notebook to purge the resource that we made through SageMaker notebook. Then, you can try to destroy SageMaker and AWS infrastructure. For more information, please refer to this.
+Whne you finishied the hands-on lab, you have to clean up AWS resources. Follow the instructions of `Cleanup.ipynb` notebook to purge the resource that we made through SageMaker notebook. Then, you can try to destroy SageMaker and AWS infrastructure.
 
 ## JumpStart
 Amazon SageMaker JumpStart is a machine learning (ML) hub that can help you accelerate your ML journey. With SageMaker JumpStart, you can access pretrained models, including foundation models, to perform tasks like article summarization and image generation. Pretrained models are fully customizable for your use case with your data, and you can easily deploy them into production with the user interface or SDK. In addition, you can access prebuilt solutions to solve common use cases, and share ML artifacts, including ML models and notebooks, within your organization to accelerate ML model building and deployment. For more details, please visit this [developer guide for SageMaker JumpStart](https://docs.aws.amazon.com/sagemaker/latest/dg/studio-jumpstart.html).
