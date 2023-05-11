@@ -76,15 +76,6 @@ resource "aws_sagemaker_domain" "studio" {
   default_user_settings {
     execution_role  = aws_iam_role.studio.arn
     security_groups = [aws_security_group.studio.id]
-
-    dynamic "jupyter_server_app_settings" {
-      for_each = { for lc in lookup(var.studio, "lifecycle_configs", []) : lc.name => lc if lc.type == "JupyterServer" }
-      content {
-        default_resource_spec {
-          lifecycle_config_arn = aws_sagemaker_studio_lifecycle_config.lc[jupyter_server_app_settings.key].arn
-        }
-      }
-    }
   }
 }
 
