@@ -12,7 +12,7 @@ studio = {
     {
       name = "default"
       jupyter_server_app_settings = {
-        lifecycle_configs = "hello"
+        lifecycle_configs = ["hello"]
       }
     }
   ]

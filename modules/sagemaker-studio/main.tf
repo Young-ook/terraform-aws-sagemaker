@@ -89,11 +89,13 @@ resource "aws_sagemaker_domain" "studio" {
 }
 
 locals {
-  user_profiles = var.studio != null ? lookup(var.studio, "user_profiles", local.default_studio["user_profiles"]) : []
+  user_profiles     = var.studio != null ? lookup(var.studio, "user_profiles", local.default_studio["user_profiles"]) : []
+  lifecycle_configs = { for k, v in aws_sagemaker_studio_lifecycle_config.lc : k => v.arn }
 }
 
 ### application/users
 resource "aws_sagemaker_user_profile" "user" {
+  depends_on        = [aws_sagemaker_studio_lifecycle_config.lc]
   for_each          = { for user in local.user_profiles : user.name => user }
   domain_id         = aws_sagemaker_domain.studio.id
   user_profile_name = each.key
@@ -106,9 +108,9 @@ resource "aws_sagemaker_user_profile" "user" {
         lookup(each.value, "jupyter_server_app_settings")
       ] : []
       content {
-        lifecycle_config_arns = (lookup(jupyter_server_app_settings.value, "lifecycle_configs", null) != null) ? [(
-          lookup(aws_sagemaker_studio_lifecycle_config.lc, lookup(jupyter_server_app_settings.value, "lifecycle_configs"))["arn"]
-        )] : null
+        lifecycle_config_arns = (lookup(jupyter_server_app_settings.value, "lifecycle_configs", null) != null) ? [
+          for v in lookup(jupyter_server_app_settings.value, "lifecycle_configs", []) : local.lifecycle_configs[v]
+        ] : null
       }
     }
 
