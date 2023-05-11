@@ -12,7 +12,7 @@ studio = {
     {
       name = "default"
       jupyter_server_app_settings = {
-        lifecycle_configs = ["hello"]
+        lifecycle_configs = ["hello", "world"]
       }
     }
   ]
@@ -21,6 +21,11 @@ studio = {
       name    = "hello"
       type    = "JupyterServer"
       content = "echo hello"
+    },
+    {
+      name    = "world"
+      type    = "JupyterServer"
+      content = "echo world"
     },
     {
       name    = "distributed-training"
