@@ -106,11 +106,9 @@ resource "aws_sagemaker_user_profile" "user" {
         lookup(each.value, "jupyter_server_app_settings")
       ] : []
       content {
-        default_resource_spec {
-          lifecycle_config_arn = (lookup(jupyter_server_app_settings.value, "lifecycle_rule", null) != null) ? (
-            lookup(aws_sagemaker_studio_lifecycle_config.lc, lookup(jupyter_server_app_settings.value, "lifecycle_rule"))["arn"]
-          ) : null
-        }
+        lifecycle_config_arns = (lookup(jupyter_server_app_settings.value, "lifecycle_configs", null) != null) ? [(
+          lookup(aws_sagemaker_studio_lifecycle_config.lc, lookup(jupyter_server_app_settings.value, "lifecycle_configs"))["arn"]
+        )] : null
       }
     }
 
