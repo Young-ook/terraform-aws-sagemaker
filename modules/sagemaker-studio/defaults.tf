@@ -20,4 +20,10 @@ locals {
       }
     ]
   }
+  default_app = {
+    ### Allowed values: JupyterServer, KernelGateway, RStudioServerPro, RSessionGateway and TensorBoard.
+    type    = "JupyterServer"
+    name    = "default"
+    profile = "default"
+  }
 }
