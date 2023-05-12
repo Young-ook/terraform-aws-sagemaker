@@ -82,7 +82,7 @@ resource "aws_sagemaker_domain" "studio" {
 
 locals {
   app_configs       = var.studio != null ? try(var.studio.app_configs, []) : []
-  user_profiles     = var.studio != null ? lookup(var.studio, "user_profiles", local.default_studio["user_profiles"]) : []
+  user_profiles     = var.studio != null ? try(var.studio.user_profiles, []) : []
   lifecycle_configs = { for k, v in aws_sagemaker_studio_lifecycle_config.lc : k => v.arn }
 }
 
@@ -90,7 +90,7 @@ locals {
 resource "aws_sagemaker_user_profile" "user" {
   depends_on        = [aws_sagemaker_studio_lifecycle_config.lc]
   for_each          = { for user in local.user_profiles : user.name => user }
-  user_profile_name = each.key
+  user_profile_name = try(each.key, local.default_user_profile["name"])
   tags              = merge(var.tags, local.default-tags)
   domain_id         = aws_sagemaker_domain.studio.id
 
