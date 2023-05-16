@@ -66,3 +66,6 @@ terraform destroy -var-file fixture.tc1.tfvars
 - [Hybrid-network Architecture with AWS Transit Gateway](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/tgw)
 - [Huggingface with Amazon SageMaker](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/huggingface)
 - [Amazon SageMaker Feature Store Workshop](https://github.com/aws-samples/amazon-sagemaker-feature-store-end-to-end-workshop)
+
+## Jupyter Notebook
+- [Announcing new Jupyter contributions by AWS to democratize generative AI and scale ML workloads](https://aws.amazon.com/blogs/machine-learning/announcing-new-jupyter-contributions-by-aws-to-democratize-generative-ai-and-scale-ml-workloads/)
