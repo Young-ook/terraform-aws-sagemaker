@@ -2,6 +2,8 @@
 [Amazon SageMaker](https://aws.amazon.com/sagemaker/) helps data scientists and developers to prepare, build, train, and deploy high-quality machine learning (ML) models quickly by bringing together a broad set of capabilities purpose-built for ML. You can deploy SageMaker Domain or Jupyter notebook instances on AWS using this module.
 
 ## Examples
+- [Amazon EKS Blueprint](https://github.com/Young-ook/terraform-aws-eks/tree/main/examples/blueprint)
+- [Amazon EMR Blueprint](https://github.com/Young-ook/terraform-aws-emr/tree/main/examples/blueprint)
 - [Amazon SageMaker Blueprint](https://github.com/Young-ook/terraform-aws-sagemaker/tree/main/examples/blueprint)
 - [Deploy Amazon SageMaker into a secure VPC](https://github.com/Young-ook/terraform-aws-sagemaker/tree/main/examples/fsi)
 
