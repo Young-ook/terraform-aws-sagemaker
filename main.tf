@@ -64,10 +64,10 @@ resource "random_integer" "subnet" {
 # on_create : A shell script (base64-encoded) that runs only once when the SageMaker Notebook Instance is created.
 # on_start : A shell script (base64-encoded) that runs every time the SageMaker Notebook Instance is started including the time it's created.
 resource "aws_sagemaker_notebook_instance_lifecycle_configuration" "lc" {
-  for_each  = { for ni in var.notebook_instances : ni.name => ni }
+  for_each  = { for ni in var.notebook_instances : ni.name => ni if lookup(ni, "lifecycle_config", null) != null }
   name      = join("-", [local.name, each.key])
-  on_create = base64encode(lookup(lookup(each.value, "lifecycle_config", local.default_notebook_config["lifecycle_config"]), "on_create", ""))
-  on_start  = base64encode(lookup(lookup(each.value, "lifecycle_config", local.default_notebook_config["lifecycle_config"]), "on_start", ""))
+  on_create = base64encode(lookup(lookup(each.value, "lifecycle_config", {}), "on_create", ""))
+  on_start  = base64encode(lookup(lookup(each.value, "lifecycle_config", {}), "on_start", ""))
 }
 
 ### application/instance
