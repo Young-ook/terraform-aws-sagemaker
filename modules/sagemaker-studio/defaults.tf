@@ -14,10 +14,14 @@ locals {
         content = "studio_lifecycle_config_content to be in the range (1 - 16384)"
       }
     ]
-    user_profiles = [
-      {
-        name = "default"
-      }
-    ]
+  }
+  default_app = {
+    ### Allowed values: JupyterServer, KernelGateway, RStudioServerPro, RSessionGateway and TensorBoard.
+    type    = "JupyterServer"
+    name    = "default"
+    profile = "default"
+  }
+  default_user_profile = {
+    name = "default"
   }
 }

@@ -68,6 +68,7 @@ resource "aws_sagemaker_studio_lifecycle_config" "lc" {
 ### application/studio
 resource "aws_sagemaker_domain" "studio" {
   domain_name             = local.name
+  tags                    = merge(var.tags, local.default-tags)
   auth_mode               = lookup(var.studio, "auth_mode", local.default_studio["auth_mode"])
   app_network_access_type = lookup(var.studio, "app_network_access_type", local.default_studio["app_network_access_type"])
   vpc_id                  = var.vpc
@@ -80,7 +81,8 @@ resource "aws_sagemaker_domain" "studio" {
 }
 
 locals {
-  user_profiles     = var.studio != null ? lookup(var.studio, "user_profiles", local.default_studio["user_profiles"]) : []
+  app_configs       = var.studio != null ? try(var.studio.app_configs, []) : []
+  user_profiles     = var.studio != null ? try(var.studio.user_profiles, []) : []
   lifecycle_configs = { for k, v in aws_sagemaker_studio_lifecycle_config.lc : k => v.arn }
 }
 
@@ -88,8 +90,10 @@ locals {
 resource "aws_sagemaker_user_profile" "user" {
   depends_on        = [aws_sagemaker_studio_lifecycle_config.lc]
   for_each          = { for user in local.user_profiles : user.name => user }
+  user_profile_name = try(each.key, local.default_user_profile["name"])
+  tags              = merge(var.tags, local.default-tags)
   domain_id         = aws_sagemaker_domain.studio.id
-  user_profile_name = each.key
+
   user_settings {
     execution_role  = aws_iam_role.studio.arn
     security_groups = [aws_security_group.studio.id]
@@ -118,4 +122,14 @@ resource "aws_sagemaker_user_profile" "user" {
       }
     }
   }
+}
+
+resource "aws_sagemaker_app" "app" {
+  depends_on        = [aws_sagemaker_user_profile.user]
+  for_each          = { for app in local.app_configs : app.name => app }
+  app_name          = each.key
+  app_type          = lookup(each.value, "type", local.default_app["type"])
+  tags              = merge(var.tags, local.default-tags)
+  domain_id         = aws_sagemaker_domain.studio.id
+  user_profile_name = aws_sagemaker_user_profile.user[lookup(each.value, "profile", local.default_app["profile"])].user_profile_name
 }

@@ -5,6 +5,11 @@ output "studio" {
   value       = aws_sagemaker_domain.studio
 }
 
+output "apps" {
+  description = "The SageMaker studio apps"
+  value       = aws_sagemaker_app.app
+}
+
 output "users" {
   description = "The SageMaker studio users"
   value       = aws_sagemaker_user_profile.user
