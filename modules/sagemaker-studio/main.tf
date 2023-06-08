@@ -103,6 +103,14 @@ resource "aws_sagemaker_user_profile" "user" {
         lookup(each.value, "jupyter_server_app_settings")
       ] : []
       content {
+        dynamic "code_repository" {
+          for_each = (try(jupyter_server_app_settings.value.code_repository, null) != null ? (
+            toset(try(jupyter_server_app_settings.value.code_repository))
+          ) : [])
+          content {
+            repository_url = code_repository.value
+          }
+        }
         lifecycle_config_arns = (lookup(jupyter_server_app_settings.value, "lifecycle_configs", null) != null) ? [
           for v in lookup(jupyter_server_app_settings.value, "lifecycle_configs", []) : local.lifecycle_configs[v]
         ] : null

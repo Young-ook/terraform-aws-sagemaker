@@ -13,6 +13,10 @@ studio = {
       name = "default"
       jupyter_server_app_settings = {
         lifecycle_configs = ["hello", "world"]
+        code_repository = [
+          "https://github.com/huggingface/notebooks.git",
+          "https://github.com/aws-samples/amazon-personalize-samples.git",
+        ]
       }
     }
   ]
