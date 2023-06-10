@@ -75,7 +75,7 @@ Please try again using subnet in a different availability zone, or try a differe
 
 Run terraform to delete a randomly selected subnet index and notebook instance:
 ```
-terraform destroy -target module.sagemaker.random_integer.subnet -target module.sagemaker.aws_sagemaker_notebook_instance.ni
+terraform destroy -target module.notebook
 ```
 Then retry terraform apply
 

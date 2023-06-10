@@ -77,7 +77,7 @@ module "vpc" {
 module "studio" {
   for_each = toset(var.studio != null ? ["enabled"] : [])
   source   = "Young-ook/sagemaker/aws//modules/sagemaker-studio"
-  version  = "0.3.7"
+  version  = "0.4.1"
   name     = var.name
   tags     = var.tags
   vpc      = module.vpc.vpc.id
