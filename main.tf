@@ -37,7 +37,7 @@ resource "aws_security_group" "sagemaker" {
   name        = local.name
   description = format("security group for %s", local.name)
   vpc_id      = var.vpc
-  tags        = merge(local.default-tags, var.tags)
+  tags        = merge(var.tags, local.default-tags)
 
   ingress {
     from_port = 0
@@ -76,7 +76,7 @@ resource "aws_sagemaker_notebook_instance" "ni" {
   for_each                = { for ni in var.notebook_instances : ni.name => ni }
   name                    = format("%s-%s", local.name, each.key)
   role_arn                = aws_iam_role.ni.arn
-  tags                    = merge(local.default-tags, var.tags)
+  tags                    = merge(var.tags, local.default-tags)
   direct_internet_access  = lookup(each.value, "direct_internet_access", local.default_notebook_config["direct_internet_access"])
   subnet_id               = var.subnets[random_integer.subnet.result]
   security_groups         = [aws_security_group.sagemaker.id]
@@ -90,7 +90,7 @@ resource "aws_sagemaker_notebook_instance" "ni" {
 resource "aws_sagemaker_model" "model" {
   for_each                 = { for m in var.models : m.name => m }
   name                     = lower(each.key)
-  tags                     = merge(local.default-tags, var.tags)
+  tags                     = merge(var.tags, local.default-tags)
   execution_role_arn       = aws_iam_role.ni.arn # todo: replace with new role
   enable_network_isolation = lookup(each.value, "enable_network_isolation", false)
 
@@ -131,7 +131,7 @@ resource "aws_sagemaker_endpoint_configuration" "ep" {
   depends_on  = [aws_sagemaker_model.model]
   for_each    = { for ep in var.endpoints : ep.name => ep }
   name        = lower(local.name)
-  tags        = merge(local.default-tags, var.tags)
+  tags        = merge(var.tags, local.default-tags)
   kms_key_arn = lookup(each.value, "kms_key_arn", null)
 
   dynamic "production_variants" {
