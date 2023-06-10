@@ -2,16 +2,17 @@
 
 ### network
 variable "vpc" {
-  description = "The vpc ID for sagemaker"
+  description = "A vpc ID for sagemaker"
   type        = string
 }
 
-variable "subnets" {
-  description = "The subnet IDs to deploy sagemaker"
-  type        = list(string)
+variable "subnet" {
+  description = "A subnet ID to deploy sagemaker"
+  type        = string
+  default     = null
   validation {
-    condition     = var.subnets != null && length(var.subnets) > 0
-    error_message = "The subnets required."
+    condition     = var.subnet != ""
+    error_message = "A subnet is invalid."
   }
 }
 

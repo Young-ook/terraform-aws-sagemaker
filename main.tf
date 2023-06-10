@@ -54,12 +54,6 @@ resource "aws_security_group" "sagemaker" {
   }
 }
 
-### drawing lots for choosing a subnet
-resource "random_integer" "subnet" {
-  min = 0
-  max = length(var.subnets) - 1
-}
-
 ### Lifecycle configuration for SageMaker Notebook Instances.
 # on_create : A shell script (base64-encoded) that runs only once when the SageMaker Notebook Instance is created.
 # on_start : A shell script (base64-encoded) that runs every time the SageMaker Notebook Instance is started including the time it's created.
@@ -78,8 +72,8 @@ resource "aws_sagemaker_notebook_instance" "ni" {
   role_arn                = aws_iam_role.ni.arn
   tags                    = merge(local.default-tags, var.tags)
   direct_internet_access  = lookup(each.value, "direct_internet_access", local.default_notebook_config["direct_internet_access"])
-  subnet_id               = var.subnets[random_integer.subnet.result]
-  security_groups         = [aws_security_group.sagemaker.id]
+  subnet_id               = var.subnet
+  security_groups         = var.subnet == null ? null : [aws_security_group.sagemaker.id]
   instance_type           = lookup(each.value, "instance_type", local.default_notebook_config["instance_type"])
   volume_size             = lookup(each.value, "volume_size", local.default_notebook_config["volume_size"])
   default_code_repository = lookup(each.value, "default_code_repository", null)
