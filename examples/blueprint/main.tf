@@ -73,6 +73,12 @@ module "vpc" {
   ]
 }
 
+### drawing lots for choosing a subnet
+resource "random_integer" "subnet" {
+  min = 0
+  max = length(values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"])) - 1
+}
+
 ### application/ml
 module "studio" {
   for_each = toset(var.studio != null ? ["enabled"] : [])
@@ -88,11 +94,11 @@ module "studio" {
 module "notebook" {
   for_each           = toset(var.studio == null && var.notebook_instances != null ? ["enabled"] : [])
   source             = "Young-ook/sagemaker/aws"
-  version            = "0.3.5"
+  version            = "0.4.2"
   name               = var.name
   tags               = var.tags
   vpc                = module.vpc.vpc.id
-  subnets            = values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"])
+  subnet             = var.use_default_vpc ? null : element(values(module.vpc.subnets["private"]), random_integer.subnet.result)
   notebook_instances = var.notebook_instances
 }
 
