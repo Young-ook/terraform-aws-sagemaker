@@ -54,7 +54,7 @@ resource "aws_security_group" "sagemaker" {
   }
 }
 
-### Lifecycle configuration for SageMaker Notebook Instances.
+### Lifecycle configuration
 # on_create : A shell script (base64-encoded) that runs only once when the SageMaker Notebook Instance is created.
 # on_start : A shell script (base64-encoded) that runs every time the SageMaker Notebook Instance is started including the time it's created.
 resource "aws_sagemaker_notebook_instance_lifecycle_configuration" "lc" {
@@ -62,6 +62,15 @@ resource "aws_sagemaker_notebook_instance_lifecycle_configuration" "lc" {
   name      = join("-", [local.name, each.key])
   on_create = base64encode(lookup(lookup(each.value, "lifecycle_config", {}), "on_create", ""))
   on_start  = base64encode(lookup(lookup(each.value, "lifecycle_config", {}), "on_start", ""))
+}
+
+### Code repositories configuration
+resource "aws_sagemaker_code_repository" "repo" {
+  for_each             = { for ni in var.notebook_instances : ni.name => ni if lookup(ni, "default_code_repository", null) != null }
+  code_repository_name = join("-", [local.name, each.key])
+  git_config {
+    repository_url = try(each.value.default_code_repository, null)
+  }
 }
 
 ### application/instance
@@ -76,7 +85,7 @@ resource "aws_sagemaker_notebook_instance" "ni" {
   security_groups         = var.subnet == null ? null : [aws_security_group.sagemaker.id]
   instance_type           = lookup(each.value, "instance_type", local.default_notebook_config["instance_type"])
   volume_size             = lookup(each.value, "volume_size", local.default_notebook_config["volume_size"])
-  default_code_repository = lookup(each.value, "default_code_repository", null)
+  default_code_repository = lookup(each.value, "default_code_repository", null) != null ? aws_sagemaker_code_repository.repo[each.key].code_repository_name : null
   lifecycle_config_name   = lookup(each.value, "lifecycle_config", null) != null ? aws_sagemaker_notebook_instance_lifecycle_configuration.lc[each.key].name : null
 }
 
