@@ -195,28 +195,17 @@ locals {
 
 ### utility/script
 resource "local_file" "empty" {
-  count      = var.force_destroy ? 1 : 0
-  depends_on = [aws_s3_bucket.bucket]
-  content = join("\n", [
-    "#!/bin/sh",
-    "aws s3api delete-objects \\",
-    "  --region ${local.aws_region} --bucket ${local.bucket_name} \\",
-    "  --delete \"$(aws s3api list-object-versions \\",
-    "    --region ${local.aws_region} --bucket ${local.bucket_name} \\",
-    "    --query='{Objects: Versions[].{Key:Key,VersionId:VersionId}}' \\",
-    "    --output json)\"",
-    "echo $?",
-    "exit 0"
-  ])
-  filename        = join("/", [path.module, "awss3-empty.sh"])
-  file_permission = "0400"
+  for_each        = (var.force_destroy ? toset(["enabled"]) : [])
+  content         = "bash ${path.module}/scripts/empty.sh -r ${local.aws_region} -b ${local.bucket_name}"
+  filename        = join("/", [path.module, "force-destroy.sh"])
+  file_permission = "0600"
 }
 
-resource "null_resource" "empty" {
-  count      = var.force_destroy ? 1 : 0
+resource "null_resource" "force_destroy" {
   depends_on = [local_file.empty]
+  for_each   = (var.force_destroy ? toset(["enabled"]) : [])
   provisioner "local-exec" {
     when    = destroy
-    command = "bash ${path.module}/awss3-empty.sh"
+    command = "bash ${path.module}/force-destroy.sh"
   }
 }
