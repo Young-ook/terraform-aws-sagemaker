@@ -8,7 +8,7 @@ module "aws" {
 ### security/policy
 resource "aws_iam_role" "studio" {
   name = local.name
-  tags = merge(var.tags, local.default-tags)
+  tags = merge(local.default-tags, var.tags)
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -37,7 +37,7 @@ resource "aws_iam_role_policy_attachment" "extra" {
 resource "aws_security_group" "studio" {
   name        = local.name
   description = format("security group for %s", local.name)
-  tags        = merge(var.tags, local.default-tags)
+  tags        = merge(local.default-tags, var.tags)
   vpc_id      = var.vpc
 
   ingress {
@@ -59,7 +59,7 @@ resource "aws_security_group" "studio" {
 ### A shell script (base64-encoded) that runs only once when the SageMaker Studio Notebook is created.
 resource "aws_sagemaker_studio_lifecycle_config" "lc" {
   for_each                         = { for lc in lookup(var.studio, "lifecycle_configs", []) : lc.name => lc }
-  tags                             = merge(var.tags, local.default-tags)
+  tags                             = merge(local.default-tags, var.tags)
   studio_lifecycle_config_name     = join("-", [local.name, "lc", each.key])
   studio_lifecycle_config_app_type = lookup(each.value, "type", "JupyterServer")
   studio_lifecycle_config_content  = base64encode(lookup(each.value, "content"))
@@ -68,7 +68,7 @@ resource "aws_sagemaker_studio_lifecycle_config" "lc" {
 ### application/studio
 resource "aws_sagemaker_domain" "studio" {
   domain_name             = local.name
-  tags                    = merge(var.tags, local.default-tags)
+  tags                    = merge(local.default-tags, var.tags)
   auth_mode               = lookup(var.studio, "auth_mode", local.default_studio["auth_mode"])
   app_network_access_type = lookup(var.studio, "app_network_access_type", local.default_studio["app_network_access_type"])
   vpc_id                  = var.vpc
@@ -91,7 +91,7 @@ resource "aws_sagemaker_user_profile" "user" {
   depends_on        = [aws_sagemaker_studio_lifecycle_config.lc]
   for_each          = { for user in local.user_profiles : user.name => user }
   user_profile_name = try(each.key, local.default_user_profile["name"])
-  tags              = merge(var.tags, local.default-tags)
+  tags              = merge(local.default-tags, var.tags)
   domain_id         = aws_sagemaker_domain.studio.id
 
   user_settings {
@@ -137,7 +137,7 @@ resource "aws_sagemaker_app" "app" {
   for_each          = { for app in local.app_configs : app.name => app }
   app_name          = each.key
   app_type          = lookup(each.value, "type", local.default_app["type"])
-  tags              = merge(var.tags, local.default-tags)
+  tags              = merge(local.default-tags, var.tags)
   domain_id         = aws_sagemaker_domain.studio.id
   user_profile_name = aws_sagemaker_user_profile.user[lookup(each.value, "profile", local.default_app["profile"])].user_profile_name
 }
