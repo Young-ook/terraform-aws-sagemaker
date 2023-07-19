@@ -17,6 +17,7 @@ studio = {
         code_repository = [
           "https://github.com/huggingface/notebooks.git",
           "https://github.com/aws-samples/amazon-personalize-samples.git",
+          "https://github.com/aws-samples/generative-ai-on-aws-immersion-day",
         ]
       }
     }
