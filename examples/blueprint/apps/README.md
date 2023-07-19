@@ -35,3 +35,4 @@ Amazon SageMaker JumpStart is a machine learning (ML) hub that can help you acce
 # Additional Resources
 - [Amazon SageMaker JumpStart Simplifies Access to Pre-built Models and Machine Learning Solutions](https://aws.amazon.com/blogs/aws/amazon-sagemaker-jumpstart-simplifies-access-to-prebuilt-models-and-machine-learning-models/)
 - [Enable Amazon SageMaker JumpStart for custom IAM execution roles](https://aws.amazon.com/blogs/machine-learning/enable-amazon-sagemaker-jumpstart-for-custom-iam-execution-roles/)
+- [Generative AI on AWS Immersion Day](https://github.com/aws-samples/generative-ai-on-aws-immersion-day)
