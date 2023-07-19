@@ -83,7 +83,7 @@ resource "random_integer" "subnet" {
 module "studio" {
   for_each = toset(var.studio != null ? ["enabled"] : [])
   source   = "Young-ook/sagemaker/aws//modules/sagemaker-studio"
-  version  = "0.4.1"
+  version  = "0.4.2"
   name     = var.name
   tags     = var.tags
   vpc      = module.vpc.vpc.id
