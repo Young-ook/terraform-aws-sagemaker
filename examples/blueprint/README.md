@@ -34,6 +34,8 @@ Amazon S3 (Simple Storage Service) is an object storage service that offers indu
 ## Applications
 - [Huggingface](./apps/README.md#huggingface-transformers-with-amazon-sagemaker)
 - [Personalize](./apps/README.md#amazon-personalize)
+- [JumpStart](./apps/README.md#jumpstart)
+- [Generative AI on AWS](./apps/README.md#generative-ai-on-aws)
 
 ## Clean up
 Before you destroy the SageMaker Studio, make sure that users in the SageMaker are deleted. Repeat the following steps for each user in the **User name** list on SageMaker control panel.
