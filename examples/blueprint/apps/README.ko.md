@@ -1,11 +1,6 @@
 [[English](README.md)] [[한국어](README.ko.md)]
 
 # 애플리케이션
-## SageMaker Studio 프로젝트
-SageMaker Studio에서 프로젝트를 활성화 해야 합니다.
-![aws-sm-svccatal-disabled](../../../images/aws-sm-svccatal-disabled.png)
-![aws-sm-enable-jumpstart](../../../images/aws-sm-enable-jumpstart.png)
-
 ## Amazon SageMaker에서 허깅페이스 트랜스포머(Huggingface Transformers) 사용하기
 SageMaker 노트북 인스턴스가 구동되었다면, 여러 분은 AWS 관리 콘솔의 SageMaker 서비스 페이지에서 JupyterLab 또는 Jupyter notebook을 열고 접속할 수 있습니다. 이 예제에서는 Amazon SageMaker에서 처음으로 허깅페이스 트랜스포머 예제를 실행할 때 필요한 자원을 모두 배포할 것입니다. 먼저 아래와 같이 저장소를 여러 분의 노트북 작업환경에 복사합니다. 이제 여러 분은 보다 예제 노트북에 접근할 수 있습니다.
 
@@ -30,6 +25,15 @@ Amazon SageMaker JumpStart는 ML 여정을 가속화하는 데 도움이 될 수
 
 ![aws-sm-enable-jumpstart](../../../images/aws-sm-enable-jumpstart.png)
 
+만약, SageMaker를 처음 사용한다면, 다음과 같은 오류 메시지를 볼 수 있다. 이럴 경우 JumpStart를 사용하도록 설정을 활성화 해주어야 한다.
+![aws-sm-svccatal-disabled](../../../images/aws-sm-svccatal-disabled.png)
+
+## 생성형 인공지능 예제 (Generative AI on AWS)
+생성형 인공지능을 직접 실습해 볼 수 있는 예제입니다. 먼저, SageMaker Studio를 실행합니다. AWS 관리콘솔에서 SageMaker Studio 앱을 띄웁니다. SageMaker Studio의 왼쪽 내비게이션 메뉴에서 소스 콘트롤 버튼을 누릅니다. 이제, *Clone a repository* 단추를 누르면, 여러 예제 소스 저장소 중에서 내려받기할 곳을 정할 수 있는 팝업 다이알로그가 나타날 것입니다.
+![aws-sm-studio-code-repos](../../../images/aws-sm-studio-code-repos.png)
+![aws-sm-studio-clone-repo](../../../images/aws-sm-studio-clone-repo.png)
+
 # 추가 정보
 - [Amazon SageMaker JumpStart로 사전 구축된 모델과 기계 학습 솔루션 액세스 단순화](https://aws.amazon.com/ko/blogs/korea/amazon-sagemaker-jumpstart-simplifies-access-to-prebuilt-models-and-machine-learning-models/)
 - [개인화된 IAM 역할을 활용한 Amazon SageMaker JumpStart 활성화](https://aws.amazon.com/blogs/machine-learning/enable-amazon-sagemaker-jumpstart-for-custom-iam-execution-roles/)
+- [생성형 인공지능 이머전데이 워크샵](https://github.com/aws-samples/generative-ai-on-aws-immersion-day)
