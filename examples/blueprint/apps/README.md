@@ -33,6 +33,7 @@ If it is the your first time to run SageMaker, you may see the error messages be
 ## Generative AI on AWS
 This is a hands-on lab sample for Gen-AI on AWS workshop. You can run this example on your SageMaker Studio. Launch your SageMaker Studio app in AWS Console. And click the source control button on the left navigation at the SageMaker Studio to manage code repositories. And you can see a pop up dialog that displays code repositories you can add to your SageMaker when you click the *Clone a repository* button.
 ![aws-sm-studio-code-repos](../../../images/aws-sm-studio-code-repos.png)
+![aws-sm-studio-clone-repo](../../../images/aws-sm-studio-clone-repo.png)
 
 # Additional Resources
 - [Amazon SageMaker JumpStart Simplifies Access to Pre-built Models and Machine Learning Solutions](https://aws.amazon.com/blogs/aws/amazon-sagemaker-jumpstart-simplifies-access-to-prebuilt-models-and-machine-learning-models/)

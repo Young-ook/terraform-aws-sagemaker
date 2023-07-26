@@ -31,6 +31,7 @@ Amazon SageMaker JumpStart는 ML 여정을 가속화하는 데 도움이 될 수
 ## 생성형 인공지능 예제 (Generative AI on AWS)
 생성형 인공지능을 직접 실습해 볼 수 있는 예제입니다. 먼저, SageMaker Studio를 실행합니다. AWS 관리콘솔에서 SageMaker Studio 앱을 띄웁니다. SageMaker Studio의 왼쪽 내비게이션 메뉴에서 소스 콘트롤 버튼을 누릅니다. 이제, *Clone a repository* 단추를 누르면, 여러 예제 소스 저장소 중에서 내려받기할 곳을 정할 수 있는 팝업 다이알로그가 나타날 것입니다.
 ![aws-sm-studio-code-repos](../../../images/aws-sm-studio-code-repos.png)
+![aws-sm-studio-clone-repo](../../../images/aws-sm-studio-clone-repo.png)
 
 # 추가 정보
 - [Amazon SageMaker JumpStart로 사전 구축된 모델과 기계 학습 솔루션 액세스 단순화](https://aws.amazon.com/ko/blogs/korea/amazon-sagemaker-jumpstart-simplifies-access-to-prebuilt-models-and-machine-learning-models/)
