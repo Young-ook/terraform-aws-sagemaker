@@ -190,3 +190,20 @@ module "s3" {
     }
   ]
 }
+
+### emr
+module "emr-studio" {
+  depends_on = [module.vpc, module.s3]
+  source     = "../../modules/emr-studio"
+  name       = var.name
+  vpc        = module.vpc.vpc.id
+  subnets    = slice(values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"]), 0, 3)
+  studio = {
+    auth_mode           = "IAM"
+    default_s3_location = "s3://${module.s3.bucket.bucket}/data"
+    policy_arns = [
+      module.s3.policy_arns["read"],
+      module.s3.policy_arns["write"],
+    ]
+  }
+}
