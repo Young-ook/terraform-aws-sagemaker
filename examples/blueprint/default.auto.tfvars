@@ -18,6 +18,8 @@ studio = {
           "https://github.com/huggingface/notebooks.git",
           "https://github.com/aws-samples/amazon-personalize-samples.git",
           "https://github.com/aws-samples/generative-ai-on-aws-immersion-day.git",
+          # ai/ml workshop (korean)
+          "https://github.com/aws-samples/aws-ai-ml-workshop-kr.git",
         ]
       }
     }
