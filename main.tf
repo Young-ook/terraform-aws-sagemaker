@@ -1,10 +1,5 @@
 ### Amazon SageMaker Notebook
 
-## aws partition and region (global, gov, china)
-module "aws" {
-  source = "Young-ook/spinnaker/aws//modules/aws-partitions"
-}
-
 ### security/policy
 resource "aws_iam_role" "ni" {
   name = format("%s-ni", local.name)
