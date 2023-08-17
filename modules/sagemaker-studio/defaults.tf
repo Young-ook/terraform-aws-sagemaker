@@ -1,4 +1,9 @@
-### default variables
+### default values
+
+### aws partitions
+module "aws" {
+  source = "Young-ook/spinnaker/aws//modules/aws-partitions"
+}
 
 locals {
   default_studio = {
