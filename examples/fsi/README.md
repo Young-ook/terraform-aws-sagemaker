@@ -43,3 +43,4 @@ terraform destroy -var-file tc1.tfvars
 # Additional Resources
 ## Compliance
 - [Amazon SageMaker를 활용한 기계 학습에서 EFS 안의 민감 정보를 삭제하기 위한 서버리스 솔루션](https://aws.amazon.com/ko/blogs/tech/sensitive-ml-training-data-lifecycle-management-using-aws-lambda/)
+- [금융 워크로드를 위한 카카오페이의 AWS 기반 MLOps 플랫폼 구축 사례](https://youtu.be/BbsmOYasu1A?si=c92-xk5V5ms5OqzJ)
