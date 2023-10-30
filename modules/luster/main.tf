@@ -7,5 +7,5 @@ resource "aws_fsx_lustre_file_system" "fsx" {
   per_unit_storage_throughput = lookup(var.filesystem, "per_unit_storage_throughput", local.default_fsx_luster_config.per_unit_storage_throughput)
   storage_capacity            = lookup(var.filesystem, "storage_capacity", local.default_fsx_luster_config.storage_capacity)
   storage_type                = lookup(var.filesystem, "storage_type", local.default_fsx_luster_config.storage_type)
-  import_path                 = var.s3
+  import_path                 = lookup(var.filesystem, "import_path", local.default_fsx_luster_config.import_path)
 }

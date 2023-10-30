@@ -1,10 +1,4 @@
 ### network
-variable "s3" {
-  description = "The s3 bucket URI for import data (e.g., s3://my-bucket/optional-prefix)"
-  type        = string
-  default     = null
-}
-
 variable "subnets" {
   # A list of IDs for the subnets that the file system will be accessible from.
   # File systems currently support only one subnet. 
