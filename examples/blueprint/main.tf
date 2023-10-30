@@ -154,3 +154,13 @@ module "s3" {
     }
   ]
 }
+
+### storage/filesystem
+module "luster" {
+  source  = "Young-ook/sagemaker/aws//modules/luster"
+  version = "0.4.5"
+  subnets = [element(values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"]), random_integer.subnet.result)]
+  filesystem = {
+    import_path = format("s3://%s", module.s3.bucket.id)
+  }
+}
