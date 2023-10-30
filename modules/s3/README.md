@@ -1,8 +1,12 @@
 # Amazon S3 (Simple Storage Service)
 [Amazon S3](https://aws.amazon.com/s3/) is an object storage service that offers industry-leading scalability, data availability, security, and performance.
 
-## Quickstart
-```
+## Getting started
+### Prerequisites
+This module requires terraform. If you don't have the terraform tools in your environment, go to the main [page](https://github.com/Young-ook/terraform-aws-sagemaker) of this repository and follow the installation instructions before you move to the next step.
+
+### Setup
+```hcl
 module "s3" {
   source  = "Young-ook/sagemaker/aws//modules/s3"
   name    = var.name
@@ -47,7 +51,7 @@ terraform init
 terraform apply
 ```
 
-## Intelligent-Tiering Configuration
+## Intelligent-Tiering
 S3 Intelligent-Tiering is a new Amazon S3 storage class designed for customers who want to **optimize storage costs automatically when data access patterns change, without performance impact or operational overhead**. S3 Intelligent-Tiering is the first cloud object storage class that delivers automatic cost savings by moving data between access tiers — frequent access, infrequent access, archive, deep archive — when access patterns change, and is ideal for data with unknown or changing access patterns.
 
 S3 Intelligent-Tiering stores objects in many access tiers. For a small monthly monitoring and automation fee per object, S3 Intelligent-Tiering monitors access patterns and moves objects that have not been accessed for 30 consecutive days to the infrequent access tier. There are no retrieval fees in S3 Intelligent-Tiering. If an object in the infrequent access tier is accessed later, it is automatically moved back to the frequent access tier. No additional tiering fees apply when objects are moved between access tiers within the S3 Intelligent-Tiering storage class. **S3 Intelligent-Tiering is designed for 99.9% availability and 99.999999999% durability, and offers the same low latency and high throughput performance of S3 Standard**.
@@ -91,6 +95,53 @@ module "s3" {
 }
 ```
 Modify the terraform configuration file to add a lifecycle rule to apply objects in the S3 bucket.
+```
+terraform init
+terraform apply
+```
+
+## Bucket Policy
+With Amazon S3 bucket policies, you can secure access to objects in your buckets, so that only users with the appropriate permissions can access them. You can even prevent authenticated users without the appropriate permissions from accessing your Amazon S3 resources. This example shows how to configure a bucket policy to allow access to buckets through VPC endpoints only for security and compliance.
+
+For more information, refer to the [Controlling access from VPC endpoints with bucket policies](https://docs.aws.amazon.com/AmazonS3/latest/userguide/example-bucket-policies-vpc-endpoint.html) user guide.
+
+### Example
+```hcl
+module "s3" {
+  source  = "Young-ook/sagemaker/aws//modules/s3"
+  name    = var.name
+  tags    = { env = "test" }
+
+  bucket_policy = {
+    vpce-only = {
+      policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+          {
+            Sid = "AllowAccessFromVpcEndpoint"
+            Action = [
+              "s3:GetObject",
+              "s3:PutObject",
+              "s3:ListBucket"
+            ]
+            Effect = "Deny"
+            Principal = {
+              AWS = flatten([module.aws.caller.account_id, ])
+            }
+            Resource = [join("/", [module.s3.bucket.arn, "*"]), module.s3.bucket.arn, ]
+            Condition = {
+              StringNotEquals = {
+                "aws:sourceVpce" = module.vpc.vpce.s3.id
+              }
+            }
+          },
+        ]
+      })
+    }
+  }
+}
+```
+Modify the terraform configuration file to apply a bucket policy for access control.
 ```
 terraform init
 terraform apply
