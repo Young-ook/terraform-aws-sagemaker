@@ -109,42 +109,6 @@ module "s3" {
   name          = var.name
   tags          = var.tags
   force_destroy = var.force_destroy
-  bucket_policy = {
-    vpce-only = {
-      policy = jsonencode({
-        Version = "2012-10-17"
-        Statement = [
-          {
-            Sid = "AllowAccessFromVpcEndpoint"
-            Action = [
-              "s3:GetObject",
-              "s3:PutObject",
-              "s3:ListBucket"
-            ]
-            Effect = "Deny"
-            Principal = {
-              AWS = flatten([module.aws.caller.account_id, ])
-            }
-            Resource = [join("/", [module.s3.bucket.arn, "*"]), module.s3.bucket.arn, ]
-            Condition = {
-              StringNotEquals = {
-                "aws:sourceVpce" = module.vpc.vpce.s3.id
-              }
-            }
-          },
-          {
-            Sid    = "AllowTerraformToReadBuckets"
-            Action = "s3:ListBucket"
-            Effect = "Allow"
-            Principal = {
-              AWS = flatten([module.aws.caller.account_id, ])
-            }
-            Resource = [module.s3.bucket.arn, ]
-          }
-        ]
-      })
-    }
-  }
   lifecycle_rules = [
     {
       id     = "s3-intelligent-tiering"
@@ -189,4 +153,14 @@ module "s3" {
       ]
     }
   ]
+}
+
+### storage/filesystem
+module "luster" {
+  source  = "Young-ook/sagemaker/aws//modules/luster"
+  version = "0.4.5"
+  subnets = [element(values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"]), random_integer.subnet.result)]
+  filesystem = {
+    import_path = format("s3://%s", module.s3.bucket.id)
+  }
 }
