@@ -59,7 +59,7 @@ terraform destroy -var-file fixture.tc1.tfvars
 ## Amazon EFS
 - [Mount an EFS file system to an Amazon SageMaker notebook](https://aws.amazon.com/blogs/machine-learning/mount-an-efs-file-system-to-an-amazon-sagemaker-notebook-with-lifecycle-configurations/)
 
-## Amazon FSx for Luster
+## Amazon FSx for Lustre
 - [Speed up training on Amazon SageMaker using Amazon FSx for Lustre and Amazon EFS file systems](https://aws.amazon.com/blogs/machine-learning/speed-up-training-on-amazon-sagemaker-using-amazon-efs-or-amazon-fsx-for-lustre-file-systems/)
 
 ## Amazon SageMaker
