@@ -10,5 +10,5 @@ output "notebooks" {
 
 output "lustre" {
   description = "The attribute of FSx for Lustre file system"
-  value       = module.lustre.fsx
+  value       = module.lustre
 }
