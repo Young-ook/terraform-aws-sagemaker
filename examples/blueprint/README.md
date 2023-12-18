@@ -31,6 +31,11 @@ Amazon S3 (Simple Storage Service) is an object storage service that offers indu
 
 ![aws-s3-lc-int-tiering](../../images/aws-s3-lc-int-tiering.png)
 
+## File System
+Amazon FSx for Lustre is a fully managed service makes it easier for you to use Lustre for workloads where storage speed matters. FSx for Lustre eliminates the traditional complexity of setting up and managing Lustre file systems, enabling you to spin up and run a battle-tested high-performance file system in minutes. It also provides multiple deployment options so you can optimize cost for your needs. For your information, please refer to [this description about FSx for Lustre](https://github.com/Young-ook/terraform-aws-sagemaker/tree/main/modules/lustre).
+
+You might want to mount the FSx for Lustre file system if you want to allow your ML training job to access your datas faster than reading datas from S3 object storage directly. This [guide document](https://docs.aws.amazon.com/fsx/latest/LustreGuide/mount-fs-auto-mount-onreboot.html) describes how to automatically mount the FSx for Lustre file system at boot time.
+
 ## Applications
 - [Huggingface](./apps/README.md#huggingface-transformers-with-amazon-sagemaker)
 - [Personalize](./apps/README.md#amazon-personalize)
