@@ -8,7 +8,10 @@ output "notebooks" {
   value       = module.notebook
 }
 
-output "lustre" {
-  description = "The attribute of FSx for Lustre file system"
-  value       = module.lustre
+output "file_systems" {
+  description = "File systems"
+  value = {
+    efs = module.efs
+    fsx = module.lustre
+  }
 }
