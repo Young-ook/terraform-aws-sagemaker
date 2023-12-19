@@ -164,3 +164,12 @@ module "lustre" {
     import_path = format("s3://%s", module.s3.bucket.id)
   }
 }
+
+module "efs" {
+  for_each = toset(var.studio == null && var.notebook_instances != null ? ["enabled"] : [])
+  source   = "Young-ook/sagemaker/aws//modules/efs"
+  version  = "0.4.5"
+  tags     = var.tags
+  vpc      = module.vpc.vpc.id
+  subnets  = values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"])
+}
