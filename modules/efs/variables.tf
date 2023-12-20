@@ -9,6 +9,12 @@ variable "subnets" {
   type        = list(string)
 }
 
+variable "access_points" {
+  description = "Access Points configuration"
+  type        = any
+  default     = []
+}
+
 ### description
 variable "name" {
   description = "The logical name of the module instance"

@@ -13,3 +13,13 @@ locals {
     { "Name" = local.name },
   )
 }
+
+### access point id
+resource "random_string" "apid" {
+  for_each = { for k, v in var.access_points : k => v }
+  length   = 5
+  upper    = false
+  lower    = true
+  numeric  = false
+  special  = false
+}
