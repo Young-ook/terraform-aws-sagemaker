@@ -31,6 +31,11 @@ Amazon S3 (Simple Storage Service) is an object storage service that offers indu
 
 ![aws-s3-lc-int-tiering](../../images/aws-s3-lc-int-tiering.png)
 
+## File System
+Amazon FSx for Lustre is a fully managed service makes it easier for you to use Lustre for workloads where storage speed matters. FSx for Lustre eliminates the traditional complexity of setting up and managing Lustre file systems, enabling you to spin up and run a battle-tested high-performance file system in minutes. It also provides multiple deployment options so you can optimize cost for your needs. For your information, please refer to [this description about FSx for Lustre](https://github.com/Young-ook/terraform-aws-sagemaker/tree/main/modules/lustre).
+
+You might want to mount the FSx for Lustre file system if you want to allow your ML training job to access your datas faster than reading datas from S3 object storage directly. This [guide document](https://docs.aws.amazon.com/fsx/latest/LustreGuide/mount-fs-auto-mount-onreboot.html) describes how to automatically mount the FSx for Lustre file system at boot time.
+
 ## Applications
 - [Huggingface](./apps/README.md#huggingface-transformers-with-amazon-sagemaker)
 - [Personalize](./apps/README.md#amazon-personalize)
@@ -59,7 +64,7 @@ terraform destroy -var-file fixture.tc1.tfvars
 ## Amazon EFS
 - [Mount an EFS file system to an Amazon SageMaker notebook](https://aws.amazon.com/blogs/machine-learning/mount-an-efs-file-system-to-an-amazon-sagemaker-notebook-with-lifecycle-configurations/)
 
-## Amazon FSx for Luster
+## Amazon FSx for Lustre
 - [Speed up training on Amazon SageMaker using Amazon FSx for Lustre and Amazon EFS file systems](https://aws.amazon.com/blogs/machine-learning/speed-up-training-on-amazon-sagemaker-using-amazon-efs-or-amazon-fsx-for-lustre-file-systems/)
 
 ## Amazon SageMaker
