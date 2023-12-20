@@ -1,3 +1,7 @@
 ### default values
 
-locals {}
+locals {
+  default_efs = {
+    encrypted = true
+  }
+}
