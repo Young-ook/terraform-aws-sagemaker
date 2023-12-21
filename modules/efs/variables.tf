@@ -9,6 +9,12 @@ variable "subnets" {
   type        = list(string)
 }
 
+variable "access_points" {
+  description = "Access Points configuration"
+  type        = any
+  default     = []
+}
+
 ### file system
 variable "volume" {
   description = "EFS file system configuration"
