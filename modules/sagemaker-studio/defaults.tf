@@ -19,9 +19,11 @@ locals {
         content = "studio_lifecycle_config_content to be in the range (1 - 16384)"
       }
     ]
+    ###  allowed values: Retain | Delete
+    efs_retention_policy = "Retain"
   }
   default_app = {
-    ### Allowed values: JupyterServer, KernelGateway, RStudioServerPro, RSessionGateway and TensorBoard.
+    ### allowed values: JupyterServer, KernelGateway, RStudioServerPro, RSessionGateway and TensorBoard.
     type    = "JupyterServer"
     name    = "default"
     profile = "default"

@@ -9,4 +9,7 @@ locals {
       permissions = "750"
     }
   }
+  default_efs = {
+    encrypted = true
+  }
 }
