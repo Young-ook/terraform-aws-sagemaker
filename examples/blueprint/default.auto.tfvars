@@ -7,7 +7,8 @@ studio = {
 
   # The mode of authentication that members use to access the domain.
   # Valid values are IAM and SSO.
-  auth_mode = "IAM"
+  auth_mode            = "IAM"
+  efs_retention_policy = "Delete"
   user_profiles = [
     {
       name = "default"
