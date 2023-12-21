@@ -1,12 +1,18 @@
 ### network
 variable "vpc" {
-  description = "The vpc ID for efs"
+  description = "The vpc ID for EFS"
   type        = string
 }
 
 variable "subnets" {
-  description = "The subnet IDs for efs"
+  description = "The subnet IDs for EFS"
   type        = list(string)
+}
+
+### file system
+variable "volume" {
+  description = "EFS file system configuration"
+  default     = {}
 }
 
 ### description
