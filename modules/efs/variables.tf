@@ -16,7 +16,7 @@ variable "access_points" {
 }
 
 ### file system
-variable "volume" {
+variable "filesystem" {
   description = "EFS file system configuration"
   default     = {}
 }
