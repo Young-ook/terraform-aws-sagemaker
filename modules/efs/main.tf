@@ -1,9 +1,31 @@
 ### elastic file system
 
-# efs
+### filesystem/volume
 resource "aws_efs_file_system" "efs" {
   tags      = merge(local.default-tags, var.tags)
   encrypted = lookup(var.filesystem, "encrypted", local.default_efs.encrypted)
+}
+
+### security/firewall
+resource "aws_security_group" "efs" {
+  name        = format("%s", local.name)
+  description = format("default security group for %s", local.name)
+  vpc_id      = var.vpc
+  tags        = merge(local.default-tags, var.tags)
+
+  ingress {
+    from_port = 2049
+    to_port   = 2049
+    protocol  = "tcp"
+    self      = true
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
 resource "aws_efs_mount_target" "efs" {

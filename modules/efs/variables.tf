@@ -1,11 +1,11 @@
 ### network
 variable "vpc" {
-  description = "The vpc ID for EFS"
+  description = "VPC Id"
   type        = string
 }
 
 variable "subnets" {
-  description = "The subnet IDs for EFS"
+  description = "Subnet Ids"
   type        = list(string)
 }
 
