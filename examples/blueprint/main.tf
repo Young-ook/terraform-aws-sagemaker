@@ -81,9 +81,9 @@ resource "random_integer" "subnet" {
 
 ### application/ml
 module "studio" {
-  for_each = toset(var.studio != null ? ["enabled"] : [])
+  for_each = toset(local.studio_enabled ? ["enabled"] : [])
   source   = "Young-ook/sagemaker/aws//modules/sagemaker-studio"
-  version  = "0.4.2"
+  version  = "0.4.6"
   name     = var.name
   tags     = var.tags
   vpc      = module.vpc.vpc.id
@@ -92,7 +92,7 @@ module "studio" {
 }
 
 module "notebook" {
-  for_each           = toset(var.studio == null && var.notebook_instances != null ? ["enabled"] : [])
+  for_each           = toset(local.notebook_enabled ? ["enabled"] : [])
   source             = "Young-ook/sagemaker/aws"
   version            = "0.4.2"
   name               = var.name
@@ -157,10 +157,32 @@ module "s3" {
 
 ### storage/filesystem
 module "lustre" {
-  source  = "Young-ook/sagemaker/aws//modules/lustre"
-  version = "0.4.5"
-  subnets = [element(values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"]), random_integer.subnet.result)]
+  for_each = toset(local.notebook_enabled ? ["enabled"] : [])
+  source   = "Young-ook/sagemaker/aws//modules/lustre"
+  version  = "0.4.6"
+  tags     = var.tags
+  subnets  = [element(values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"]), random_integer.subnet.result)]
   filesystem = {
     import_path = format("s3://%s", module.s3.bucket.id)
   }
+}
+
+module "efs" {
+  for_each = toset(local.notebook_enabled ? ["enabled"] : [])
+  source   = "Young-ook/sagemaker/aws//modules/efs"
+  version  = "0.4.6"
+  tags     = var.tags
+  vpc      = module.vpc.vpc.id
+  subnets  = values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"])
+  filesystem = {
+    encrypted = false
+  }
+  access_points = [
+    {
+      uid         = "1001"
+      gid         = "1001"
+      permissions = "750"
+      path        = "/export/lambda"
+    }
+  ]
 }
