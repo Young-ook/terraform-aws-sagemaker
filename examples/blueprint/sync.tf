@@ -50,6 +50,7 @@ module "lambda" {
       function = {
         package = data.archive_file.lambda_zip_file["cherrypick"].output_path
         handler = "cherrypick.lambda_handler"
+        timeout = 300
         aliases = [
           {
             name    = "dev"
