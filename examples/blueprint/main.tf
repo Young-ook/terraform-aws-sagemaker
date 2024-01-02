@@ -41,6 +41,11 @@ module "vpc" {
       private_dns_enabled = true
     },
     {
+      service             = "lambda"
+      type                = "Interface"
+      private_dns_enabled = true
+    },
+    {
       service             = "monitoring"
       type                = "Interface"
       private_dns_enabled = true
