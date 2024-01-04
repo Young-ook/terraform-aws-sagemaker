@@ -15,7 +15,7 @@ module "aws" {
 ### network/vpc
 module "vpc" {
   source  = "Young-ook/vpc/aws"
-  version = "1.0.3"
+  version = "1.0.7"
   name    = var.name
   tags    = var.tags
   vpc_config = var.use_default_vpc ? null : {
@@ -41,13 +41,18 @@ module "vpc" {
       private_dns_enabled = true
     },
     {
+      service             = "lambda"
+      type                = "Interface"
+      private_dns_enabled = true
+    },
+    {
       service             = "monitoring"
       type                = "Interface"
       private_dns_enabled = true
     },
     {
       service             = "s3"
-      type                = "Interface"
+      type                = "Gateway"
       private_dns_enabled = false
     },
     {
