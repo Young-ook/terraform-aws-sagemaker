@@ -1,8 +1,4 @@
-## simple storage service
-
-module "aws" {
-  source = "Young-ook/spinnaker/aws//modules/aws-partitions"
-}
+### simple storage service
 
 locals {
   bucket_arn_with_slash = join("/", [aws_s3_bucket.bucket.arn, "*"])
