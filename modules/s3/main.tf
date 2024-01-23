@@ -1,7 +1,8 @@
 ### simple storage service
 
 locals {
-  bucket_arn_with_slash = join("/", [aws_s3_bucket.bucket.arn, "*"])
+  directory_bucket = var.zone_id != null ? true : false
+  general_bucket   = !local.directory_bucket
 }
 
 ### security/policy
@@ -18,7 +19,7 @@ resource "aws_iam_policy" "read" {
           "s3:Get*",
         ]
         Effect   = "Allow"
-        Resource = [aws_s3_bucket.bucket.arn, local.bucket_arn_with_slash, ]
+        Resource = [local.bucket_arn, local.bucket_arn_with_slash]
       }
     ]
     Version = "2012-10-17"
@@ -45,7 +46,7 @@ resource "aws_iam_policy" "write" {
           "s3:HeadBucket",
         ]
         Effect   = "Allow"
-        Resource = [aws_s3_bucket.bucket.arn, ]
+        Resource = [local.bucket_arn]
       }
     ]
     Version = "2012-10-17"
@@ -56,13 +57,14 @@ resource "aws_iam_policy" "write" {
 resource "aws_s3_bucket_policy" "bucket" {
   for_each   = var.bucket_policy == null ? {} : var.bucket_policy
   depends_on = [aws_s3_bucket_public_access_block.bucket]
-  bucket     = aws_s3_bucket.bucket.id
+  bucket     = (local.directory_bucket ? aws_s3_directory_bucket.bucket["enabled"].id : aws_s3_bucket.bucket["enabled"].id)
   policy     = lookup(each.value, "policy", null)
 }
 
 ### security/policy
 resource "aws_s3_bucket_public_access_block" "bucket" {
-  bucket                  = aws_s3_bucket.bucket.id
+  for_each                = (local.general_bucket ? toset(["enabled"]) : [])
+  bucket                  = aws_s3_bucket.bucket["enabled"].id
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
@@ -71,22 +73,31 @@ resource "aws_s3_bucket_public_access_block" "bucket" {
 
 ### storage/bucket
 resource "aws_s3_bucket" "bucket" {
+  for_each      = (local.general_bucket ? toset(["enabled"]) : [])
   bucket        = local.name
   tags          = merge(local.default-tags, var.tags)
   force_destroy = var.force_destroy
 }
 
+resource "aws_s3_directory_bucket" "bucket" {
+  for_each = (local.directory_bucket ? toset(["enabled"]) : [])
+  bucket   = join("--", [local.name, var.zone_id, "x-s3"])
+  location {
+    name = var.zone_id
+  }
+}
+
 resource "aws_s3_bucket_versioning" "versioning" {
-  for_each = toset(var.versioning != null ? ["versioning"] : [])
-  bucket   = aws_s3_bucket.bucket.id
+  for_each = (var.versioning != null && local.general_bucket ? toset(["enabled"]) : [])
+  bucket   = aws_s3_bucket.bucket["enabled"].id
   versioning_configuration {
     status = var.versioning
   }
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "sse" {
-  for_each = toset(var.server_side_encryption != null ? ["sse"] : [])
-  bucket   = aws_s3_bucket.bucket.id
+  for_each = (var.server_side_encryption != null && local.general_bucket ? toset(["enabled"]) : [])
+  bucket   = aws_s3_bucket.bucket["enabled"].id
   rule {
     apply_server_side_encryption_by_default {
       sse_algorithm     = lookup(var.server_side_encryption, "sse_algorithm", null)
@@ -96,15 +107,15 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "sse" {
 }
 
 resource "aws_s3_bucket_logging" "log" {
-  for_each      = toset(var.logging_rules != null ? ["log"] : [])
-  bucket        = aws_s3_bucket.bucket.id
+  for_each      = (var.logging_rules != null && local.general_bucket ? toset(["enabled"]) : [])
+  bucket        = aws_s3_bucket.bucket["enabled"].id
   target_bucket = lookup(var.logging_rules, "target_bucket", local.name)
   target_prefix = lookup(var.logging_rules, "target_prefix", "log/")
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "lc" {
-  for_each = toset(var.lifecycle_rules != null ? ["lc"] : [])
-  bucket   = aws_s3_bucket.bucket.id
+  for_each = (var.lifecycle_rules != null && local.general_bucket ? toset(["enabled"]) : [])
+  bucket   = aws_s3_bucket.bucket["enabled"].id
 
   dynamic "rule" {
     for_each = { for k, v in var.lifecycle_rules : k => v }
@@ -163,8 +174,8 @@ resource "aws_s3_bucket_lifecycle_configuration" "lc" {
 }
 
 resource "aws_s3_bucket_intelligent_tiering_configuration" "int" {
-  for_each = { for k, v in(var.intelligent_tiering_archive_rules != null ? var.intelligent_tiering_archive_rules : []) : k => v }
-  bucket   = aws_s3_bucket.bucket.id
+  for_each = { for k, v in(var.intelligent_tiering_archive_rules != null && local.general_bucket ? var.intelligent_tiering_archive_rules : []) : k => v }
+  bucket   = aws_s3_bucket.bucket["enabled"].id
   name     = local.name
   status   = lookup(each.value, "status", "Disabled")
 
@@ -185,15 +196,10 @@ resource "aws_s3_bucket_intelligent_tiering_configuration" "int" {
   }
 }
 
-locals {
-  aws_region  = module.aws.region.name
-  bucket_name = aws_s3_bucket.bucket.id
-}
-
 ### utility/script
 resource "local_file" "empty" {
   for_each        = (var.force_destroy ? toset(["enabled"]) : [])
-  content         = "bash ${path.module}/scripts/empty.sh -r ${local.aws_region} -b ${local.bucket_name}"
+  content         = "bash ${path.module}/scripts/empty.sh -r ${local.aws.region} -b ${local.bucket_name}"
   filename        = join("/", [path.module, "force-destroy.sh"])
   file_permission = "0600"
 }
