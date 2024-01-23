@@ -79,9 +79,10 @@ module "vpc" {
 }
 
 ### drawing lots for choosing a subnet
-resource "random_integer" "subnet" {
-  min = 0
-  max = length(values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"])) - 1
+module "random-az" {
+  source  = "Young-ook/fis/aws//modules/roulette"
+  version = "2.0.3"
+  items   = values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"])
 }
 
 ### application/ml
@@ -103,14 +104,14 @@ module "notebook" {
   name               = var.name
   tags               = var.tags
   vpc                = module.vpc.vpc.id
-  subnet             = var.use_default_vpc ? null : element(values(module.vpc.subnets["private"]), random_integer.subnet.result)
+  subnet             = var.use_default_vpc ? null : module.random-az.item
   notebook_instances = var.notebook_instances
 }
 
 ### artifact/bucket
 module "s3" {
   source        = "Young-ook/sagemaker/aws//modules/s3"
-  version       = "0.3.4"
+  version       = "0.4.7"
   name          = var.name
   tags          = var.tags
   force_destroy = var.force_destroy
@@ -160,13 +161,30 @@ module "s3" {
   ]
 }
 
+### For more information, please visit this website:
+### https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones#zone_ids
+data "aws_availability_zones" "azs" {
+  state = "available"
+}
+
+### Currently, express one zone is available in the us-east-1, us-west-2, eu-north-1, and ap-northeast-1.
+### You can create a directory bucket with zone-id ("apne1-az1", "usw2-az3")
+module "s3-e1z" {
+  for_each      = (contains(["us-east-1", "us-west-2", "eu-north-1", "ap-northeast-1"], var.aws_region) ? toset(["enabled"]) : [])
+  source        = "../../modules/s3"
+  zone_id       = data.aws_availability_zones.azs.zone_ids[0]
+  name          = var.name
+  tags          = var.tags
+  force_destroy = var.force_destroy
+}
+
 ### storage/filesystem
 module "lustre" {
   for_each = toset(local.notebook_enabled ? ["enabled"] : [])
   source   = "Young-ook/sagemaker/aws//modules/lustre"
   version  = "0.4.6"
   tags     = var.tags
-  subnets  = [element(values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"]), random_integer.subnet.result)]
+  subnets  = [module.random-az.item]
   filesystem = {
     import_path = format("s3://%s", module.s3.bucket.id)
   }
