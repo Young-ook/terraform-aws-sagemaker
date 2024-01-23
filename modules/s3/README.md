@@ -160,4 +160,8 @@ terraform apply
 * [Expiring Amazon S3 Objects Based on Last Accessed Date to Decrease Costs](https://aws.amazon.com/blogs/architecture/expiring-amazon-s3-objects-based-on-last-accessed-date-to-decrease-costs/)
 
 ## Storage Class
+- [Amazon S3 Glacier is the Best Place to Archive Your Data – Introducing the S3 Glacier Instant Retrieval Storage Class](https://aws.amazon.com/blogs/aws/amazon-s3-glacier-is-the-best-place-to-archive-your-data-introducing-the-s3-glacier-instant-retrieval-storage-class/)
 - [Announcing the new Amazon S3 Express One Zone high performance storage class](https://aws.amazon.com/blogs/aws/new-amazon-s3-express-one-zone-high-performance-storage-class/)
+
+## Governance
+- [Monitor, review, and protect Amazon S3 buckets using Access Analyzer for S3](https://aws.amazon.com/blogs/storage/protect-amazon-s3-buckets-using-access-analyzer-for-s3/)
