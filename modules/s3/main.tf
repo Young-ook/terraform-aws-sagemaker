@@ -7,7 +7,7 @@ locals {
 ### security/policy
 resource "aws_iam_policy" "read" {
   name        = format("%s-read", local.name)
-  description = format("Allow to read objects and the S3 bucket")
+  description = format("Allow to download/read objects from the S3 bucket")
   path        = "/"
   policy = jsonencode({
     Statement = [
@@ -27,7 +27,7 @@ resource "aws_iam_policy" "read" {
 
 resource "aws_iam_policy" "write" {
   name        = format("%s-write", local.name)
-  description = format("Allow to write objects and the S3 bucket")
+  description = format("Allow to upload/write objects into the S3 bucket")
   path        = "/"
   policy = jsonencode({
     Statement = [
@@ -35,6 +35,7 @@ resource "aws_iam_policy" "write" {
         Action = [
           "s3:Put*",
           "s3:DeleteObject*",
+          "s3:AbortMultipartUpload",
         ]
         Effect   = "Allow"
         Resource = [local.bucket_arn_with_slash]
