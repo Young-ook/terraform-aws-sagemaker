@@ -34,6 +34,13 @@ Amazon SageMaker JumpStart는 ML 여정을 가속화하는 데 도움이 될 수
 ![aws-sm-studio-clone-repo](../../../images/aws-sm-studio-clone-repo.png)
 
 # 추가 정보
+## Amazon SageMaker
 - [Amazon SageMaker JumpStart로 사전 구축된 모델과 기계 학습 솔루션 액세스 단순화](https://aws.amazon.com/ko/blogs/korea/amazon-sagemaker-jumpstart-simplifies-access-to-prebuilt-models-and-machine-learning-models/)
 - [개인화된 IAM 역할을 활용한 Amazon SageMaker JumpStart 활성화](https://aws.amazon.com/blogs/machine-learning/enable-amazon-sagemaker-jumpstart-for-custom-iam-execution-roles/)
 - [생성형 인공지능 이머전데이 워크샵](https://github.com/aws-samples/generative-ai-on-aws-immersion-day)
+
+## Amazon Personalize
+- [Amazon Personalize 예제](https://github.com/aws-samples/amazon-personalize-samples)
+- [Amazon Personalize 개발자 문서](https://docs.aws.amazon.com/personalize/latest/dg/what-is-personalize.html)
+- [Omnichannel personalization with Amazon Personalize](https://aws.amazon.com/blogs/machine-learning/omnichannel-personalization-with-amazon-personalize/)
+- [Introducing recommendation scores in Amazon Personalize](https://aws.amazon.com/blogs/machine-learning/introducing-recommendation-scores-in-amazon-personalize/)

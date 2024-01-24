@@ -36,6 +36,13 @@ This is a hands-on lab sample for Gen-AI on AWS workshop. You can run this examp
 ![aws-sm-studio-clone-repo](../../../images/aws-sm-studio-clone-repo.png)
 
 # Additional Resources
+## Amazon SageMaker
 - [Amazon SageMaker JumpStart Simplifies Access to Pre-built Models and Machine Learning Solutions](https://aws.amazon.com/blogs/aws/amazon-sagemaker-jumpstart-simplifies-access-to-prebuilt-models-and-machine-learning-models/)
 - [Enable Amazon SageMaker JumpStart for custom IAM execution roles](https://aws.amazon.com/blogs/machine-learning/enable-amazon-sagemaker-jumpstart-for-custom-iam-execution-roles/)
 - [Generative AI on AWS Immersion Day](https://github.com/aws-samples/generative-ai-on-aws-immersion-day)
+
+## Amazon Personalize
+- [Amazon Personalize Samples](https://github.com/aws-samples/amazon-personalize-samples)
+- [Amazon Personalize Developer Guide](https://docs.aws.amazon.com/personalize/latest/dg/what-is-personalize.html)
+- [Omnichannel personalization with Amazon Personalize](https://aws.amazon.com/blogs/machine-learning/omnichannel-personalization-with-amazon-personalize/)
+- [Introducing recommendation scores in Amazon Personalize](https://aws.amazon.com/blogs/machine-learning/introducing-recommendation-scores-in-amazon-personalize/)
