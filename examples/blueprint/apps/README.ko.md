@@ -40,6 +40,7 @@ Amazon SageMaker JumpStart는 ML 여정을 가속화하는 데 도움이 될 수
 - [생성형 인공지능 이머전데이 워크샵](https://github.com/aws-samples/generative-ai-on-aws-immersion-day)
 
 ## Amazon Personalize
+- [기계학습을 활용하여 개인화된 경험 유지하기](https://github.com/aws-solutions/maintaining-personalized-experiences-with-machine-learning)
 - [Amazon Personalize 예제](https://github.com/aws-samples/amazon-personalize-samples)
 - [Amazon Personalize 개발자 문서](https://docs.aws.amazon.com/personalize/latest/dg/what-is-personalize.html)
 - [Omnichannel personalization with Amazon Personalize](https://aws.amazon.com/blogs/machine-learning/omnichannel-personalization-with-amazon-personalize/)
