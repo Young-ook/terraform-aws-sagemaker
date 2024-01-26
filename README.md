@@ -85,3 +85,4 @@ terraform apply
 # Additional Resources
 ## On-line training courses
 - [AWS Skill Builder](https://explore.skillbuilder.aws/learn)
+- [모두를 위한 머신러닝/딥러닝 강의](https://hunkim.github.io/ml/)
