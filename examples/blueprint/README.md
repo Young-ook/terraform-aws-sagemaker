@@ -75,11 +75,15 @@ terraform destroy -var-file fixture.tc1.tfvars
 - [Secure multi-account model deployment with Amazon SageMaker: Part 1](https://aws.amazon.com/blogs/machine-learning/part-1-secure-multi-account-model-deployment-with-amazon-sagemaker/)
 - [Secure multi-account model deployment with Amazon SageMaker: Part 2](https://aws.amazon.com/blogs/machine-learning/part-2-secure-multi-account-model-deployment-with-amazon-sagemaker/)
 - [Hybrid-network Architecture with AWS Transit Gateway](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/tgw)
+- [Dynamic A/B testing for machine learning models with Amazon SageMaker MLOps projects](https://aws.amazon.com/blogs/machine-learning/dynamic-a-b-testing-for-machine-learning-models-with-amazon-sagemaker-mlops-projects/)
 - [Huggingface with Amazon SageMaker](https://github.com/Young-ook/terraform-aws-sagemaker/blob/main/examples/huggingface)
 - [Amazon SageMaker Feature Store Workshop](https://github.com/aws-samples/amazon-sagemaker-feature-store-end-to-end-workshop)
 - [Build a powerful question answering bot with Amazon SageMaker, Amazon OpenSearch Service, Streamlit, and LangChain](https://aws.amazon.com/blogs/machine-learning/build-a-powerful-question-answering-bot-with-amazon-sagemaker-amazon-opensearch-service-streamlit-and-langchain/)
+- [Amazon SageMaker for Tableau](https://aws.amazon.com/quickstart/architecture/amazon-sagemaker-for-tableau/)
 - [A quick guide to using Spot instances with Amazon SageMaker](https://towardsdatascience.com/a-quick-guide-to-using-spot-instances-with-amazon-sagemaker-b9cfb3a44a68)
 
+## AWS Clean Rooms
+- [Guidance for Predictive Segmentation using Third-Party Data with AWS Clean Rooms](https://aws.amazon.com/solutions/guidance/predictive-segmentation-using-third-party-data-with-aws-clean-rooms/)
 
 ## Jupyter Notebook
 - [Announcing new Jupyter contributions by AWS to democratize generative AI and scale ML workloads](https://aws.amazon.com/blogs/machine-learning/announcing-new-jupyter-contributions-by-aws-to-democratize-generative-ai-and-scale-ml-workloads/)
