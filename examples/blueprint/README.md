@@ -81,9 +81,7 @@ terraform destroy -var-file fixture.tc1.tfvars
 - [Build a powerful question answering bot with Amazon SageMaker, Amazon OpenSearch Service, Streamlit, and LangChain](https://aws.amazon.com/blogs/machine-learning/build-a-powerful-question-answering-bot-with-amazon-sagemaker-amazon-opensearch-service-streamlit-and-langchain/)
 - [Amazon SageMaker for Tableau](https://aws.amazon.com/quickstart/architecture/amazon-sagemaker-for-tableau/)
 - [A quick guide to using Spot instances with Amazon SageMaker](https://towardsdatascience.com/a-quick-guide-to-using-spot-instances-with-amazon-sagemaker-b9cfb3a44a68)
+- [Save costs by automatically shutting down idle resources within Amazon SageMaker Studio](https://aws.amazon.com/blogs/machine-learning/save-costs-by-automatically-shutting-down-idle-resources-within-amazon-sagemaker-studio/)
 
 ## AWS Clean Rooms
 - [Guidance for Predictive Segmentation using Third-Party Data with AWS Clean Rooms](https://aws.amazon.com/solutions/guidance/predictive-segmentation-using-third-party-data-with-aws-clean-rooms/)
-
-## Jupyter Notebook
-- [Announcing new Jupyter contributions by AWS to democratize generative AI and scale ML workloads](https://aws.amazon.com/blogs/machine-learning/announcing-new-jupyter-contributions-by-aws-to-democratize-generative-ai-and-scale-ml-workloads/)
