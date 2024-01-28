@@ -5,6 +5,13 @@ variable "bucket_policy" {
   default     = {}
 }
 
+variable "server_side_encryption" {
+  description = "A configuration of server side encryption"
+  type        = map(string)
+  default     = { sse_algorithm = "AES256" }
+}
+
+### features
 variable "intelligent_tiering_archive_rules" {
   description = "A configuration of intelligent tiering archive management"
   type        = any
@@ -35,12 +42,6 @@ variable "logging_rules" {
   }
 }
 
-variable "server_side_encryption" {
-  description = "A configuration of server side encryption"
-  type        = map(string)
-  default     = { sse_algorithm = "AES256" }
-}
-
 variable "versioning" {
   description = "A configuration to enable object version control"
   type        = string
@@ -55,6 +56,16 @@ variable "force_destroy" {
   description = "A boolean that indicates all objects should be deleted from the bucket so that the bucket can be destroyed without error"
   type        = bool
   default     = false
+}
+
+variable "zone_id" {
+  description = "Zone ID for S3 express one zone"
+  type        = string
+  default     = null
+  validation {
+    condition     = var.zone_id == null ? true : length(var.zone_id) > 0
+    error_message = "The zone-id must not be empty. Required at least one character."
+  }
 }
 
 ### description

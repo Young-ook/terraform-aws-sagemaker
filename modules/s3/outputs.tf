@@ -1,8 +1,14 @@
 ### output variables
 
+locals {
+  bucket_name           = (local.directory_bucket ? aws_s3_directory_bucket.bucket["enabled"].id : aws_s3_bucket.bucket["enabled"].id)
+  bucket_arn_with_slash = join("/", [(local.directory_bucket ? aws_s3_directory_bucket.bucket["enabled"].arn : aws_s3_bucket.bucket["enabled"].arn), "*"])
+  bucket_arn            = (local.directory_bucket ? aws_s3_directory_bucket.bucket["enabled"].arn : aws_s3_bucket.bucket["enabled"].arn)
+}
+
 output "bucket" {
   description = "Attributes of the generated S3 bucket"
-  value       = aws_s3_bucket.bucket
+  value       = local.directory_bucket ? aws_s3_directory_bucket.bucket["enabled"] : aws_s3_bucket.bucket["enabled"]
 }
 
 output "policy_arns" {
@@ -15,7 +21,7 @@ output "empty" {
   value = join(" ", [
     "bash -e",
     format("%s/script/empty.sh", path.module),
-    format("-r %s", module.aws.region.name),
-    format("-b %s", aws_s3_bucket.bucket.id),
+    format("-r %s", local.aws.region),
+    format("-b %s", local.bucket_name),
   ])
 }
