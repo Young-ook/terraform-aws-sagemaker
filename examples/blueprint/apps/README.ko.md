@@ -45,3 +45,7 @@ Amazon SageMaker JumpStart는 ML 여정을 가속화하는 데 도움이 될 수
 - [Amazon Personalize 개발자 문서](https://docs.aws.amazon.com/personalize/latest/dg/what-is-personalize.html)
 - [Omnichannel personalization with Amazon Personalize](https://aws.amazon.com/blogs/machine-learning/omnichannel-personalization-with-amazon-personalize/)
 - [Introducing recommendation scores in Amazon Personalize](https://aws.amazon.com/blogs/machine-learning/introducing-recommendation-scores-in-amazon-personalize/)
+- [A How-to Guide for Deploying Amazon Interactive Video Service and Amazon Personalize in Retail](https://aws.amazon.com/blogs/industries/a-how-to-guide-for-deploying-amazon-interactive-video-service-and-amazon-personalize-in-retail/)
+- [Amazon Personalize now supports dynamic filters for applying business rules to your recommendations on the fly](https://aws.amazon.com/blogs/machine-learning/amazon-personalize-now-supports-dynamic-filters-for-applying-business-rules-to-your-recommendations-on-the-fly/)
+- [Omnichannel personalization with Amazon Personalize](https://aws.amazon.com/blogs/machine-learning/omnichannel-personalization-with-amazon-personalize/)
+- [Retail Demo Store](https://github.com/aws-samples/retail-demo-store)
