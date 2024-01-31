@@ -42,7 +42,12 @@ This is a hands-on lab sample for Gen-AI on AWS workshop. You can run this examp
 - [Generative AI on AWS Immersion Day](https://github.com/aws-samples/generative-ai-on-aws-immersion-day)
 
 ## Amazon Personalize
+- [Maintaining Personalized Experiences with Machine Learning](https://github.com/aws-solutions/maintaining-personalized-experiences-with-machine-learning)
 - [Amazon Personalize Samples](https://github.com/aws-samples/amazon-personalize-samples)
 - [Amazon Personalize Developer Guide](https://docs.aws.amazon.com/personalize/latest/dg/what-is-personalize.html)
 - [Omnichannel personalization with Amazon Personalize](https://aws.amazon.com/blogs/machine-learning/omnichannel-personalization-with-amazon-personalize/)
 - [Introducing recommendation scores in Amazon Personalize](https://aws.amazon.com/blogs/machine-learning/introducing-recommendation-scores-in-amazon-personalize/)
+- [A How-to Guide for Deploying Amazon Interactive Video Service and Amazon Personalize in Retail](https://aws.amazon.com/blogs/industries/a-how-to-guide-for-deploying-amazon-interactive-video-service-and-amazon-personalize-in-retail/)
+- [Amazon Personalize now supports dynamic filters for applying business rules to your recommendations on the fly](https://aws.amazon.com/blogs/machine-learning/amazon-personalize-now-supports-dynamic-filters-for-applying-business-rules-to-your-recommendations-on-the-fly/)
+- [Omnichannel personalization with Amazon Personalize](https://aws.amazon.com/blogs/machine-learning/omnichannel-personalization-with-amazon-personalize/)
+- [Retail Demo Store](https://github.com/aws-samples/retail-demo-store)
