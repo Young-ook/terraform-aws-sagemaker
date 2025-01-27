@@ -96,4 +96,4 @@ terraform apply
 - [Feature Store as a Foundation for Machine Learning](https://towardsdatascience.com/feature-store-as-a-foundation-for-machine-learning-d010fc6eb2f3)
 
 ## ML examples
-- [Data on WSL(Windows Subsystems for Linux)](https://github.com/Young-ook/data-lab-on-wsl)
+- [Data on WSL(Windows Subsystem for Linux)](https://github.com/Young-ook/data-lab-on-wsl)
